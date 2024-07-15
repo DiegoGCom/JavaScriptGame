@@ -1,0 +1,41 @@
+
+
+bucle recorriendo el mapa de 10 casillas en 10 casillas{
+	
+ 	// se decide que tipo de casilla predominará
+
+	randomNumber = Math.random()
+
+	tipoTerreno = elegirTipoTerreno()
+
+	funcion para crear el parche(tipoTerreno)
+
+
+}
+funcion elegirTipoTerreno(){
+
+	if(randomNumber < 0.1) return montaña;
+	elif(randomNumbre < 0.2) return bosque;
+	else return hierba
+
+
+}
+
+funcion para crear el parche de las 10x10 casillas(recibe el parametro predominante){
+
+	for(let indicex de casilla actual; indicex< casilla actual+10; indicex++)
+		for(let indicex de casilla actual; indicex< casilla actual+10; indicex++)
+			
+			randomNumber = Math.random()
+		
+			const tipo_casilla= randomNumber < 0.10 ? hierba : parametro predominante
+
+			casilla.setType(tipo_casilla)
+	
+			
+
+	}
+
+
+
+    

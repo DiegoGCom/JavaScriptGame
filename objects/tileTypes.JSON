@@ -1,0 +1,37 @@
+{
+    "mountain": {
+        "type": "montaña",
+        "recurso": "piedra",
+        "accesibilidad": false,
+        "produccion": 5,
+        "sprite": "mountainSprite"
+    },
+    "river": {
+        "type": "río",
+        "recurso": "agua",
+        "accesibilidad": false,
+        "produccion": 0,
+        "sprite": "riverSprite"
+    },
+    "field": {
+        "type": "campo",
+        "recurso": "comida",
+        "accesibilidad": true,
+        "produccion": 3,
+        "sprite": "fieldSprite"
+    },
+    "quarry": {
+        "type": "cantera",
+        "recurso": "piedra",
+        "accesibilidad": true,
+        "produccion": 4,
+        "sprite": "quarrySprite"
+    },
+    "forest": {
+        "type": "bosque",
+        "recurso": "madera",
+        "accesibilidad": true,
+        "produccion": 2,
+        "sprite": "forestSprite"
+    }
+}
