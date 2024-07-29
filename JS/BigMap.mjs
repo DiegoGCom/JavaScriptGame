@@ -39,7 +39,7 @@ class BigMap {
         this.tileSize=tileSize;
         this.offsetX=offsetX;
         this.offsetY=offsetY;
-        console.log(`En renderizado de mapas: OffsetX: ${offsetX}, OffsetY: ${offsetY}`);
+       // console.log(`En renderizado de mapas: OffsetX: ${offsetX}, OffsetY: ${offsetY}`);
 
         for (let y = 0; y < this.mapHeight; y++) {
             for (let x = 0; x < this.mapWidth; x++) {

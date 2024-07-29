@@ -10,6 +10,7 @@ class CanvasControler {
         this.originalHeight = mapCanvas.height;
         this.originalTileSize = mapCanvas.tileSize;
 
+
         this.setupListeners();
 
         onload = () => {
@@ -75,6 +76,7 @@ class CanvasControler {
                 this.mapCanvas.setOffset(offsetX, offsetY);
                 this.characterCanvas.setOffset(offsetX, offsetY);
             }
+           // this.infoMouse(e);
         });
 
         //------ZOOM-----------------------------
@@ -129,6 +131,7 @@ class CanvasControler {
         container.addEventListener("mouseleave", () => {
             isDragging = false;
 
+
         });
 
 
@@ -137,6 +140,7 @@ class CanvasControler {
             e.preventDefault();
 
         });
+  
 
         //------EVENTO CLIC EN LOS CANVAS--------------------
 
@@ -158,8 +162,8 @@ class CanvasControler {
                 const gridX = Math.floor((this.mapCanvas.offsetX + mouseX) / this.mapCanvas.tileSize);
                 const gridY = Math.floor((this.mapCanvas.offsetY + mouseY) / this.mapCanvas.tileSize);
 
-                let selectedTile = this.mapCanvas.map[gridY][gridX];
-                console.log(selectedTile.x + ", " + selectedTile.y);
+                //let selectedTile = this.mapCanvas.map[gridY][gridX];
+               // console.log(selectedTile.x + ", " + selectedTile.y);
 
                 if (gridX >= 0 && gridX < this.mapCanvas.mapWidth && gridY >= 0 && gridY < this.mapCanvas.mapHeight) {
                     for (let row of this.mapCanvas.map) {
@@ -173,7 +177,11 @@ class CanvasControler {
 
                     this.mapCanvas.map[gridY][gridX].selected(true);
 
-                    //  this.characterCanvas.setTarget(mouseX, mouseY);
+                    let selectedTile = this.mapCanvas.map[gridY][gridX];
+
+                    console.log(selectedTile.x + ", " + selectedTile.y);
+
+                    this.characterCanvas.setTarget(selectedTile.x,selectedTile.y);
 
 
                 }
@@ -203,6 +211,33 @@ class CanvasControler {
         const screenWidth = screen.width;
         const screenHeight = screen.height;
 
+
+
+    }
+
+    infoMouse(e) {
+
+
+        const rect = this.mapCanvas.canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        const gridX = Math.floor((this.mapCanvas.offsetX + mouseX) / this.mapCanvas.tileSize);
+        const gridY = Math.floor((this.mapCanvas.offsetY + mouseY) / this.mapCanvas.tileSize);
+
+       // console.log(`Mouse Pixel Position: (${mouseX}px, ${mouseY}px), Grid Position: (${gridX}, ${gridY})`);
+
+        if (gridX >= 0 && gridX < this.mapCanvas.mapWidth && gridY >= 0 && gridY < this.mapCanvas.mapHeight) {
+            for (let row of this.mapCanvas.map) {
+                for (let tile of row) {
+                    tile.selected(false);
+                }
+            }
+        }
+        this.mapCanvas.map[gridY][gridX].selected(true);
+
+
+        this.mapCanvas.draw();
 
 
     }

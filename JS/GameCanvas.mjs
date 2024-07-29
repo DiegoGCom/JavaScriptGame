@@ -75,6 +75,7 @@ class GameCanvas extends BaseCanvas {
     update(){
 
         if (this.loading<50){
+            console.log('redimensionando');
             this.draw();
             this.loading++;
         }

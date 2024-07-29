@@ -9,7 +9,7 @@ class Character {
         this.speed=0.4;
         this.targetX;
         this.targetY;
-        this.delay = 0;
+        this.frameRate = 0;
 
 
         //Objeto monigote
@@ -94,14 +94,14 @@ class Character {
     }
     animateSprite(){
 
-        if (this.delay > 8) {
+        if (this.frameRate > 8) {
             this.monigote.x += this.monigote.width;
             if (this.monigote.x > this.monigoteSheet.width-this.monigote.width) {
                 this.monigote.x = 0; // Resetea al inicio si sobrepasa el ancho total de la imagen
             } 
-            this.delay = 0;
+            this.frameRate = 0;
         } else {
-            this.delay++;
+            this.frameRate++;
         }
 
     }

@@ -65,7 +65,6 @@ class Tile {
 
     render(x, y, size) {
 
-        
         if (this.backImageLoaded) this.ctx.drawImage(this.backgroundImage, x, y);
 
         this.chooseStyle(x, y, size);
@@ -148,6 +147,7 @@ class Tile {
 
         this.isSelected = selected;
 
+        this.render();
     }
 
 

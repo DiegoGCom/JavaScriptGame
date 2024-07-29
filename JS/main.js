@@ -18,6 +18,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     uiManager.addNewCharacter(characterCanvas.characters[1]);
 
+    window.addEventListener('resize', ()=>{
+
+        gameCanvas.loading=0;
+
+    });
+
 
     function update(){
 

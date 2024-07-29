@@ -14,6 +14,7 @@ class CharacterCanvas extends BaseCanvas {
         this.monigoteIndex = 0;
         this.speed = 2;
         this.clearRect = false;
+        this.scaleFactor=null;
 
         this.characters = [];
         this.createNewCharacter();
@@ -56,6 +57,7 @@ class CharacterCanvas extends BaseCanvas {
 
     //Escalado de la posicion target y de la posición del personaje tras los eventos de zoom
     updateTarjetPosition(scaleFactor) {
+        this.scaleFactor=scaleFactor;
         this.characters.forEach(character => { character.updateTarjetPosition(scaleFactor); });
     }
 
@@ -67,7 +69,7 @@ class CharacterCanvas extends BaseCanvas {
 
     setTarget(targetX, targetY) {
 
-        this.characters.forEach(character => { character.setTarget(targetX += 20, targetY += 20); });
+        this.characters.forEach(character => { character.setTarget(targetX += 20*this.scaleFactor, targetY +=20*this.scaleFactor); });
 
     }
 
