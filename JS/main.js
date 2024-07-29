@@ -1,22 +1,27 @@
 import { GameCanvas } from "./GameCanvas.mjs";
 import { CharacterCanvas } from "./CharacterCanvas.mjs";
 import { CanvasControler } from "./CanvasControler.mjs";
-import { ImageManager } from "./ImageManager.mjs";
+import { UIManager } from "./UIManager.mjs"; 
 
 
 document.addEventListener("DOMContentLoaded", function () {
 
   
 
-    const gameCanvas = new GameCanvas('gameCanvas', 100, 100, 100);
+    const gameCanvas = new GameCanvas('gameCanvas',100,80, 80);
 
-    const characterCanvas = new CharacterCanvas('characterCanvas', 100, 100, 100);
+    const characterCanvas = new CharacterCanvas('characterCanvas', 100, 80, 80);
 
-    const canvasContainer = new CanvasControler(gameCanvas, characterCanvas);
+    const canvasControler = new CanvasControler(gameCanvas, characterCanvas);
 
-    //characterCanvas.setTargetPosition(1400,450);
+    const uiManager = new UIManager();
+
+    uiManager.addNewCharacter(characterCanvas.characters[1]);
+
 
     function update(){
+
+        gameCanvas.update();
 
         characterCanvas.update();
 

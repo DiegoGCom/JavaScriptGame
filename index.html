@@ -6,45 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JavaScriptGame</title>
 
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles2.css">
 
-    <script src = "JS/main.js" type="module"> </script> 
+    <script src="JS/main.js" type="module"> </script>
 
 
 </head>
 
 <body>
 
-
-    <nav>
-        Barra de navegación
-    </nav>
-
-
     <div class="container">
-        <aside class="left">
-            Espacio lateral izquierdo
-        </aside>
 
-        <div  id="canvasContainer">
-            <canvas id="gameCanvas"></canvas>
-            <canvas id="characterCanvas"></canvas>
+        <div id="canvasContainer">
+            <div class="nav">
+                <div id="imageButtonCharacter" class="buttonLeft">
+                    <img src="Assets/Dibujos/PNG/monigote_button.png" alt="boton monigote">
+                </div>
+                <!-- Menú desplegable -->
+                <div id="dropdownMenu" class="dropdown-menu">
+                   
+                </div>
+                <div id="imageButtonMap" class="buttonRight"></div>
+            </div>
+                <canvas id="gameCanvas"></canvas>
+                <canvas id="characterCanvas"></canvas>
+            </div>
+
+
+
         </div>
-
-        <aside class = "right">
-            Espacio lateral derecho
-        </aside>
-
-
-
-    </div>
-
-    <footer>
-        Pie de página
-    </footer>
-
-
-
 
 
 </body>

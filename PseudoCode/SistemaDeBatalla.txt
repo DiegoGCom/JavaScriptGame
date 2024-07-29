@@ -1,0 +1,51 @@
+SISTEMA DE BATALLA:
+
+Base:
+		Matriz de 5x5
+		Enemigo en cuadrado central superior
+		Jugador en cuadrado central inferior
+		Hay turnos de ataque, el jugador tiene que programar los movimientos ataques y defensas de sus personajes
+		Enemigo o personaje puede tener la iniciativa, primer movimiento.
+		Cuando comienza el turno se realizan los movimientos y ataques.
+		Enemigos y personajes tienen puntos vida(3 puntos base, ampliables si el indice de bien estar supera un rango)
+		Perder una batalla no mata al personaje pero le quita vida en el mapa general
+
+---------------------------------------------------------
+Early Game:
+
+
+		El enemigo atacará de una forma particular, puede ser de frente, a una casilla target, en diagonal, movimientos de ajedrez?
+		
+		Las primeras batallas son sencillas, el jugador debe identificar el patron de ataque del enemigo sin mucha dificultad
+		
+		Los enemigos se clasificarán por tipos, quizá los tipos sean las piezas del ajedrez y los enemigos tengan alguna caracteristica que recuerde a 		estas piezas. 
+
+		Se pueden hacer variaciones en el tipo, como el espejo(el enemigo hace el mismo patrón de ataque pero en espejo), hay que dar una pista al 			jugador de la variación del enemigo, algun detalle o directamente se menciona
+
+---------------------------------------------------------
+
+Mid Game: 	
+	
+		se duplica? cuadruplica? la matriz
+		hay más enemigos
+		posibles sinergías(sin esta palabra nunca serás un buen "game designer") entre los enemigos
+		combinaciones de enemigos de forma que puedan tener 2 patrones de ataque?
+
+
+--------------------------------------------------------
+
+Late Game: 
+
+		Vete a saber si llegarás, si llegas pues te inventas algo
+
+--------------------------------------------------------
+
+Bosses?: 	
+
+		Combinan varios patrones de ataque?, más vida?
+
+		Atacar por partes en un orden determinado? piernas torso cabeza
+--------------------------------------------------------
+Otras posibles idas de olla:
+		
+		Estados alterados, ataque/defensa elemental, más sinergias, coworking, afterwork, mindfullnes, headrecruiting, PMS,ZKF y otras siglas 		inventadas, (TODO ir a internet a buscar más palabras en inglés)
