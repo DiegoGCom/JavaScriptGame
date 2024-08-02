@@ -1,9 +1,12 @@
 class Character {
 
 
-    constructor(name, x, y) {
+    constructor(ctx,name, x, y) {
 
         this.name = name;
+        this.ctx=ctx;
+        this.bigMapX;
+        this.bigMapY;
         this.x = x;
         this.y = y;
         this.speed=0.4;
@@ -60,13 +63,14 @@ class Character {
             this.y += (deltaY / distance) * this.speed;
         }     
         
+       
     }
 
-    render(ctx,x,y,size) {
+    render(x,y,size) {
       
         this.animateSprite();
         
-        ctx.drawImage(
+        this.ctx.drawImage(
             this.monigoteSheet,
             this.monigote.x,
             this.monigote.y,
@@ -75,21 +79,21 @@ class Character {
             x, y, size, size);
 
     }
-    renderMirror(ctx, x, y, size) {
+    renderMirror(x, y, size) {
 
         this.animateSprite();
 
-        ctx.save();
-        ctx.translate(x + size, y);
-        ctx.scale(-1, 1);
-        ctx.drawImage(
+        this.ctx.save();
+        this.ctx.translate(x + size, y);
+        this.ctx.scale(-1, 1);
+        this.ctx.drawImage(
             this.monigoteSheet,
             this.monigote.x,
             this.monigote.y,
             this.monigote.width,
             this.monigote.height
             , 0, 0, size, size);
-        ctx.restore();
+        this.ctx.restore();
 
     }
     animateSprite(){
@@ -105,12 +109,10 @@ class Character {
         }
 
     }
-   updateRender(ctx,x,y,size){
+   updateRender(x,y,size){
 
-        if(this.targetX>=this.x) this.render(ctx,x,y,size);
-        else this.renderMirror(ctx,x,y,size);
-
-
+        if(this.targetX>=this.x) this.render(x,y,size);
+        else this.renderMirror(x,y,size);
     }
 
 }

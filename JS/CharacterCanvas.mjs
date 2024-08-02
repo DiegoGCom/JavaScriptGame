@@ -19,6 +19,8 @@ class CharacterCanvas extends BaseCanvas {
         this.characters = [];
         this.createNewCharacter();
 
+        
+
 
     }
 
@@ -30,21 +32,21 @@ class CharacterCanvas extends BaseCanvas {
         for (let i = 0; i < 6; i++) {
             positionX = Random.getRandom(0, 1000);
             positionY = Random.getRandom(0, 1000);
-            let character = new Character("Pepe", positionX, positionY);
+            let character = new Character(this.ctx,"Pepe", positionX, positionY);
             character.setTarget(Random.getRandom(0, 600), Random.getRandom(0, 600));
             this.characters.push(character);
         }
     }
 
     draw() {
-
+    
     }
 
     update() {
         if (!this.clearRect) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.characters.forEach(character => { character.move()});
-            this.characters.forEach(character => { character.updateRender(this.ctx, character.x - this.offsetX, character.y - this.offsetY, this.tileSize / 2); });
+            this.characters.forEach(character => { character.updateRender(character.x - this.offsetX, character.y - this.offsetY, this.tileSize/2); });
 
             this.draw();
         }else{
@@ -63,6 +65,8 @@ class CharacterCanvas extends BaseCanvas {
 
     updateCharacterScale(scaleFactor) {
         this.characters.forEach(character => { character.updateScale(scaleFactor); });
+        this.scaleFactor=scaleFactor;
+        this.characters.forEach(character => { character.updateTarjetPosition(scaleFactor); });
     }
 
 
@@ -80,6 +84,7 @@ class CharacterCanvas extends BaseCanvas {
             for (let col = 0; col < this.mapHeight; col++) {
                 const x = col * this.tileSize - this.offsetX;
                 const y = row * this.tileSize - this.offsetY;
+                const index= row+col*this.tileSize;
                 this.ctx.strokeStyle = 'black';
                 this.ctx.strokeRect(x, y, this.tileSize, this.tileSize);
             }

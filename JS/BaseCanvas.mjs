@@ -4,7 +4,7 @@ capas de canvas pero que estas respondan igual a los eventos manteniendo la cohe
 
 class BaseCanvas {
 
-    constructor(canvasId, tileSize, mapWidth, mapHeight) {
+    constructor(canvasId, tileSize) {
         
         this.canvas = document.getElementById(canvasId);
         this.width=this.canvas.width;
@@ -12,8 +12,8 @@ class BaseCanvas {
         this.ctx = this.canvas.getContext("2d");
         this.scale = window.devicePixelRatio || 1;
         this.tileSize = tileSize;
-        this.mapWidth = mapWidth;
-        this.mapHeight = mapHeight;
+        this.mapWidth=0;
+        this.mapHeight=0;
 
         this.offsetX = 0;
         this.offsetY = 0;
@@ -28,10 +28,11 @@ class BaseCanvas {
     /*Actualizamos la diferencia entre en tamaño del canvas y el tamaño del mapa, se llama en los enventos de la clase controladora
     coordina los tamaños de las distintas capas*/
 
+
     setOffset(offsetX,offsetY){
 
         this.offsetX = Math.max(0, Math.min(offsetX, this.mapWidth * this.tileSize - this.canvas.width / this.scale));
-        this.offsetY = Math.max(0, Math.min(offsetY, this.mapHeight * this.tileSize - this.canvas.height / this.scale));
+        this.offsetY = Math.max(0, Math.min(offsetY, this.mapHeight * this.tileSize - (this.canvas.height-this.tileSize) / this.scale));
 
         this.draw();
 
@@ -57,6 +58,17 @@ class BaseCanvas {
     draw() {
 
         throw new Error("El método draw() debe ser implementado por las subclases");
+
+    }
+
+    setMapSize(mapWidth,mapHeight){
+        this.mapHeight=mapHeight;
+        this.mapWidth=mapWidth;
+    }
+
+    ressetOffests(){
+        this.offsetX=0;
+        this.offsetY=0;
 
     }
 

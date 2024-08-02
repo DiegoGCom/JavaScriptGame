@@ -92,6 +92,11 @@ canvas {
     height: 100%;
     border-radius: 4px;
 }
+.buttonRight img {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+}
 
 /* Efecto al pasar el ratón por encima del botón */
 .buttonLeft:hover, .buttonRight:hover {

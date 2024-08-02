@@ -1,82 +1,58 @@
 
+import { ImageManager } from "./ImageManager.mjs";
 import { Random } from "./Utils/Random.mjs";
 
 class Tile {
 
-    constructor(ctx, index) {
+    constructor(ctx, tileIndex) {
 
+        /**@type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.x;
         this.y;
-        this.index = index;
+        this.tileIndex = tileIndex;
         this._type = "grass";
         this.isSelected = false;
         this.randomIndex = Random.getRandom(0, 5);
         this.bush = Random.getRandom(0, 100) < 20;
+        this.visibility = 'clear';
 
         //Carga de imagenes
 
-        this.backgroundImage = new Image();
-        this.backgroundImage.src = "../Assets/Dibujos/Textures/parchmentFolded.png";
-        this.backImageLoaded = false;
-        this.backgroundImage.onload = () => {
-            this.backImageLoaded = true;
-        };
+        this.backgroundImage = ImageManager.getImage('backgroundImage');
 
-        this.spriteSheet = new Image();
-        this.spriteSheetLoaded = false;
-        this.spriteSheet.src = '../Assets/Dibujos/Spritesheet/spritesheet_retina.png';
-        this.spriteSheet.onload = () => {
+        this.spriteSheet = ImageManager.getImage('spriteSheet')
 
-            this.spriteSheetLoaded = true;
-
-        }
-
-        this.objects = {
-
-            mountain: {
-                mountain0: { nombre: "rocks.png", x: "384", y: "1024",width:"128" },
-                mountain1: { nombre: "rocksA.png", x: "384", y: "896",width:"128" },
-                mountain2: { nombre: "rocksB.png", x: "384", y: "768",width:"128" },
-                mountain3: { nombre: "rocksMountain.png", x: "384", y: "640",width:"128" },
-                mountain4: { nombre: "rocksTall.png", x: "384", y: "512",width:"128" }
-            },
-            tree: {
-                tree0: { x: "256", y: "0",width:"128" },
-                tree1: { x: "128", y: "1152",width:"128" },
-                tree2: { x: "128", y: "1024",width:"128" },
-                tree3: { x: "0", y: "1152",width:"128" }
-
-            },
-
-            bush: {
-                bush0: { x: "896", y: "1152",width:"128" }
-
-            }
-        }
+        this.spriteData= ImageManager.getSpriteData();
+        
 
     }
-    setPosition(x,y){
-        this.x=x;
-        this.y=y;
+    setPosition(x, y) {
+        this.x = x;
+        this.y = y;
 
+    }
+    getPositionX() {
+
+        return this.x;
     }
 
 
     render(x, y, size) {
 
-        if (this.backImageLoaded) this.ctx.drawImage(this.backgroundImage, x, y);
+        this.setPosition(x, y);
+
+        this.ctx.drawImage(this.backgroundImage, x, y, size, size);
 
         this.chooseStyle(x, y, size);
 
         if (this.isSelected) {
 
-            this.ctx.lineWidth = 4;
-            this.ctx.strokeStyle = "white";
-            this.ctx.strokeRect(x, y, size, size);
-
+            this.selectTile(x, y, size);
 
         }
+        //this.drawStroke(x, y, size);
+        this.drawFog(x, y, size);
     }
 
     /**
@@ -114,30 +90,28 @@ class Tile {
     }
     drawImage(type, x, y, size, index) {
 
-        if (this.spriteSheetLoaded && index != null) {
+        const objectKey = `${type}${index}`;
+        const object = this.spriteData[type][objectKey];
+       //const object= this.objects[type][objectKey];
+    
+        if (object) {
 
-            const objectKey = `${type}${index}`;
-            const object = this.objects[type][objectKey];
-
-            if (object) {
-
-                this.ctx.drawImage(
-                    this.spriteSheet,
-                    object.x,
-                    object.y,
-                    object.width,
-                    object.width,
-                    x, y, size, size
-
-                )
-
-            }
+            console.log(`Drawing image: ${objectKey}`, object); // Log de depuración
+            console.log(`spriteSheet:`, this.spriteSheet); // Log de depuración
+            console.log(`Parameters for drawImage - sx: ${object.x}, sy: ${object.y}, sw: ${object.width}, sh: ${object.width}, dx: ${x}, dy: ${y}, dw: ${size}, dh: ${size}`);
 
 
-
-
+            this.ctx.drawImage(
+                this.spriteSheet,
+                object.x,
+                object.y,
+                object.width,
+                object.width,
+                x, y, size, size
+            )
+        }else{
+            console.log(`Failed to load object: ${objectKey}`); // Log de depuración
         }
-
     }
 
     /**
@@ -149,13 +123,55 @@ class Tile {
 
         this.render();
     }
+    drawStroke(x, y, size) {
+        this.ctx.lineWidth = 0.5;
+
+        this.ctx.strokeStyle = 'black';
+        this.ctx.strokeRect(x, y, size, size);
+        this.ctx.font = `${size / 8}px Arial`;
+        this.ctx.fillStyle = 'black';
+        this.ctx.fillText(this.tileIndex, x, y + size);
+
+    }
+
+    drawFog(x, y, size) {
+
+        let alpha;
+
+        switch (this.visibility) {
+
+            case 'none':
+                alpha = 1.0;
+                break;
+            case 'fogged':
+                alpha = 0.7;
+                break;
+            case 'clear':
+                alpha = 0.0;
+                break;
+
+
+
+        }
+        this.ctx.fillStyle = `rgba(0, 0, 0,${alpha})`; // Color negro grisáceo con transparencia
+        this.ctx.fillRect(x, y, size, size);
+
+
+
+
+    }
+
+    selectTile(x, y, size) {
+
+        this.ctx.lineWidth = 4;
+        this.ctx.strokeStyle = "white";
+        this.ctx.strokeRect(x, y, size, size);
+
+    }
 
 
 
 
 }
-
-
-
 
 export { Tile };
