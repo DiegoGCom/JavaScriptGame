@@ -15,9 +15,13 @@ class CanvasGroupControler {
 
         this.setupListeners();
 
+        this.characterCanvas.setMapSize(this.mapCanvas.bigMap.mapWidth, this.mapCanvas.bigMap.mapHeight);
+      //  this.characterCanvas.updateCharacterScale();
+
         onload = () => {
 
             this.mapCanvas.draw();
+
         }; 
 
 

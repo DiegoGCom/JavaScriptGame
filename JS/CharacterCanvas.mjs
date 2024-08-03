@@ -16,6 +16,9 @@ class CharacterCanvas extends BaseCanvas {
         this.clearRect = false;
         this.scaleFactor=null;
 
+        this.offsetX=5000;
+        this.offsetY=5000;
+
         this.characters = [];
         this.createNewCharacter();
 
