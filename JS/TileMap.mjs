@@ -9,36 +9,28 @@ class TileMap {
         this.ctx = this.canvas.getContext("2d");
         this.canvasWidth=this.canvas.width;
         this.canvasHeight= this.canvas.height;
-
         this.tileSize = tileSize;
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.map = [];
+        
+        
 
-        this.initializeGameMap();
-/* 
-        this.map[0][2].visibility='clear';
-        this.map[0][1].visibility='fogged';
-        this.map[1][2].visibility='fogged';
-        this.map[0][3].visibility='fogged';
- */
     }
 
     //Creamos la malla 
-    initializeGameMap() {
+    initializeGameMap(backGroundImage,spriteSheet, spriteData) {
 
         for (let y = 0; y < this.mapHeight; y++) {
             let row = [];
             for (let x = 0; x < this.mapWidth; x++) {
-                let tile = new Tile(this.ctx, x + y * this.mapWidth);
+                let tile = new Tile(this.ctx, x + y * this.mapWidth,backGroundImage,spriteSheet, spriteData);
                 row.push(tile);
             }
             this.map.push(row);
         }
 
         this.map[0][0].selected(true);
-        this.createGround();
-
     }
 
     render(tileSize,offsetX,offsetY) {
@@ -50,6 +42,8 @@ class TileMap {
             for (let x = 0; x < this.mapWidth; x++) {
                 let drawX = x * this.tileSize - offsetX;
                 let drawY = y * this.tileSize - offsetY;
+
+                /**@type {Tile} */
                 let tile = this.map[y][x];
 
                 if (
@@ -58,59 +52,14 @@ class TileMap {
                 ) {
 
                     tile.render(drawX, drawY, this.tileSize);
-                    tile.setPosition(drawX, drawY);
+
                 }
             }
         }
         
     }
 
-    //Se crean parches de terreno de 5x5 tiles, se elige de forma random el tipo de tile
-    
-    createGround() {
 
-        for (let y = 0; y < this.mapHeight; y +=5) {
-            for (let x = 0; x < this.mapWidth; x += 5) {
-
-                this.buildPatchOfGround(x, y, this.groundType());
-
-            }
-        }
-    }
-
-    groundType() {
-
-        const randomNumber = Math.random();
-
-        if (randomNumber < 0.1) return "mountain";
-
-        else if (randomNumber < 0.3) return "forest";
-
-        else return "grass";
-
-
-    }
-    buildPatchOfGround(x, y, groundType) {
-
-        let xIndex;
-        let yIndex;
-
-        for (yIndex = y; yIndex < y + 5; yIndex++) {
-            for (xIndex = x; xIndex < x + 5; xIndex++) {
-
-                const randomNumber = Math.random();
-
-                const tile_type = randomNumber < 0.5 ? "grass" : groundType;
-
-                const tile = this.map[xIndex][yIndex];
-
-                tile.type = tile_type;
-
-            }
-        }
-
-
-    }
     drawTiles(offsetX,offsetY) {
 
         this.ctx.lineWidth=0.5;

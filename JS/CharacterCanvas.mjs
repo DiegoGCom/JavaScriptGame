@@ -14,10 +14,10 @@ class CharacterCanvas extends BaseCanvas {
         this.monigoteIndex = 0;
         this.speed = 2;
         this.clearRect = false;
-        this.scaleFactor=null;
+        this.scaleFactor=1;
 
-        this.offsetX=5000;
-        this.offsetY=5000;
+        this.offsetX=0;
+        this.offsetY=0;
 
         this.characters = [];
         this.createNewCharacter();
@@ -50,12 +50,12 @@ class CharacterCanvas extends BaseCanvas {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.characters.forEach(character => { character.move()});
             this.characters.forEach(character => { character.updateRender(character.x - this.offsetX, character.y - this.offsetY, this.tileSize/2); });
-
-            this.draw();
+          
         }else{
 
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.characters.forEach(character => { character.move();});
+           
         }
     }
 
@@ -67,8 +67,10 @@ class CharacterCanvas extends BaseCanvas {
     }
 
     updateCharacterScale(scaleFactor) {
-        this.characters.forEach(character => { character.updateScale(scaleFactor); });
         this.scaleFactor=scaleFactor;
+
+        this.characters.forEach(character => { character.updateScale(scaleFactor); });
+ 
         this.characters.forEach(character => { character.updateTarjetPosition(scaleFactor); });
     }
 

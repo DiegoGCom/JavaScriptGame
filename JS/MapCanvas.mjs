@@ -1,6 +1,6 @@
 
 import { BaseCanvas } from "./BaseCanvas.mjs";
-import { Tile } from "./Tile.mjs";
+import { BigArea } from "./BigArea.mjs";
 import { TileMap } from "./TileMap.mjs";
 
 
@@ -13,7 +13,7 @@ class MapCanvas extends BaseCanvas {
 
         this.map = [];
 
-        this.bigMap = new TileMap(100, 100, 100);
+        this.bigMap = new BigArea(100, 100, 100);
 
         this.mapWidth = this.bigMap.mapWidth;
         this.mapHeight = this.bigMap.mapHeight;
@@ -24,8 +24,8 @@ class MapCanvas extends BaseCanvas {
 
         this.loading = 50;
 
-        this.offsetX=5000;
-        this.offsetY=5000;
+        this.offsetX=0;
+        this.offsetY=0;
 
         this.bigMap.map[50][50].visibility= 'clear';
 
@@ -36,7 +36,7 @@ class MapCanvas extends BaseCanvas {
 
     }
 
-    draw(index) {
+    draw() {
 
         if (this.bigMapSelected) {
 
@@ -48,20 +48,20 @@ class MapCanvas extends BaseCanvas {
 
         } else {
 
-            this.drawArea(index);
+            this.drawArea();
 
 
         }
 
     }
-    drawArea(index) {
+    drawArea() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         //  console.log(`El area ${this.tileIndex} existe:  ${this.mapAreas.get(this.tileIndex)!=undefined}`);
 
-        if (this.mapAreas.get(index) != undefined) {
+        if (this.mapAreas.get(this.tileIndex) != undefined) {
 
-            let mapArea = this.mapAreas.get(index);
+            let mapArea = this.mapAreas.get(this.tileIndex);
 
             this.map = mapArea.map;
 
@@ -71,15 +71,15 @@ class MapCanvas extends BaseCanvas {
 
         } else {
 
-            const newMapArea = new TileMap(this.tileSize, 50, 50);
+            const newMapArea = new BigArea(this.tileSize, 50, 50);
 
-            this.mapAreas.set(index, newMapArea);
+            this.mapAreas.set(this.tileIndex, newMapArea);
 
             this.map = newMapArea.map;
 
             this.loading = 0;
             
-            console.log('Creando mapa en ' + index);
+            console.log('Creando mapa en ' + this.tileIndex);
             console.log(this.mapAreas);
         }
 
@@ -89,10 +89,10 @@ class MapCanvas extends BaseCanvas {
     update() {
 
         if (this.loading < 50) {
-            console.log('redimensionando');
+           //console.log('redimensionando');
             this.loading++;
             this.draw();
-            console.log(this.loading);
+           // console.log(this.loading);
         }
     }
 
