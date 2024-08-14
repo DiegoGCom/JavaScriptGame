@@ -19,20 +19,29 @@
 
         <div id="canvasContainer">
             <div class="nav">
-                <div id="imageButtonCharacter" class="buttonLeft">
+                <div id="imageButtonCharacter" class="imgButton">
                     <img src="Assets/Dibujos/PNG/monigote_button.png" alt="boton monigote">
                 </div>
-                <!-- Menú desplegable -->
-                <div id="dropdownMenu" class="dropdown-menu">
-
-                </div>
-                <div id="imageButtonMap" class="buttonRight">
+                <div id="imageButtonMap" class="imgButton">
                     <img src="Assets/Dibujos/PNG/field_button.png" alt="boton capa">
+                </div>
+                <div id="imageButtonSandbox" class="imgButton">
+                    <img src="Assets/Dibujos/PNG/sandbox-button.png" alt="boton sandbox">
+                    <!-- Menú desplegable -->
+                </div>
+                <div id="dropdownMenuSandbox" class="dropdown-menu">
+                    <input type="text" id="textTypeArea" placeholder="Añade el tipo">
+                    <input type="text" id="textIndexArea" placeholder="Añade el índice">
+                    <button id="okButtonDropM">Aceptar</button>
+                    <button id="resetButtonDropM">Reset tiles</button>
+                </div>
+                
+                <div id="dropdownMenuCharacter" class="dropdown-menu">
                 </div>
             </div>
             <canvas id="gameCanvas"></canvas>
             <canvas id="characterCanvas"></canvas>
-            
+
         </div>
 
 

@@ -7,14 +7,15 @@ class Character {
         this.ctx=ctx;
         this.bigMapX;
         this.bigMapY;
-        this.x = x;
-        this.y = y;
+        this.x=x;
+        this.y=y;
         this.speed=0.4;
         this.targetX;
         this.targetY;
         this.frameRate = 0;
-
-
+        this.currentTile=null;
+        
+        
         //Objeto monigote
         this.monigote = {
             x: 0,
@@ -22,7 +23,6 @@ class Character {
             width: 124,
             height: 204
         }
-
 
         //Carga de imagen
         this.monigoteSheet = new Image();
@@ -33,7 +33,6 @@ class Character {
             this.monigoteLoaded = true;
            
         }
-
     }
     
     setTarget(targetX,targetY){
@@ -44,6 +43,10 @@ class Character {
     updateTarjetPosition(scaleFactor){
         this.targetX = Math.floor(this.targetX * scaleFactor);
         this.targetY = Math.floor(this.targetY * scaleFactor);
+        
+        this.speed*= scaleFactor;
+
+       // console.log('ScaleFactor: '+scaleFactor+' Speed: '+this.speed);
     }
 
     updateScale(scaleFactor){
@@ -109,6 +112,8 @@ class Character {
         }
 
     }
+
+    //----MÉTODO QUE MUEVE AL PERSONAJE 
    updateRender(x,y,size){
 
         if(this.targetX>=this.x) this.render(x,y,size);

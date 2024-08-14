@@ -1,5 +1,4 @@
 
-import { ImageManager } from "./ImageManager.mjs";
 import { Random } from "./Utils/Random.mjs";
 
 class Tile {
@@ -15,7 +14,7 @@ class Tile {
         this.randomIndex = Random.getRandom(0, 5);
         this.bush = Random.getRandom(0, 100) < 20;
         this.visibility = 'clear';
-        this.strokeOnOff= true;
+        this.strokeOn= false;
         
 
         //Carga de imagenes
@@ -59,10 +58,9 @@ class Tile {
        
         this.drawImage(x,y,size);
        
-
-        if(this.strokeOnOff) this.drawStroke(x,y,size);
+        if(this.strokeOn) this.drawStroke(x,y,size);
        
-        if (this.isSelected) this.selectTile(x, y, size);
+        if(this.isSelected) this.selectTile(x, y, size);
         
     }
     
@@ -102,26 +100,20 @@ class Tile {
 
     drawStroke(x, y, size) {
         this.ctx.lineWidth = 0.5;
-
         this.ctx.strokeStyle = 'black';
         this.ctx.strokeRect(x, y, size, size);
         this.ctx.font = `${size / 8}px Arial`;
         this.ctx.fillStyle = 'black';
         this.ctx.fillText(this.tileIndex, x, y + size);
-
     }
 
     selectTile(x, y, size) {
-
-        this.ctx.lineWidth = 4;
+        let gap=5;
+        this.ctx.lineWidth = gap;
         this.ctx.strokeStyle = "white";
-        this.ctx.strokeRect(x, y, size, size);
+        this.ctx.strokeRect(x+gap, y+gap, size-gap*2, size-gap*2);
 
     }
-
-
-
-
 }
 
 export { Tile };

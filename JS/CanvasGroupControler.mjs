@@ -1,6 +1,8 @@
 import { MapCanvas } from "./MapCanvas.mjs";
 import { CharacterCanvas } from "./CharacterCanvas.mjs";
 import { Tile } from "./Tile.mjs";
+import { Character } from "./Character.mjs";
+import { GameTimer } from "./Utils/GameTimer.mjs";
 
 
 
@@ -13,10 +15,7 @@ class CanvasGroupControler {
         this.isDragging = false;
         this.startX;
         this.startY;
-
-        this.dropDownMenu = document.getElementById('dropdownMenu');
-
-        this.addMenuItems();
+        this.selectTile = false;
 
         this.selectedTile = this.mapCanvas.map[0][0];
 
@@ -25,7 +24,6 @@ class CanvasGroupControler {
         this.setupListeners();
 
         this.characterCanvas.setMapSize(this.mapCanvas.bigMap.mapWidth, this.mapCanvas.bigMap.mapHeight);
-        //  this.characterCanvas.updateCharacterScale();
 
         onload = () => {
 
@@ -33,185 +31,73 @@ class CanvasGroupControler {
 
         };
 
-
+        this.character = this.characterCanvas.characters.get('Pepe');
+        this.gridX = Math.floor((this.character.x) / this.mapCanvas.tileSize);
+        this.gridY = Math.floor((this.character.y) / this.mapCanvas.tileSize);
+        this.currentTile = this.mapCanvas.map[this.gridX][this.gridY];
     }
+
     setupListeners() {
 
         const container = document.getElementById('canvasContainer');
-        const imageButtonCharacter = document.getElementById('imageButtonCharacter');
-        const imageButtonMap = document.getElementById('imageButtonMap');
-
-        imageButtonMap.addEventListener('click', (e) => {
-            e.stopPropagation();
-            console.log("Boton pulsado");
-
-            this.buttonMapClic();
-
-        });
-
-
-        //------CLIC EN EL BOTON DEL PERSONAJE PARA LOS EVENTOS EN EL CANVAS CONTAINER
-
-        imageButtonCharacter.addEventListener('click', (e) => {
-
-            e.stopPropagation();
-            this.dropDownMenu.style.display = this.dropDownMenu.style.display === 'flex' ? 'none' : 'flex';
-
-
-        });
 
         //-----CALCULO DEL PUNTO DESDE EL QUE SE ARRASTRA
         container.addEventListener("mousedown", (e) => {
-
             this.mouseDown(e);
-
         });
 
         //-----ARRASTRE DEL MAPA
 
         container.addEventListener("mousemove", (e) => {
-
             this.mouseDragg(e);
-            //this.infoMouse(e);
-
-
+            if(this.selectTile) this.infoMouse(e);
         });
 
         //------ZOOM-----------------------------
         container.addEventListener("wheel", (e) => {
-
             this.zoom(e);
-
-
             e.preventDefault();
-
-
         });
-
-
 
         container.addEventListener("mouseup", () => {
             this.isDragging = false;
-
         });
 
         container.addEventListener("mouseleave", () => {
             this.isDragging = false;
-
-
         });
 
 
         container.addEventListener("contextmenu", (e) => {
-
             e.preventDefault();
-
         });
 
 
         //------EVENTO CLIC EN LOS CANVAS--------------------
 
         container.addEventListener('click', (e) => {
+                this.selectTile=this.selectTile? false:true;
+                console.log (this.selectTile); 
+        });
 
-            // this.dropDownMenu.style.display = 'none';
+        container.addEventListener('dblclick', (e) => {
 
             this.clic(e);
-
+    
         });
     }
-
-    //----TEMPORALMENTE----Introduciendo texto podemos cambiar la imagen en la casilla seleccionada
-    addMenuItems() {
-
-        const textAreaType = document.createElement('input');
-        const textAreaObectKey = document.createElement('input');
-
-        textAreaType.placeholder = 'tipo de casilla';
-        textAreaObectKey.placeholder = 'indice del objeto';
-
-        const p1 = document.createElement('button');
-        const reset = document.createElement('button');
-
-        reset.textContent = 'Reset Tiles';
-        p1.textContent = 'Aceptar';
-
-        p1.addEventListener('click', (e) => {
-            e.stopPropagation();
-            let tileType = textAreaType.value;
-            let tileObjectKey = textAreaObectKey.value;
-            let spriteData = this.mapCanvas.bigMap.spriteSheetData[tileType];
-
-            if (spriteData) {
-                this.selectedTilesList.forEach((tile) => {
-                    tile.setType(spriteData, `${tileType}${tileObjectKey}`);
-                    console.log('Exito al cambiar de imagen');
-                });
-                this.mapCanvas.draw();
-            } else {
-                textAreaType.value = 'Objeto no encontrado'
-            }
-
-        });
-
-        reset.addEventListener('click', (e)=>{
-            e.stopPropagation();
-            this.selectedTilesList.forEach((tile) => {
-                tile.isSelected=false;
-                console.log('Éxito al deseleccionar los tiles');
-            });
-            this.selectedTilesList.clear();
-            this.mapCanvas.draw();
-
-        });
-
-
-
-        textAreaType.addEventListener('click', (e) => e.stopPropagation());
-        textAreaObectKey.addEventListener('click', (e) => e.stopPropagation());
-
-        this.dropDownMenu.appendChild(textAreaType);
-        this.dropDownMenu.appendChild(textAreaObectKey);
-        this.dropDownMenu.appendChild(p1);
-        this.dropDownMenu.appendChild(reset);
-
-    }
-
-    draw() {
-        this.mapCanvas.draw();
-    }
-
-    update() {
-
-        this.characterCanvas.update();
-        this.mapCanvas.update();
-
-    }
-
 
 
     //-----LISTENERS----------------------
 
-    //---Devuelve el contexto al mapa grande
-    buttonMapClic() {
-
-        this.mapCanvas.setMapSize(this.mapCanvas.bigMap.mapWidth, this.mapCanvas.bigMap.mapHeight);
-        this.characterCanvas.setMapSize(this.mapCanvas.bigMap.mapWidth, this.mapCanvas.bigMap.mapHeight);
-        this.mapCanvas.bigMapSelected = true;
-        this.characterCanvas.clearRect = false;
-        this.mapCanvas.draw();
-
-    }
-
     //---Guarda el punto del mapa donde se hace clic y comienza el efecto de arrastre
     mouseDown(e) {
-
         this.characterCanvas.setMapSize(this.mapCanvas.mapWidth, this.mapCanvas.mapHeight);
         if (e.button === 2) {
             this.isDragging = true;
             this.startX = e.offsetX + this.mapCanvas.offsetX;
             this.startY = e.offsetY + this.mapCanvas.offsetY;
         }
-
     }
 
     //--Al arrastrar se recalcula la distancia desde el punto donde empieza el arrastre
@@ -228,7 +114,6 @@ class CanvasGroupControler {
             this.mapCanvas.setOffset(offsetX, offsetY);
             this.characterCanvas.setOffset(offsetX, offsetY);
         }
-
     }
     //--Zoom in y zoom out se lleva a cabo en la zona donde está el ratón
     zoom(e) {
@@ -239,7 +124,6 @@ class CanvasGroupControler {
         const rect = this.mapCanvas.canvas.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
-
         const oldTileSize = this.mapCanvas.tileSize;
         const newTileSize = Math.floor(this.mapCanvas.tileSize * wheelDelta);
 
@@ -248,7 +132,7 @@ class CanvasGroupControler {
             this.mapCanvas.tileSize = newTileSize;
             this.characterCanvas.tileSize = newTileSize;
 
-            //Con esto obtenemos el tile concreto en el que se encuentra el ratón
+            //Obtenemos el tile concreto en el que se encuentra el ratón
             const mouseGridX = Math.floor((this.mapCanvas.offsetX + mouseX) / oldTileSize);
             const mouseGridY = Math.floor((this.mapCanvas.offsetY + mouseY) / oldTileSize);
 
@@ -265,7 +149,6 @@ class CanvasGroupControler {
             this.mapCanvas.setOffset(offsetX, offsetY);
             this.characterCanvas.setOffset(offsetX, offsetY);
         }
-
     }
 
     //-----El evento clic accede a un nuevo mapa si estamos en el mapa grande
@@ -273,8 +156,8 @@ class CanvasGroupControler {
     clic(e) {
 
         this.characterCanvas.setMapSize(this.mapCanvas.mapWidth, this.mapCanvas.mapHeight);
-        /**@type  {Tile}     */
 
+        /**@type  {Tile}     */
 
         if (this.mapCanvas.bigMapSelected) {
             //se obtiene el rectangulo que forma el canvas
@@ -290,16 +173,14 @@ class CanvasGroupControler {
             const gridX = Math.floor((this.mapCanvas.offsetX + mouseX) / this.mapCanvas.tileSize);
             const gridY = Math.floor((this.mapCanvas.offsetY + mouseY) / this.mapCanvas.tileSize);
 
-  
-
             //Calculamos el indice de la casilla sobre la que se hace clic para crear o acceder a un nuevo mapa y 
             //    que el indice sirva de key en el objeto Map() en el que se guarda.
 
+
             //  this.mapCanvas.ressetOffests();
 
-
             //TODO: cambiar las coordenadas del personaje aquí para que aparecza correctamente en el area pequeña    
-            this.characterCanvas.clearRect = false;
+            this.characterCanvas.clearRect = true;
 
             this.selectedTile = this.mapCanvas.map[gridY][gridX];
 
@@ -307,7 +188,7 @@ class CanvasGroupControler {
 
             this.mapCanvas.tileIndex = this.selectedTile.tileIndex;
 
-            this.characterCanvas.setTarget(e.clientX + this.mapCanvas.offsetX, e.clientY + this.mapCanvas.offsetY);
+            // this.characterCanvas.setTarget(e.clientX + this.mapCanvas.offsetX, e.clientY + this.mapCanvas.offsetY);
 
             if (!this.selectedTilesList.has(this.selectedTile.tileIndex)) {
                 this.selectedTilesList.set(this.selectedTile.tileIndex, this.selectedTile);
@@ -315,40 +196,27 @@ class CanvasGroupControler {
             else this.selectedTilesList.delete(this.selectedTile.tileIndex);
 
         }
-        this.mapCanvas.bigMapSelected = true;
+        this.mapCanvas.bigMapSelected = false;
         this.mapCanvas.draw();
         console.log(this.selectedTile.x, this.selectedTile.y);
-
-
     }
-
+   
     //--------selecciona las casillas por las que pasa el raton----
     infoMouse(e) {
-
 
         const rect = this.mapCanvas.canvas.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
-
         const gridX = Math.floor((this.mapCanvas.offsetX + mouseX) / this.mapCanvas.tileSize);
         const gridY = Math.floor((this.mapCanvas.offsetY + mouseY) / this.mapCanvas.tileSize);
 
         // console.log(`Mouse Pixel Position: (${mouseX}px, ${mouseY}px), Grid Position: (${gridX}, ${gridY})`);
 
-        if (gridX >= 0 && gridX <= this.mapCanvas.mapWidth && gridY >= 0 && gridY <= this.mapCanvas.mapHeight) {
-            for (let row of this.mapCanvas.map) {
-                for (let tile of row) {
-                    tile.selected(false);
-                }
-            }
-        }
         /**@type {Tile} */
         this.selectedTile = this.mapCanvas.map[gridY][gridX];
-
         this.selectedTile.selected(true);
-
-        console.log(this.selectedTile.x + ", " + this.selectedTile.y);
-
+        this.selectedTilesList.set(this.selectedTile.tileIndex,this.selectedTile);
+        // console.log(this.selectedTile.x + ", " + this.selectedTile.y);
         this.mapCanvas.draw();
 
     }

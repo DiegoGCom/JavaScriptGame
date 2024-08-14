@@ -7,10 +7,7 @@ class CharacterCanvas extends BaseCanvas {
     constructor(canvasId, tileSize, mapWidth, mapHeight) {
 
         super(canvasId, tileSize, mapWidth, mapHeight);
-        this.tarjetX = null;
-        this.tarjetY = null;
-        this.mapAbsoluteWidth = this.mapWidth * tileSize;
-        this.mapAbsoluteHeight = this.mapHeight * tileSize;
+
         this.monigoteIndex = 0;
         this.speed = 2;
         this.clearRect = false;
@@ -19,26 +16,20 @@ class CharacterCanvas extends BaseCanvas {
         this.offsetX=0;
         this.offsetY=0;
 
-        this.characters = [];
-        this.createNewCharacter();
-
-        
-
+        this.characters = new Map();
+        this.createNewCharacter("Pepe",400,400);
+       
 
     }
 
     //TODO: cambiar el metodo para hacer spawn 
 
-    createNewCharacter() {
-        let positionX = 0;
-        let positionY = 0;
-        for (let i = 0; i < 6; i++) {
-            positionX = Random.getRandom(0, 1000);
-            positionY = Random.getRandom(0, 1000);
-            let character = new Character(this.ctx,"Pepe", positionX, positionY);
+    createNewCharacter(name,positionX,positionY) {
+
+            let character = new Character(this.ctx,name, positionX, positionY);
             character.setTarget(Random.getRandom(0, 600), Random.getRandom(0, 600));
-            this.characters.push(character);
-        }
+            this.characters.set(character.name,character);
+        
     }
 
     draw() {
@@ -70,7 +61,7 @@ class CharacterCanvas extends BaseCanvas {
         this.scaleFactor=scaleFactor;
 
         this.characters.forEach(character => { character.updateScale(scaleFactor); });
- 
+
         this.characters.forEach(character => { character.updateTarjetPosition(scaleFactor); });
     }
 

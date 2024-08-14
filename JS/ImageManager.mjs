@@ -3,7 +3,6 @@ class ImageManager {
 
     static images = new Map();
 
-
     static spriteData = {
 
         mountain: {
@@ -40,7 +39,7 @@ class ImageManager {
 
         },
         house: {
-            house0: { x: "640", y: "896", width: "128", height: "128" } ,
+            house0: { x: "640", y: "896", width: "128", height: "128" },
         },
         void: {
             void0: { x: '0', y: '0', width: '0', height: '0' }
@@ -48,27 +47,61 @@ class ImageManager {
     }
 
 
-        static loadImage(key, src) {
-            const img = new Image();
-            img.src = src;
-            ImageManager.images.set(key, img);
-        }
+
+    static loadImage(key, src) {
+        const img = new Image();
+        img.src = src;
+        ImageManager.images.set(key, img);
+    }
 
     static getImage(key) {
-            return ImageManager.images.get(key);
-        }
+        return ImageManager.images.get(key);
+    }
 
     static getSpriteData() {
 
-            const data = ImageManager.spriteData;
-            return data;
-
-        }
-
-
-
-
-
+        const data = ImageManager.spriteData;
+        return data;
 
     }
+    static getWorldMapInfo(mapType) {
+
+        const mapaMundiInfo ={
+            backGroundImage: ImageManager.getImage('bigMapBackGround'),
+            spriteSheet: ImageManager.getImage('spriteSheetRetina'),
+            spriteData: ImageManager.getSpriteData(),
+            mapWidth: 100,
+            mapHeight:100,
+            tileSize: 100
+        }
+        const smallAreaInfo ={
+            backGroundImage: ImageManager.getImage('smallAreaBackground'),
+            spriteSheet: ImageManager.getImage('spriteSheetRetina'),
+            spriteData: ImageManager.getSpriteData(),
+            mapWidth: 50,
+            mapHeight: 50,
+            tileSize: 100
+        }
+
+        return mapType== 'mapaMundi' ? mapaMundiInfo : smallAreaInfo;
+    }
+
+    static loadImagesFromDirectory() {
+
+        const imagesToLoad = [
+            { key: 'spriteSheetRetina', src: '../Assets/Dibujos/Spritesheet/spritesheet_retina.png' },
+            { key: 'smallAreaBackground', src: "../Assets/Dibujos/Textures/cesped_1.png" },
+            { key: 'bigMapBackGround', src: "../Assets/Dibujos/Textures/parchmentAncient.png" },
+        ]
+
+        imagesToLoad.forEach(image => ImageManager.loadImage(image.key, image.src));
+
+    }
+
+
+
+
+
+
+}
 export { ImageManager }

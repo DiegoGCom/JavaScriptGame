@@ -1,7 +1,8 @@
 
 import { BaseCanvas } from "./BaseCanvas.mjs";
-import { BigArea } from "./BigArea.mjs";
+import { ImageManager } from "./ImageManager.mjs";
 import { TileMap } from "./TileMap.mjs";
+import { GameTimer } from "./Utils/GameTimer.mjs";
 
 
 class MapCanvas extends BaseCanvas {
@@ -13,27 +14,32 @@ class MapCanvas extends BaseCanvas {
 
         this.map = [];
 
-        this.bigMap = new BigArea(100, 100, 100);
+        this.mapaMundiInfo = ImageManager.getWorldMapInfo('mapaMundi');
+
+        this.bigMap = new TileMap(this.mapaMundiInfo);
 
         this.mapWidth = this.bigMap.mapWidth;
         this.mapHeight = this.bigMap.mapHeight;
 
         this.mapAreas = new Map();
 
-        this.bigMapSelected = true;
+        this.bigMapSelected = false;
 
         this.loading = 50;
 
-        this.offsetX=0;
-        this.offsetY=0;
+        this.offsetX = 0;
+        this.offsetY = 0;
 
-        this.bigMap.map[50][50].visibility= 'clear';
+        this.bigMap.map[50][50].visibility = 'clear';
 
-        this.tileIndex = null;
+        this.tileIndex = 510;
+
+        /**@type {GameTimer}  */
+        this.gameTimer = GameTimer.getInstance();
+
+        this.gameTimer.setLimitedInterval(this.draw.bind(this),10,5);
 
         this.draw();
-
-
     }
 
     draw() {
@@ -70,30 +76,29 @@ class MapCanvas extends BaseCanvas {
             mapArea.render(this.tileSize, this.offsetX, this.offsetY);
 
         } else {
+            const smallAreaInfo = ImageManager.getWorldMapInfo('smallArea');
 
-            const newMapArea = new BigArea(this.tileSize, 50, 50);
+            const newMapArea = new TileMap(smallAreaInfo);
 
             this.mapAreas.set(this.tileIndex, newMapArea);
 
             this.map = newMapArea.map;
 
             this.loading = 0;
-            
+
             console.log('Creando mapa en ' + this.tileIndex);
             console.log(this.mapAreas);
         }
 
-
     }
+    update(){
 
-    update() {
-
-        if (this.loading < 50) {
-           //console.log('redimensionando');
-            this.loading++;
+        if(this.loading<=50){
             this.draw();
-           // console.log(this.loading);
+            this.loading++; 
         }
+
+
     }
 
 }
