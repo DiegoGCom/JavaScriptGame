@@ -2,6 +2,7 @@ import { MapCanvas } from "./MapCanvas.mjs";
 import { CharacterCanvas } from "./CharacterCanvas.mjs";
 import { CanvasGroupControler } from "./CanvasGroupControler.mjs";
 import { GameTimer } from "./Utils/GameTimer.mjs";
+import { Character } from "./Character.mjs";
 
 class GameManager {
 
@@ -19,6 +20,7 @@ class GameManager {
          */
         this.characterCanvas = canvasGroup.characterCanvas;
 
+        /**@type {Character} */
         this.character= this.characterCanvas.characters.get('Pepe');
 
         this.selectedTileList = canvasGroup.selectedTilesList;
@@ -26,7 +28,7 @@ class GameManager {
         /**@type {GameTimer}  */
         this.gameTimer = GameTimer.getInstance();
 
-        this.gameTimer.setGameInterval(this.checkCurrentTile.bind(this),4000);
+       // this.gameTimer.setGameInterval(this.checkCurrentTile.bind(this),100);
 
 
     }
@@ -41,10 +43,11 @@ class GameManager {
 
     checkCurrentTile() {
 
-        this.gridX = Math.floor((this.character.x + (this.mapCanvas.tileSize / 2)) / this.mapCanvas.tileSize);
-        this.gridY = Math.floor((this.character.y + (this.mapCanvas.tileSize / 3)) / this.mapCanvas.tileSize);
+        this.gridX = Math.floor((this.character.x + (this.mapCanvas.tileSize)) / this.mapCanvas.tileSize);
+        this.gridY = Math.floor((this.character.y + (this.mapCanvas.tileSize)) / this.mapCanvas.tileSize);
         this.currentTile = this.mapCanvas.map[this.gridY][this.gridX];
-        console.log(this.currentTile.objectKey);
+        this.character.currentTile=this.currentTile;
+     //   console.log(this.currentTile.objectData);
 
     }
 }

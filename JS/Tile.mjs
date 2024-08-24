@@ -1,119 +1,133 @@
 
-import { Random } from "./Utils/Random.mjs";
-
 class Tile {
 
-    constructor(ctx, tileIndex,backgroundImage,spriteSheet) {
-
+    constructor(ctx, tileIndex) {
         /**@type {CanvasRenderingContext2D} */
         this.ctx = ctx;
-        this.x= null;
-        this.y= null;
         this.tileIndex = tileIndex;
+
+        //---Coordenadas
+        this.canvasX = 0;
+        this.canvasY = 0;
+        this.gridX = 0;
+        this.gridY = 0;
+
         this.isSelected = false;
-        this.randomIndex = Random.getRandom(0, 5);
-        this.bush = Random.getRandom(0, 100) < 20;
         this.visibility = 'clear';
-        this.strokeOn= false;
-        
+        this.strokeOn = false;
+        this.hasCollider = false;
+        this.color = '';
 
-        //Carga de imagenes
+        //----Carga de imagenes
+        this.worldInfo = null;
+        this.singleImage = null;
+        this.objectData = { type: 'void', subtype: 'void0' };
+        this.backgroundOn = false;
 
-        this.backgroundImage = backgroundImage;
+    }
 
-        this.spriteSheet = spriteSheet;
-
-        this.spriteData=null;
-
-        this.objectKey=null;
-
-        this.singleImage=null;
-
-       // console.log(this.type);
-
+    //------SETTERS------
+    setInfo(worldInfo) {
+        this.worldInfo = worldInfo;
+    }
+    setType(objectData) {
+        this.objectData = objectData;
+        this.hasCollider = objectData.hasCollider || false;
+    }
+    setGrid(x, y) {
+        this.gridX = x;
+        this.gridY = y;
     }
     setPosition(x, y) {
-        this.x = x;
-        this.y = y;
-
+        this.canvasX = x;
+        this.canvasY = y;
+    }
+    setSelected(selected) {
+        this.isSelected = selected;
+    }
+    setColor(color) {
+        this.color = color;
     }
 
-    setType(spriteData, objectKey){
+    //--------DIBUJADO--------
 
-        this.spriteData= spriteData;
-        this.objectKey= objectKey;
+    drawBackground(size) {
+        if (this.worldInfo.backGroundImage) this.ctx.drawImage(this.worldInfo.backGroundImage, this.canvasX, this.canvasY, size, size);
     }
-    
-      
-    render(x, y, size) {
 
-        this.x= x;
-        this.y=y;
-
-        this.setPosition(x, y);
-
-        this.ctx.drawImage(this.backgroundImage, x, y, size, size);
-
-        if(this.singleImage) this.ctx.drawImage(this.singleImage, x, y, size, size);
-       
-        this.drawImage(x,y,size);
-       
-        if(this.strokeOn) this.drawStroke(x,y,size);
-       
-        if(this.isSelected) this.selectTile(x, y, size);
-        
+    fillColor(size) {
+        this.ctx.fillStyle = this.color;
+        this.ctx.fillRect(this.canvasX, this.canvasY, size, size);
     }
-    
- 
-    drawImage(x, y, size) {
 
-        const object = this.spriteData[this.objectKey];
-    
-        if (object) {
-/*             console.log(`Drawing image: ${objectKey}`, object); // Log de depuración
-            console.log(`spriteSheet:`, this.spriteSheet); // Log de depuración
-            console.log(`Parameters for drawImage - sx: ${object.x}, sy: ${object.y}, sw: ${object.width}, sh: ${object.width}, dx: ${x}, dy: ${y}, dw: ${size}, dh: ${size}`); */
+    drawOverlay(size) {
+        if (this.color) this.fillColor(size);
+        this.drawImage(size);
+        if (this.strokeOn) this.drawStroke(size);
+    }
 
+    drawSingleImage(size) {
+        if (this.singleImage) this.ctx.drawImage(this.singleImage, this.canvasX, this.canvasY, size, size);
+    }
+
+    drawImage(size) {
+        if (this.objectData) {
             this.ctx.drawImage(
-                this.spriteSheet,
-                object.x,
-                object.y,
-                object.width,
-                object.height,
-                x, y, size, size
+                this.worldInfo.spriteSheet,
+                this.objectData.x,
+                this.objectData.y,
+                this.worldInfo.spriteWidth,
+                this.worldInfo.spriteHeight,
+                this.canvasX, this.canvasY, size, size
             )
-        }else{
-            console.log(`Failed to load object: ${this.objectKey}`); // Log de depuración
+        } else {
+            console.log(`No se pudo cargar el objeto: ${this.objectData}`)
+        }
+    }
+    drawStroke(size) {
+        if (this.strokeOn) {
+            this.ctx.lineWidth = 0.5;
+            this.ctx.strokeStyle = 'black';
+            this.ctx.strokeRect(this.canvasX, this.canvasY, size, size);
+            this.ctx.font = `${size / 8}px Arial`;
+            this.ctx.fillStyle = 'black';
+            this.ctx.fillText(this.tileIndex, this.canvasX, this.canvasY + size);
+        }
+    }
+    drawSelection(size) {
+        if (this.isSelected) {
+            const gap = 5;
+            this.ctx.lineWidth = gap;
+            this.ctx.strokeStyle = "white";
+            this.ctx.strokeRect(this.canvasX + gap, this.canvasY + gap, size - gap * 2, size - gap * 2);
         }
     }
 
+    render(x, y, size) {
 
+        this.setPosition(x, y);
+        
+        this.drawBackground(size);
 
-    /**
-     * @param {boolean} selected
-     */
-    selected(selected) {
+        this.drawOverlay(size);
 
-        this.isSelected = selected;
+        this.drawStroke(size)
 
-    }
+        this.drawSelection(size);
 
-    drawStroke(x, y, size) {
-        this.ctx.lineWidth = 0.5;
-        this.ctx.strokeStyle = 'black';
-        this.ctx.strokeRect(x, y, size, size);
-        this.ctx.font = `${size / 8}px Arial`;
-        this.ctx.fillStyle = 'black';
-        this.ctx.fillText(this.tileIndex, x, y + size);
-    }
-
-    selectTile(x, y, size) {
-        let gap=5;
-        this.ctx.lineWidth = gap;
-        this.ctx.strokeStyle = "white";
-        this.ctx.strokeRect(x+gap, y+gap, size-gap*2, size-gap*2);
+        this.drawSingleImage(size);
 
     }
+
+
+
+
+
+
+
+
+
+
 }
 
 export { Tile };

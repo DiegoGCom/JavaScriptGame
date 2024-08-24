@@ -1,4 +1,5 @@
 import { CharacterCanvas } from "./CharacterCanvas.mjs";
+import { ImageManager } from "./ImageManager.mjs";
 import { MapCanvas } from "./MapCanvas.mjs";
 
 class UIManager {
@@ -10,7 +11,7 @@ class UIManager {
         /**@type {CharacterCanvas} */
         this.characterCanvas = canvasGroup.characterCanvas;
 
-        this.selectedTilesList=canvasGroup.selectedTilesList;
+        this.selectedTilesList = canvasGroup.selectedTilesList;
 
         this.dropDownMenuSandbox = document.getElementById('dropdownMenuSandbox');
         this.dropDownMenuCharacter = document.getElementById('dropdownMenuCharacter');
@@ -25,13 +26,29 @@ class UIManager {
         const imageButtonCharacter = document.getElementById('imageButtonCharacter');
         const imageButtonMap = document.getElementById('imageButtonMap');
         const imageButtonSandbox = document.getElementById('imageButtonSandbox');
+        const dropDownMenus= document.getElementsByClassName('dropdown-menu');
+
+        for(let menu of dropDownMenus){
+            menu.addEventListener('click',(e)=>{
+                e.stopPropagation();
+            });
+            menu.addEventListener('mousemove',(e)=>{
+               e.stopPropagation();
+            });
+        }
+
 
 
         imageButtonMap.addEventListener('click', (e) => {
-            e.stopPropagation();
+             e.stopPropagation();
             console.log("Boton pulsado");
 
-            this.buttonMapClic();
+            setTimeout(()=>{
+                this.quitTileSelection();   
+                this.buttonMapClic();
+            },300);
+
+            
 
         });
         //------CLIC EN EL BOTON DEL PERSONAJE PARA LOS EVENTOS EN EL CANVAS CONTAINER
@@ -50,20 +67,27 @@ class UIManager {
 
 
         });
+        window.addEventListener('keydown', (e) => {
+
+            if (e.key === 'Escape') {
+                this.dropDownMenuSandbox.style.display = 'none';
+                this.dropDownMenuCharacter.style.display = 'none';
+            }
+        });
 
 
     }
-        //---Devuelve el contexto al mapa grande
-        buttonMapClic() {
+    //---Devuelve el contexto al mapa grande
+    buttonMapClic() {
 
-            this.mapCanvas.setMapSize(this.mapCanvas.bigMap.mapWidth, this.mapCanvas.bigMap.mapHeight);
-            this.characterCanvas.setMapSize(this.mapCanvas.bigMap.mapWidth, this.mapCanvas.bigMap.mapHeight);
-            this.mapCanvas.bigMapSelected = this.mapCanvas.bigMapSelected==true  ?  false:true;
-            this.mapCanvas.ressetOffests();
-            this.characterCanvas.clearRect = false;
-            this.mapCanvas.draw();
-    
-        }
+        this.mapCanvas.setMapSize(this.mapCanvas.mapaMundi.mapWidth, this.mapCanvas.mapaMundi.mapHeight);
+        this.characterCanvas.setMapSize(this.mapCanvas.mapaMundi.mapWidth, this.mapCanvas.mapaMundi.mapHeight);
+        this.mapCanvas.bigMapSelected = this.mapCanvas.bigMapSelected == true ? false : true;
+        this.mapCanvas.ressetOffests();
+        this.characterCanvas.clearRect = this.characterCanvas.clearRect==true ? false :true;
+        this.mapCanvas.draw();
+
+    }
 
     addCharactersToMenu() {
 
@@ -73,6 +97,7 @@ class UIManager {
             const textAreaTargetX = document.createElement('input');
             const textAreaTargetY = document.createElement('input');
             const targetButton = document.createElement('button');
+            
 
             textAreaTargetX.placeholder = 'X: '
             textAreaTargetY.placeholder = 'Y: '
@@ -84,43 +109,50 @@ class UIManager {
             characterDiv.appendChild(targetButton);
 
             targetButton.addEventListener('click', () => {
-                if (parseInt(textAreaTargetX.value) && parseInt(textAreaTargetY.value)) {
-                    character.setTarget(parseInt(textAreaTargetX.value), parseInt(textAreaTargetY.value));
+                if (textAreaTargetX.value) {
+                    let tileTarget= this.mapCanvas.map[parseInt(textAreaTargetY.value)][parseInt(textAreaTargetX.value)];
+                    character.setTarget(tileTarget.canvasX,tileTarget.canvasY);
                 } else {
                     textAreaTargetX.placeholder = 'Introduce un número > que 0';
                 }
+                textAreaTargetX.value='';
+                textAreaTargetY.value='';
             });
 
             characterDiv.addEventListener('click', (e) => { e.stopPropagation() });
             this.dropDownMenuCharacter.appendChild(characterDiv);
-
-
+            
         });
 
     }
+
     //----TEMPORALMENTE----Introduciendo texto podemos cambiar la imagen en la casilla seleccionada
     addMenuItems() {
 
+        const imageIconDiv= document.createElement('div');
         const textAreaType = document.getElementById('textTypeArea')
         const textAreaObectKey = document.getElementById('textIndexArea')
         const okButtonM = document.getElementById('okButtonDropM');
         const reset = document.getElementById('resetButtonDropM');
+        const imageMap = ImageManager.getImageMap();
 
         okButtonM.addEventListener('click', (e) => {
             e.stopPropagation();
             let tileType = textAreaType.value;
             let tileObjectKey = textAreaObectKey.value;
-            let spriteData = this.mapCanvas.bigMap.worldInfo.spriteData[tileType];
+            let worldMapInfo =  ImageManager.getWorldMapInfo('smallArea'); //this.mapCanvas.mapaMundi.worldInfo.spriteData[tileType];
 
-            if (spriteData) {
+            if (worldMapInfo) {
                 this.selectedTilesList.forEach((tile) => {
-                    tile.setType(spriteData, `${tileType}${tileObjectKey}`);
+                    tile.setType(worldMapInfo.spriteData[tileType][tileObjectKey]);
                     console.log('Exito al cambiar de imagen');
-                    tile.render(tile.x,tile.y,this.mapCanvas.tileSize);
+                    this.quitTileSelection();
+                    tile.render(tile.x, tile.y, this.mapCanvas.tileSize);
                 });
             } else {
                 textAreaType.value = 'Objeto no encontrado'
             }
+            this.mapCanvas.draw();
 
         });
 
@@ -129,9 +161,10 @@ class UIManager {
             this.selectedTilesList.forEach((tile) => {
                 tile.isSelected = false;
                 console.log('Éxito al deseleccionar los tiles');
-                tile.render(tile.x,tile.y,this.mapCanvas.tileSize);
+                tile.render(tile.canvasX, tile.canvasY, this.mapCanvas.tileSize);
             });
             this.selectedTilesList.clear();
+
         });
 
         textAreaType.addEventListener('click', (e) => e.stopPropagation());
@@ -142,6 +175,13 @@ class UIManager {
         this.dropDownMenuSandbox.appendChild(okButtonM);
         this.dropDownMenuSandbox.appendChild(reset);
 
+    }
+    quitTileSelection(){
+        this.selectedTilesList.forEach((tile) => {
+            tile.isSelected=false;
+            tile.render(tile.canvasX,tile.canvasY,this.mapCanvas.tileSize);    
+        });
+        this.selectedTilesList.clear();     
     }
 
 

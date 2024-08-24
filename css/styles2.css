@@ -6,7 +6,18 @@ body {
     overflow: hidden; /* Evita scrollbars innecesarios */
     position: relative;
 }
+.container { 
+    position: absolute; /* Asegura que se sitúe sobre los canvas */
+    top: 0; /* Espacio para nav */
+    bottom: 0; /* Espacio para footer */
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: flex-start; /* Ajusta la alineación si es necesario */
+    justify-content: flex-start; /* Ajusta la alineación si es necesario */
+    z-index: 1; /* Asegúrate de que esté sobre los canvas */
 
+}
 /* Estilo para el contenedor del canvas */
 #canvasContainer {
     position: absolute; /* Asegura que se sitúe en la capa de fondo */
@@ -30,7 +41,7 @@ canvas {
     left: 0;
     border: none;
     display: block;
-    image-rendering: crisp-edges; /* Mejora la visualización de los bordes en escalas */
+    image-rendering:crisp-edges;  /* Mejora la visualización de los bordes en escalas */
     box-sizing: border-box; /* Incluye el padding y el border en el tamaño total */
 }
 
@@ -41,27 +52,19 @@ canvas {
 #characterCanvas {
     z-index: 1; /* Capa de personajes sobre el fondo */
 }
+#animationCanvas{
+    z-index: 2;
+}
 
 /* Estilo para el contenedor de elementos sobre el canvas */
-.container { 
-    position: absolute; /* Asegura que se sitúe sobre los canvas */
-    top: 0; /* Espacio para nav */
-    bottom: 0; /* Espacio para footer */
-    left: 0;
-    right: 0;
-    display: flex;
-    align-items: flex-start; /* Ajusta la alineación si es necesario */
-    justify-content: flex-start; /* Ajusta la alineación si es necesario */
-    z-index: 1; /* Asegúrate de que esté sobre los canvas */
 
-}
 
 /* Estilo para la barra de navegación */
 .nav {
     position: absolute;
-    top: 5px;
+    top: 1em;
     left: 0;
-    width: 100%;
+    width: 100vw;
     height: 3em;
     background-color: rgba(255, 255, 255, 0); /* Fondo transparente */
     display: flex;
@@ -110,19 +113,22 @@ canvas {
     position: absolute; /* Posición absoluta respecto al contenedor .nav */
     top: 100%; /* Se despliega justo debajo del botón */
     left: 2em;
-    height: 80vh;
-    background-color: rgba(128, 128, 128, 0.5); /* Gris translucido */
+    height: 50vh;
+    width: 20vw;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     z-index: 11; /* Asegúrate de que esté por encima del canvas */
-    padding: 10px;
     box-sizing: border-box; /* Incluye el padding en el tamaño total */
-    flex-direction: row;
+    flex-direction:column;
+    background-image: url('../Assets/Dibujos/Textures/dropdownmenu-img.png');
+    background-position: center;
+    background-size: 100% 100%;
+
 
 }
 #dropdownMenuSandbox{
     flex-direction: column;
-
+    margin-left: 7vw;
 }
 
 /* Estilo para los ítems del menú */
@@ -130,16 +136,20 @@ canvas {
     display: flex;
     margin: 10px;
     text-align: center;
-    width: 10vw;
+    width: 10vw; 
     padding-top: 10px;
     padding-bottom: 10px;
     height: 2em;
     color: white; /* Texto blanco */
     cursor: pointer;
     flex-direction: column;
+    z-index: 3;
+    position: absolute;
 }
 .dropdown-menu div input{
 
+    float: center;
+    z-index: 3;
     margin: 5px;
 
 }
@@ -148,4 +158,5 @@ canvas {
 .dropdown-menu div:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
+
 
