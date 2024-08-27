@@ -1,6 +1,7 @@
-import { BaseCanvas } from "./BaseCanvas.mjs"
-import { Character } from "./Character.mjs";
+import { Character } from "../model/Character.mjs";
+import { BaseCanvas } from "./BaseCanvas.mjs";
 import { MapCanvas } from "./MapCanvas.mjs";
+
 
 
 class CharacterCanvas extends BaseCanvas {
@@ -16,13 +17,13 @@ class CharacterCanvas extends BaseCanvas {
         this.scaleFactor = 1;
         this.dragging = false;
 
-        this.offsetY=3500;
+        this.offsetY = 3500;
 
         this.characters = new Map();
 
-        this.createNewCharacter("Pepe",400 , 3900);
+        this.createNewCharacter("Pepe", 400, 3900);
 
-     
+
 
     }
 
@@ -30,42 +31,40 @@ class CharacterCanvas extends BaseCanvas {
 
     createNewCharacter(name, positionX, positionY) {
         let character = new Character(this.ctx, name, positionX, positionY);
-        character.setTarget(400,400,this.offsetX,this.offsetY);
+        character.setTarget(400, 400, this.offsetX, this.offsetY);
         this.characters.set(character.name, character);
 
     }
 
     draw() {
-       // this.characters.forEach(character => { character.updateRender(character.x - this.offsetX, character.y - this.offsetY, this.tileSize); });
+        this.characters.forEach(character => { character.updateRender(character.x - this.offsetX, character.y - this.offsetY, this.tileSize); });
     }
 
     update() {
 
         if (!this.clearRect) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.characters.forEach(character => { character.move()});
+            this.characters.forEach(character => { character.move() });
             this.characters.forEach(character => { character.updateRender(character.x - this.offsetX, character.y - this.offsetY, this.tileSize); });
-        }else{
+        } else {
 
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.characters.forEach(character => { character.move();});
-           
+            this.characters.forEach(character => { character.move(); });
+
         }
     }
 
     updateCharacterScale(scaleFactor) {
 
-        this.scaleFactor*=scaleFactor;
-
         this.characters.forEach(character => { character.updateScale(scaleFactor); });
 
-        this.characters.forEach(character => { character.updateTarjetPosition(scaleFactor,this.offsetX,this.offsetY); });
-        
+        this.characters.forEach(character => { character.updateTarjetPosition(scaleFactor, this.offsetX, this.offsetY); });
+
     }
 
-    setTarget(targetX,targetY) {
+    setTarget(targetX, targetY) {
 
-        this.characters.forEach(character => { character.setTarget(targetX,targetY,this.offsetX,this.offsetY); });
+        this.characters.forEach(character => { character.setTarget(targetX, targetY, this.offsetX, this.offsetY); });
 
     }
     //Dibuja la cuadricula del canvas de personaje

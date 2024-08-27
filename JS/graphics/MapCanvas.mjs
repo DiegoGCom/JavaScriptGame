@@ -1,10 +1,8 @@
 
+import { ImageManager } from "../controler/ImageManager.mjs";
+import { MapaMundi } from "../model/MapaMundi.mjs";
+import { MapArea } from "../model/MapArea.mjs";
 import { BaseCanvas } from "./BaseCanvas.mjs";
-import { ImageManager } from "./ImageManager.mjs";
-import { MapaMundi } from "./MapaMundi.mjs";
-import { MapArea } from "./MapArea.mjs";
-import { TileMap } from "./TileMap.mjs";
-import { GameTimer } from "./Utils/GameTimer.mjs";
 
 
 class MapCanvas extends BaseCanvas {
@@ -72,17 +70,13 @@ class MapCanvas extends BaseCanvas {
 
             this.setMapSize(mapArea.mapWidth, mapArea.mapHeight);
 
-          //  mapArea.drawMapObjects(5,5,ImageManager.getImage('spriteHouse'))
+         
             let houseTile = mapArea.map[5][4];
 
-         /*    console.log('Gridx: '+houseTile.gridX+', GridY: '+houseTile.gridY); */
-          
-/*             mapArea.map[mapArea.ground-1][4].setType(mapArea.worldInfo.spriteData['house']['house0']);
-            mapArea.map[mapArea.ground-1][5].setType(mapArea.worldInfo.spriteData['house']['house1']);
-            mapArea.map[mapArea.ground][4].setType(mapArea.worldInfo.spriteData['house']['house2']);
-            mapArea.map[mapArea.ground][5].setType(mapArea.worldInfo.spriteData['house']['house3']); */
+    
+            mapArea.drawMultipleTileObject('house',6,36,4,4);
 
-            mapArea.drawMultipleTileObject('house',6,38);
+           
             
             mapArea.render(this.tileSize, this.offsetX, this.offsetY);
 
@@ -117,4 +111,4 @@ class MapCanvas extends BaseCanvas {
 
 }
 
-export { MapCanvas }
+export { MapCanvas}

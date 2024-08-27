@@ -15,40 +15,35 @@
 
 <body>
 
-    <div class="container">
-
-        <div id="canvasContainer">
-            <div class="nav">
-                <div id="imageButtonCharacter" class="imgButton">
-                    <img src="Assets/Dibujos/PNG/monigote_button.png" alt="boton monigote">
-                </div>
-                <div id="imageButtonMap" class="imgButton">
-                    <img src="Assets/Dibujos/PNG/field_button.png" alt="boton capa">
-                </div>
-                <div id="imageButtonSandbox" class="imgButton">
-                    <img src="Assets/Dibujos/PNG/sandbox-button.png" alt="boton sandbox">
-                    <!-- Menú desplegable -->
-                </div>
-                <div id="dropdownMenuSandbox" class="dropdown-menu">
-
-                    <input type="text" id="textTypeArea" placeholder="Añade el tipo">
-                    <input type="text" id="textIndexArea" placeholder="Añade el índice">
-                    <button id="okButtonDropM">Aceptar</button>
-                    <button id="resetButtonDropM">Reset tiles</button>
-                </div>
-
-                <div id="dropdownMenuCharacter" class="dropdown-menu"></div>
+    <div id="canvasContainer">
+        <div class="nav">
+            <div id="imageButtonCharacter" class="imgButton">
+                <img src="Assets/Dibujos/PNG/monigote_button.png" alt="boton monigote">
             </div>
-            <canvas id="gameCanvas"></canvas>
-            <canvas id="characterCanvas"></canvas>
-            <canvas id="animationCanvas"></canvas>
+            <div id="imageButtonMap" class="imgButton">
+                <img src="Assets/Dibujos/PNG/field_button.png" alt="boton capa">
+            </div>
+            <div id="imageButtonSandbox" class="imgButton">
+                <img src="Assets/Dibujos/PNG/sandbox-button.png" alt="boton sandbox">
+                <!-- Menú desplegable -->
+            </div>
+            <div id="dropdownMenuSandbox" class="dropdown-menu">
 
-        </div>
+                <input type="text" id="textTypeArea" placeholder="Añade el tipo">
+                <input type="text" id="textIndexArea" placeholder="Añade el índice">
+                <button id="okButtonDropM">Aceptar</button>
+                <button id="resetButtonDropM">Reset tiles</button>
+            </div>
 
+            <div id="dropdownMenuCharacter" class="dropdown-menu"></div>
+        </div><!--Cierre nav-->
 
+        <canvas id="gameCanvas" class="canvas"></canvas>
+        <canvas id="characterCanvas" class="canvas"></canvas>
+        <canvas id="animationCanvas" class="canvas"></canvas>
+        <canvas id="sunsetCanvas" class="canvas"></canvas>
 
     </div>
-
 
 </body>
 

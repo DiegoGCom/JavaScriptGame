@@ -1,7 +1,7 @@
-import { UIManager } from "./UIManager.mjs"; 
-import { CanvasGroupControler } from "./CanvasGroupControler.mjs";
-import { ImageManager } from "./ImageManager.mjs";
-import { GameManager } from "./GameManager.mjs";
+import { UIManager } from "./controler/UIManager.mjs"; 
+import { CanvasGroupControler } from "./controler/CanvasGroupControler.mjs";
+import { ImageManager } from "./controler/ImageManager.mjs";
+import { GameManager } from "./controler/GameManager.mjs";
 
 
 document.addEventListener("DOMContentLoaded", function () {

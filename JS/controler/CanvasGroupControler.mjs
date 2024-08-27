@@ -1,9 +1,9 @@
-import { MapCanvas } from "./MapCanvas.mjs";
-import { CharacterCanvas } from "./CharacterCanvas.mjs";
-import { Tile } from "./Tile.mjs";
-import { Character } from "./Character.mjs";
-import { GameTimer } from "./Utils/GameTimer.mjs";
-import { DragYDropCanvas } from "./DragYDropCanvas.mjs";
+
+import { DragYDropCanvas } from "../graphics/DragYDropCanvas.mjs";
+import { Tile } from "../model/Tile.mjs";
+import { MapCanvas } from "../graphics/MapCanvas.mjs";
+import { CharacterCanvas } from "../graphics/CharacterCanvas.mjs";
+import { SunsetCanvas } from "../graphics/SunsetCanvas.mjs";
 
 
 
@@ -14,9 +14,13 @@ class CanvasGroupControler {
         this.mapCanvas = new MapCanvas('gameCanvas', 100);
         this.characterCanvas = new CharacterCanvas('characterCanvas', 100, this.mapCanvas);
         this.dragDropCanvas = new DragYDropCanvas('animationCanvas', 100);
+        this.sunsetCanvas = new SunsetCanvas('sunsetCanvas', 100);
+
+        this.sunsetCanvas.setMapSize(this.mapCanvas.mapWidth, this.mapCanvas.mapHeight);
+
         this.isDragging = false;
-        this.startX;
-        this.startY;
+        this.startX = 0;
+        this.startY = 0;
 
         this.selectTile = false;
         this.selectedTile = this.mapCanvas.map[0][0];
@@ -30,8 +34,7 @@ class CanvasGroupControler {
 
             this.mapCanvas.draw();
             this.characterCanvas.draw();
-
-
+            this.sunsetCanvas.draw();
         };
     }
 
@@ -44,7 +47,7 @@ class CanvasGroupControler {
             e.preventDefault();
             this.mouseDown(e);
 
-            if (e.button===0) this.selectTile=true;
+            if (e.button === 0) this.selectTile = true;
             if (e.button === 1) this.groupSelection = true;
             //if (e.button === 2) this.moveCharacter(e);
         });
@@ -61,9 +64,9 @@ class CanvasGroupControler {
         //------ZOOM-----------------------------
         container.addEventListener("wheel", (e) => {
             //Debouncing-> evita el efecto rebote de la rueda del ratón
-            this.characterCanvas.dragging=true;
+
             setTimeout(() => this.zoom(e), 130);
-            this.characterCanvas.dragging=false;
+
         });
 
         container.addEventListener("mouseup", () => {
@@ -82,13 +85,13 @@ class CanvasGroupControler {
         //------EVENTO CLIC EN LOS CANVAS--------------------
         container.addEventListener('click', (e) => {
 
-                this.infoMouse(e);
+            this.infoMouse(e);
         });
 
         container.addEventListener('dblclick', (e) => {
 
             if (this.groupSelection) this.drawObjects(e);
-            this.groupSelection=false;
+            this.groupSelection = false;
             this.dragDropCanvas.resetCanvas();
             this.clic(e);
         });
@@ -104,6 +107,7 @@ class CanvasGroupControler {
     //---Guarda el punto del mapa donde se hace clic y comienza el efecto de arrastre
     mouseDown(e) {
         this.characterCanvas.setMapSize(this.mapCanvas.mapWidth, this.mapCanvas.mapHeight);
+        this.sunsetCanvas.setMapSize(this.mapCanvas.mapWidth, this.mapCanvas.mapHeight);
         if (e.button === 2) {
             this.isDragging = true;
             this.startX = e.offsetX + this.mapCanvas.offsetX;
@@ -116,26 +120,28 @@ class CanvasGroupControler {
     //---calculando un nuevo offset(diferencia entre el tamaño del mapa y el canvas)
     mouseDragg(e) {
         this.characterCanvas.setMapSize(this.mapCanvas.mapWidth, this.mapCanvas.mapHeight);
+        this.sunsetCanvas.setMapSize(this.mapCanvas.mapWidth, this.mapCanvas.mapHeight);
         if (this.isDragging) {
             let offsetX = this.startX - e.offsetX;
             let offsetY = this.startY - e.offsetY;
 
             offsetX = Math.max(0, offsetX);
-            offsetY = Math.max(0, offsetY);;
+            offsetY = Math.max(0, offsetY);
 
+            this.sunsetCanvas.setOffset(offsetX, offsetY);
             this.mapCanvas.setOffset(offsetX, offsetY);
             this.characterCanvas.setOffset(offsetX, offsetY);
 
-            console.log(offsetX+', '+offsetY);
+            console.log(offsetX + ', ' + offsetY)
         }
     }
     //--Zoom in y zoom out se lleva a cabo en la zona donde está el ratón
     zoom(e) {
 
         this.characterCanvas.setMapSize(this.mapCanvas.mapWidth, this.mapCanvas.mapHeight);
-
+        this.sunsetCanvas.setMapSize(this.mapCanvas.mapWidth, this.mapCanvas.mapHeight);
+       
         const wheelDelta = e.deltaY < 0 ? 1.1 : 0.9;
-
         const oldTileSize = this.mapCanvas.tileSize;
         const newTileSize = Math.floor(this.mapCanvas.tileSize * wheelDelta);
 
@@ -150,19 +156,22 @@ class CanvasGroupControler {
 
             //Calculamos los offsets en base al ratón para que el efecto zoom in y zoomout se acerquen o alejen del puntero
             const offsetX = mouseGridX * newTileSize - mouseX;
-            const offsetY = mouseGridY * newTileSize - mouseY; 
+            const offsetY = mouseGridY * newTileSize - mouseY;
 
             this.mapCanvas.tileSize = newTileSize;
             this.characterCanvas.tileSize = newTileSize;
+            this.sunsetCanvas.tileSize = newTileSize;
 
-            let scaleFactor=newTileSize/oldTileSize;
+            let scaleFactor = newTileSize / oldTileSize;
 
             //El factor de escalado es la diferencia entre el nuevo tamaño del tile y el viejo, se usa para modificar de forma coherente las coordenadas de los personajes 
             this.characterCanvas.updateCharacterScale(scaleFactor);
+            this.sunsetCanvas.updateSunScale(scaleFactor);
             this.mapCanvas.setOffset(offsetX, offsetY);
             this.characterCanvas.setOffset(offsetX, offsetY);
-         
-            
+            this.sunsetCanvas.setOffset(offsetX, offsetY);
+
+
         }
     }
 
@@ -175,8 +184,8 @@ class CanvasGroupControler {
         /**@type  {Tile}     */
 
         if (this.mapCanvas.bigMapSelected) {
-  
-            let {gridX,gridY}= this.getGridCoordenates(e);
+
+            let { gridX, gridY } = this.getGridCoordenates(e);
 
             //TODO: cambiar las coordenadas del personaje aquí para que aparecza correctamente en el area pequeña    
             this.characterCanvas.clearRect = true;
@@ -197,7 +206,7 @@ class CanvasGroupControler {
         }
         this.mapCanvas.bigMapSelected = false;
         this.mapCanvas.draw();
-       // console.log(this.selectedTile.x, this.selectedTile.y);
+        // console.log(this.selectedTile.x, this.selectedTile.y);
 
     }
 
@@ -212,7 +221,7 @@ class CanvasGroupControler {
         /**@type {Tile} */
         this.selectedTile = this.mapCanvas.map[gridY][gridX];
         this.selectedTile.setSelected(true);
-        this.characterCanvas.setTarget(this.selectedTile.canvasX,this.selectedTile.canvasY);
+        this.characterCanvas.setTarget(this.selectedTile.canvasX, this.selectedTile.canvasY);
         this.selectedTilesList.set(this.selectedTile.tileIndex, this.selectedTile);
         this.selectedTilesList.forEach(tile => tile.render(tile.canvasX, tile.canvasY, this.mapCanvas.tileSize));
 
@@ -275,11 +284,11 @@ class CanvasGroupControler {
 
     }
     moveCharacter(e) {
-       
-       
-        const {gridX,gridY}= this.getGridCoordenates(e);
 
-        let tile= this.mapCanvas.map[gridX][gridY];
+
+        const { gridX, gridY } = this.getGridCoordenates(e);
+
+        let tile = this.mapCanvas.map[gridX][gridY];
 
         console.log(tile);
 
@@ -301,11 +310,25 @@ class CanvasGroupControler {
         this.quitTileSelection();
         this.mapCanvas.draw();
 
+
+        /**@todo cambiar esta locura con un bucle */
         let selectedTilesGroup = [
             this.mapCanvas.map[gridY][gridX],
             this.mapCanvas.map[gridY][gridX + 1],
+            this.mapCanvas.map[gridY][gridX + 2],
+            this.mapCanvas.map[gridY][gridX + 3],
             this.mapCanvas.map[gridY + 1][gridX],
             this.mapCanvas.map[gridY + 1][gridX + 1],
+            this.mapCanvas.map[gridY + 1][gridX + 2],
+            this.mapCanvas.map[gridY + 1][gridX + 3],
+            this.mapCanvas.map[gridY + 2][gridX],
+            this.mapCanvas.map[gridY + 2][gridX + 1],
+            this.mapCanvas.map[gridY + 2][gridX + 2],
+            this.mapCanvas.map[gridY + 2][gridX + 3],
+            this.mapCanvas.map[gridY + 3][gridX],
+            this.mapCanvas.map[gridY + 3][gridX + 1],
+            this.mapCanvas.map[gridY + 3][gridX + 2],
+            this.mapCanvas.map[gridY + 3][gridX + 3],
         ]
 
         for (let tile of selectedTilesGroup) {
@@ -322,12 +345,12 @@ class CanvasGroupControler {
         // this.characterCanvas.drawObjects(tileSelected.canvasX,tileSelected.canvasY,this.mapCanvas.tileSize);
         this.mapCanvas.draw();
     }
-    drawObjects(e){
+    drawObjects(e) {
         let { gridX, gridY } = this.getGridCoordenates(e);
-        if (gridX > this.mapCanvas.mapWidth - 2) gridX = this.mapCanvas.mapWidth - 2;
-        if (gridY > this.mapCanvas.mapHeight - 2) gridY = this.mapCanvas.mapHeight - 2;
+        if (gridX > this.mapCanvas.mapWidth - 4) gridX = this.mapCanvas.mapWidth - 4;
+        if (gridY > this.mapCanvas.mapHeight - 4) gridY = this.mapCanvas.mapHeight - 4;
         const mapArea = this.mapCanvas.mapAreas.get(510);
-        mapArea.drawMultipleTileObject('house', gridX, gridY, 2, 2);
+        mapArea.drawMultipleTileObject('house', gridX, gridY, 4, 4);
 
     }
 

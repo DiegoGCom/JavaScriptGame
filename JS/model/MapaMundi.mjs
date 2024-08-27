@@ -1,15 +1,16 @@
+
+import { Random } from "../utils/Random.mjs";
 import { Tile } from "./Tile.mjs";
 import { TileMap } from "./TileMap.mjs";
-import { Random } from "./Utils/Random.mjs";
 
-class MapaMundi extends TileMap{
+class MapaMundi extends TileMap {
 
-    constructor(worldInfo){
+    constructor(worldInfo) {
 
         super(worldInfo);
 
         this.createGround();
-      
+
     }
 
     render(tileSize, offsetX, offsetY) {
@@ -29,7 +30,7 @@ class MapaMundi extends TileMap{
                     drawX < this.canvas.width && drawX + this.tileSize > 0 &&
                     drawY < this.canvas.height && drawY + this.tileSize > 0
                 ) {
-                    
+                    tile.setBackground(true, 0,0,1024);
                     tile.render(drawX, drawY, this.tileSize);
 
                 }
@@ -49,26 +50,26 @@ class MapaMundi extends TileMap{
 
             }
         }
-  
+
         this.drawHorizontalObjects('lake');
 
     }
-        //---Selección del tipo de terreno por probabilidad
-        groundType() {
+    //---Selección del tipo de terreno por probabilidad
+    groundType() {
 
-            const randomNumber = Math.random();
-    
-            if (randomNumber < 0.1) return "mountain";
-    
-            else if (randomNumber < 0.3) return "tree";
-    
-            else if (randomNumber < 0.7) return "bush";
-    
-            else return 'void';
-    
-    
-        }
-        
+        const randomNumber = Math.random();
+
+        if (randomNumber < 0.1) return "mountain";
+
+        else if (randomNumber < 0.3) return "tree";
+
+        else if (randomNumber < 0.7) return "bush";
+
+        else return 'void';
+
+
+    }
+
     //---Construye parches de terreno de 5 tiles en base al tipo de terreno
 
     buildPatchOfGround(x, y, groundType) {
@@ -89,9 +90,9 @@ class MapaMundi extends TileMap{
                 /*Escogemos el tipo de tile a renderizar, el objeto con las coordenadas y el indice de la imagen*/
                 const objectKey = this.getRandomObject(tile_type);
 
-                const objectData=this.worldInfo.spriteData[tile_type][`${tile_type}${objectKey}`]
+                const objectData = this.worldInfo.spriteData[tile_type][`${tile_type}${objectKey}`]
 
-                tile.setType(objectData);
+                tile.setType(objectData.x, objectData.y);
 
             }
         }
@@ -109,9 +110,12 @@ class MapaMundi extends TileMap{
                         const tile0 = this.map[y][x];
                         /** @type {Tile} */
                         const tile1 = this.map[y][x + 1];
-            
-                        tile0.setType(this.worldInfo.spriteData[objName][`${objName}${0}`]);
-                        tile1.setType(this.worldInfo.spriteData[objName][`${objName}${1}`]);
+
+                        const objectDataTile0 = this.worldInfo.spriteData[objName][`${objName}${0}`];
+                        const objectDataTile1 = this.worldInfo.spriteData[objName][`${objName}${1}`];
+
+                        tile0.setType(objectDataTile0.x,objectDataTile0.y);
+                        tile1.setType(objectDataTile1.x,objectDataTile1.y);
 
                     }
                 }
@@ -164,4 +168,4 @@ class MapaMundi extends TileMap{
 
 }
 
-export{MapaMundi}
+export { MapaMundi }

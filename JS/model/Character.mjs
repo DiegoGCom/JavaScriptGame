@@ -39,13 +39,13 @@ class Character {
 
     setTarget(targetX,targetY,offsetX,offsetY) {
         this.targetX = targetX +offsetX;
-        this.targetY = targetY + offsetY   
+        this.targetY = this.y//targetY + offsetY   
     }
 
     updateTarjetPosition(scaleFactor) {
 
         this.targetX =this.targetX*scaleFactor;
-        this.targetY = this.targetY*scaleFactor;
+        this.targetY = this.y//this.targetY*scaleFactor;
 
         this.speed*= scaleFactor
     }
@@ -128,4 +128,4 @@ class Character {
 
 }
 
-export { Character }
+export { Character}

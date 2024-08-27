@@ -1,6 +1,6 @@
-import { CharacterCanvas } from "./CharacterCanvas.mjs";
+import { CharacterCanvas } from "../graphics/CharacterCanvas.mjs";
+import { MapCanvas } from "../graphics/MapCanvas.mjs";
 import { ImageManager } from "./ImageManager.mjs";
-import { MapCanvas } from "./MapCanvas.mjs";
 
 class UIManager {
 
@@ -83,7 +83,7 @@ class UIManager {
         this.mapCanvas.setMapSize(this.mapCanvas.mapaMundi.mapWidth, this.mapCanvas.mapaMundi.mapHeight);
         this.characterCanvas.setMapSize(this.mapCanvas.mapaMundi.mapWidth, this.mapCanvas.mapaMundi.mapHeight);
         this.mapCanvas.bigMapSelected = this.mapCanvas.bigMapSelected == true ? false : true;
-        this.mapCanvas.ressetOffests();
+       // this.mapCanvas.ressetOffests();
         this.characterCanvas.clearRect = this.characterCanvas.clearRect==true ? false :true;
         this.mapCanvas.draw();
 

@@ -18,8 +18,8 @@ class BaseCanvas {
         this.offsetX = 0;
         this.offsetY = 0;
 
-        this.zoomUpLimit = 100;
-        this.zoomDownLimit = 40;
+        this.zoomUpLimit = 200;
+        this.zoomDownLimit = 20;
 
         this.setupCanvas();
 
@@ -33,7 +33,6 @@ class BaseCanvas {
 
         this.offsetX = Math.max(0, Math.min(offsetX, this.mapWidth * this.tileSize - this.canvas.width / this.scale));
         this.offsetY = Math.max(0, Math.min(offsetY, this.mapHeight * this.tileSize - (this.canvas.height-this.tileSize) / this.scale));
-
         this.draw();
 
     }
@@ -71,10 +70,6 @@ class BaseCanvas {
         this.offsetY=0;
 
     }
-
-
-
-
 
 }
 export{BaseCanvas}

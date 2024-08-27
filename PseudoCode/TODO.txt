@@ -2,8 +2,6 @@ Tareas:
 
 -crear un area pequeña incicial que se corresponda con el punto central del mapa grande
 
--hacer que el cavnas dibuje esos cuadros en el centro de la pantalla
-
 -crear un personaje en el area y que se dibuje tambien en el tile correspondiente del mapa grande
 
 -cambiar la visibilidad de los tiles  en un radio conforme avanzan los personajes
@@ -11,4 +9,8 @@ Tareas:
 -ajustar el cambio de area, cuando u personaje cambie de area, debe cambiar de tile en el bigMap
 
 -crear los menus para dar las ordenes a los personajes
+
+
+
+
 

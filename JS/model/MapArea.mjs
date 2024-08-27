@@ -1,6 +1,8 @@
-import { ImageManager } from "./ImageManager.mjs";
-import { Tile } from "./Tile.mjs";
+
 import { TileMap } from "./TileMap.mjs";
+import { Random } from "../utils/Random.mjs";
+import { Tile } from "./Tile.mjs";
+import { ImageManager } from "../controler/ImageManager.mjs";
 
 class MapArea extends TileMap {
 
@@ -14,18 +16,18 @@ class MapArea extends TileMap {
         this.ground=this.sky-1;
         this.backGroundImage= ImageManager.getImage('greySky');
 
-
         this.setHorizontalMap();
+       
+        this.setTileBackground(40)
     }
 
 
     render(tileSize, offsetX, offsetY) {
         this.tileSize = tileSize;
 
-        this.ctx.drawImage(this.backGroundImage,0,0,this.canvas.width,this.canvas.height);
-        
-        this.ctx.fillStyle='rgb(250,100,0,0.5)'
-        this.ctx.fillRect(0,0,this.canvas.width,this.canvas.height);
+       //    this.ctx.drawImage(this.backGroundImage,0,0);
+
+   
         // console.log(`En renderizado de mapas: OffsetX: ${offsetX}, OffsetY: ${offsetY}`);
 
         for (let y = 0; y < this.mapHeight; y++) {
@@ -37,8 +39,8 @@ class MapArea extends TileMap {
                 let tile = this.map[y][x];
 
                 if (
-                    drawX < this.canvas.width && drawX + this.tileSize > 0 &&
-                    drawY < this.canvas.height && drawY + this.tileSize > 0
+                    drawX <= this.canvas.width && drawX + this.tileSize >= 0 &&
+                    drawY <= this.canvas.height && drawY + this.tileSize >= 0
                 ) {
 
                     tile.render(drawX, drawY, this.tileSize);
@@ -63,7 +65,7 @@ class MapArea extends TileMap {
                 let tile = this.map[gridY][gridX];
                 const tileIndex = dy * width + dx;
 
-                tile.setType(this.worldInfo.spriteData[objName][`${objName}${tileIndex}`]);           
+                tile.setType(dx*200,dy*200);           
                  
                 
               
@@ -108,6 +110,20 @@ class MapArea extends TileMap {
 
             }
         }
+
+    }
+    setTileBackground(tileRow){
+
+        for(let tile of this.map[tileRow]){
+            console.log('Recorriendo casillas');
+            tile.setBackground(true,Random.getRandomElements(600,800,1000,1200,1400,1600),0)
+        }
+    }
+    skyAnimation(){
+         
+        this.ctx.drawImage(this.backGroundImage,0,0,this.canvas.width,this.canvas.height);
+        this.ctx.fillStyle='rgb(250,50,10,0.3)'
+        this.ctx.fillRect(0,0,this.canvas.width,this.canvas.height);
 
     }
 }
