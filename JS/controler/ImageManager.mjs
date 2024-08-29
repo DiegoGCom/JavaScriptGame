@@ -102,7 +102,7 @@ class ImageManager {
 
         const imagesToLoad = [
             { key: 'spriteSheetRetina', src: '../Assets/Dibujos/Spritesheet/spritesheet_retina.png' },
-            { key: 'smallAreaBackground', src: "../Assets/Dibujos/Textures/tile_cesped.png" }, 
+            { key: 'smallAreaBackground', src: "../Assets/Dibujos/Textures/tile_cesped_1.png" }, 
             { key: 'bigMapBackGround', src: "../Assets/Dibujos/Textures/parchmentAncient.png" },
             { key: 'spriteHouse', src: '../Assets/Dibujos/Spritesheet/casa_800.png' },
             { key: 'ruins', src: '../Assets/Dibujos/PNG/Default/ruins.png' },

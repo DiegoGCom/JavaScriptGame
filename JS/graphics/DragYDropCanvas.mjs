@@ -11,12 +11,20 @@ class DragYDropCanvas extends BaseCanvas{
         this.smallWorlInfo=ImageManager.getWorldMapInfo('smallInfo');
         this.mapaMundiWorldInfo=ImageManager.getWorldMapInfo('mapaMundi');
         
+        this.objectX=0;
+        this.objectY=0;
+        this.objectWidth=400;
+        this.spriteSize=800;
+        this.objectWidth=400;
+        
+
+        
     }
 
 
     drawObject(x,y,size){
         this.ctx.clearRect(0,0,this.canvas.clientWidth,this.canvas.clientHeight);
-        this.ctx.drawImage(this.smallWorlInfo.spriteSheet,0,0,800,800,x,y,400,400 );
+        this.ctx.drawImage(this.smallWorlInfo.spriteSheet,0,0,800,800,x,y,size*4,size*4);
   
     }
     resetCanvas(){

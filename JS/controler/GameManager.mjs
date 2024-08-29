@@ -36,7 +36,7 @@ class GameManager {
         this.gameTimer = GameTimer.getInstance();
 
        // this.gameTimer.setGameInterval(this.checkCurrentTile.bind(this),100);
-        this.gameTimer.setGameInterval(this.sunsetCanvas.update.bind(this.sunsetCanvas),1000)
+        this.gameTimer.setGameInterval(this.sunsetCanvas.update.bind(this.sunsetCanvas),1);
 
     }
 

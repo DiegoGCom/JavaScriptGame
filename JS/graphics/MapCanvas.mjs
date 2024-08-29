@@ -20,6 +20,8 @@ class MapCanvas extends BaseCanvas {
 
         this.mapAreas = new Map();
 
+       
+
         this.mapAreaGround=0;
 
         this.bigMapSelected =false;
@@ -37,6 +39,7 @@ class MapCanvas extends BaseCanvas {
 
         if (this.bigMapSelected) {
 
+          
            this.drawMapaMundi();
 
         } else {
@@ -51,6 +54,8 @@ class MapCanvas extends BaseCanvas {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.map = this.mapaMundi.map;
+
+        this.setMapSize(this.mapaMundi.mapWidth, this.mapaMundi.mapHeight);
 
         this.mapaMundi.render(this.tileSize, this.offsetX, this.offsetY);
 
