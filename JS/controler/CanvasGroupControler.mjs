@@ -14,10 +14,7 @@ class CanvasGroupControler {
         this.mapCanvas = new MapCanvas('gameCanvas', 100);
         this.characterCanvas = new CharacterCanvas('characterCanvas', 100, this.mapCanvas);
         this.dragDropCanvas = new DragYDropCanvas('animationCanvas', 100);
-        this.sunsetCanvas = new SunsetCanvas('sunsetCanvas', 100,this.mapCanvas.mapWidth);
-
-    
-       
+        this.sunsetCanvas = new SunsetCanvas('sunsetCanvas', 100,);
 
         this.isDragging = false;
         this.startX = 0;

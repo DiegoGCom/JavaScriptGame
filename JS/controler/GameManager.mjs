@@ -25,7 +25,7 @@ class GameManager {
         this.characterCanvas = canvasGroup.characterCanvas;
 
         /**@type {Character} */
-        this.character= this.characterCanvas.characters.get('Pepe');
+        this.character = this.characterCanvas.characters.get('Pepe');
 
         /**@type {SunsetCanvas} */
         this.sunsetCanvas = canvasGroup.sunsetCanvas;
@@ -35,8 +35,8 @@ class GameManager {
         /**@type {GameTimer}  */
         this.gameTimer = GameTimer.getInstance();
 
-       // this.gameTimer.setGameInterval(this.checkCurrentTile.bind(this),100);
-        this.gameTimer.setGameInterval(this.sunsetCanvas.update.bind(this.sunsetCanvas),1);
+        // this.gameTimer.setGameInterval(this.checkCurrentTile.bind(this),100);
+        //  this.gameTimer.setGameInterval(this.sunsetCanvas.update.bind(this.sunsetCanvas),1);
 
     }
 
@@ -45,6 +45,7 @@ class GameManager {
         this.characterCanvas.update();
         this.mapCanvas.update();
         this.gameTimer.update();
+        this.sunsetCanvas.update();
 
     }
 
@@ -53,8 +54,8 @@ class GameManager {
         this.gridX = Math.floor((this.character.x + (this.mapCanvas.tileSize)) / this.mapCanvas.tileSize);
         this.gridY = Math.floor((this.character.y + (this.mapCanvas.tileSize)) / this.mapCanvas.tileSize);
         this.currentTile = this.mapCanvas.map[this.gridY][this.gridX];
-        this.character.currentTile=this.currentTile;
-     //   console.log(this.currentTile.objectData);
+        this.character.currentTile = this.currentTile;
+        //   console.log(this.currentTile.objectData);
 
     }
 }

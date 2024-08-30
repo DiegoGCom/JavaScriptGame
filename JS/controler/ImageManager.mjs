@@ -88,7 +88,7 @@ class ImageManager {
             backGroundImage: ImageManager.getImage('smallAreaBackground'),
             spriteSheet: ImageManager.getImage('spriteHouse'),
             spriteData: ImageManager.getSpriteData(),
-            mapWidth: 150,
+            mapWidth: 300,
             mapHeight: 50,
             spriteWidth: '200',
             spriteHeight: '200',
