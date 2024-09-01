@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JavaScriptGame</title>
 
-    <link rel="stylesheet" href="css/styles2.css">
+    <link rel="stylesheet" href="css/canvasStyles.css">
+    <link rel="stylesheet" href="css/menuStyles.css">
 
     <script src="JS/main.js" type="module"> </script>
 
@@ -28,14 +29,25 @@
                 <!-- Menú desplegable -->
             </div>
             <div id="dropdownMenuSandbox" class="dropdown-menu">
-
-                <input type="text" id="textTypeArea" placeholder="Añade el tipo">
-                <input type="text" id="textIndexArea" placeholder="Añade el índice">
-                <button id="okButtonDropM">Aceptar</button>
-                <button id="resetButtonDropM">Reset tiles</button>
+                <div id="gridContainerSandbox" class="gridButtonContainer">    </div>
             </div>
 
-            <div id="dropdownMenuCharacter" class="dropdown-menu"></div>
+            <div id="dropdownMenuCharacter" class="dropdown-menu">
+                <div  class="gridButtonContainer">
+                    <button>
+                        <img src="Assets/Dibujos/Spritesheet/gnomo.png" alt="Gnomo">
+                    </button>
+                    <button>
+                        <img src="Assets/Dibujos/Spritesheet/gnomo.png" alt="Gnomo">
+                    </button>
+                    <button>
+                        <img src="Assets/Dibujos/Spritesheet/gnomo.png" alt="Gnomo">
+                    </button>
+                    <button>
+                        <img src="Assets/Dibujos/Spritesheet/gnomo.png" alt="Gnomo">
+                    </button>
+                </div>
+            </div>
         </div><!--Cierre nav-->
 
         <canvas id="gameCanvas" class="canvas"></canvas>

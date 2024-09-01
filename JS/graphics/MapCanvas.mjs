@@ -14,7 +14,7 @@ class MapCanvas extends BaseCanvas {
 
         this.map = [];
 
-        this.mapaMundiInfo = ImageManager.getWorldMapInfo('mapaMundi');
+        this.mapaMundiInfo = ImageManager.getWorldMapInfo('mapaMundiInfo');
 
         this.mapaMundi = new MapaMundi(this.mapaMundiInfo);
 
@@ -74,19 +74,13 @@ class MapCanvas extends BaseCanvas {
             this.map = mapArea.map;
 
             this.setMapSize(mapArea.mapWidth, mapArea.mapHeight);
-
-         
+            
             let houseTile = mapArea.map[5][4];
 
-    
-            mapArea.drawMultipleTileObject('house',6,36,4,4);
-
-           
-            
             mapArea.render(this.tileSize, this.offsetX, this.offsetY);
 
         } else {
-            const smallAreaInfo = ImageManager.getWorldMapInfo('smallArea');
+            const smallAreaInfo = ImageManager.getWorldMapInfo('smallAreaInfo');
 
             const newMapArea = new MapArea(smallAreaInfo);
 

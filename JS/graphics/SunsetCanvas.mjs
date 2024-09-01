@@ -1,5 +1,4 @@
 import { ImageManager } from "../controler/ImageManager.mjs";
-import { SkyCycle } from "../model/SkyCycle.mjs";
 import { BaseCanvas } from "./BaseCanvas.mjs";
 
 
@@ -9,7 +8,7 @@ class SunsetCanvas extends BaseCanvas {
 
         super(canvasId, tileSize);
 
-        this.mapAreaInfo = ImageManager.getWorldMapInfo('smallWorldInfo');
+        this.mapAreaInfo = ImageManager.getWorldMapInfo('smallAreaInfo');
         this.mapWidth = this.mapAreaInfo.mapWidth;
         //------Cielo--------
         this.skyImage = ImageManager.getImage('greySky');
@@ -42,7 +41,7 @@ class SunsetCanvas extends BaseCanvas {
         }
     }
     update() {
-        this.framePosition += 2;
+        this.framePosition += 1;
         if (this.framePosition > this.totalCycle) {
             this.framePosition = 0;
             this.state = this.state === "day" ? "night" : "day";
@@ -52,7 +51,6 @@ class SunsetCanvas extends BaseCanvas {
         this.updateSunMoonPosition(t);
         this.updateSkyColor(t);
         this.draw();
-        console.log(this.framePosition)
     }
 
 
@@ -78,14 +76,14 @@ class SunsetCanvas extends BaseCanvas {
                 // Atardecer: Azul Celeste a Rojo
                 this.skyColor = this.interpolateColor({ r: 135, g: 206, b: 235 }, { r: 255, g: 94, b: 77 }, (t - 0.75) / 0.25);
                 this.sunColor = this.interpolateColor({  r: 255, g: 225, b: 225 }, {  r: 255, g: 100, b: 0 }, (t - 0.75) / 0.25);
-                this.sunHalo -= 1.5;
+                this.sunHalo  =  this.sunHalo <=0.8 ? 0 : this.sunHalo-0.8;  //-----Hace pequeño el halo al anochecer
             }
         } else if (this.state === "night") {
             if (t < 0.25) {
                 // Anochecer: Rojo a Morado Oscuro
                 this.skyColor = this.interpolateColor({ r: 255, g: 94, b: 77 }, { r: 72, g: 61, b: 139 }, t / 0.25);
                 this.sunHalo = 600;
-                this.skyAlpha=this.skyAlpha<1 ? this.skyAlpha+=0.005:this.skyAlpha=1;
+                this.skyAlpha=this.skyAlpha<1 ? this.skyAlpha+=0.005:this.skyAlpha=1; //por la noche se oscurece el cielo
             } else if (t < 0.75) {
                 // Noche: Morado Oscuro constante
                 this.skyColor = { r: 72, g: 61, b: 139 };
@@ -93,7 +91,7 @@ class SunsetCanvas extends BaseCanvas {
                 // Amanecer de la Luna: Morado Oscuro a Rojo
                 this.skyAlpha=this.skyAlpha>0.4 ? this.skyAlpha-=0.005:this.skyAlpha=0.4;
                 this.skyColor = this.interpolateColor({ r: 72, g: 61, b: 139 }, { r: 255, g: 94, b: 77 }, (t - 0.75) / 0.25);
-                this.moonHalo -= 0.2;
+                this.moonHalo  =  this.moonHalo <=0.2 ? 0 : this.moonHalo-0.2; 
             }
         }
     }

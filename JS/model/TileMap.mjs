@@ -29,7 +29,6 @@ class TileMap {
             for (let x = 0; x < this.mapWidth; x++) {
                 let tile = new Tile(this.ctx, x + y * this.mapWidth);
                 tile.setInfo(this.worldInfo);
-                tile.setGrid(x,y);
                 tile.setPosition(x,y); 
                 row.push(tile);
             }

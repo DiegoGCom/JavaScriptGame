@@ -25,6 +25,9 @@ class Tile {
         this.backgroundOn = false;
         this.textureSize=200;
 
+        this.spriteSheet=null;
+        this.spriteWidth=null;
+
         this.backGroundX=0;
         this.backGroundY=0;
 
@@ -33,6 +36,12 @@ class Tile {
     //------SETTERS------
     setInfo(worldInfo) {
         this.worldInfo = worldInfo;
+        this.spriteSheet=worldInfo.spriteSheet;
+        this.spriteWidth=worldInfo.spriteWidth;
+    }
+    setSpriteSheet(spriteSheet,spriteWidth=200){
+        this.spriteSheet=spriteSheet;
+        this.spriteWidth=spriteWidth;
     }
     setBackground(backgroundOn,backGroundX,backGroundY=this.canvasY,textureSize=this.textureSize){
 
@@ -46,10 +55,6 @@ class Tile {
         this.objectData.x = objectDataX;
         this.objectData.y = objectDataY;
         
-    }
-    setGrid(x, y) {
-        this.gridX = x;
-        this.gridY = y;
     }
     setPosition(x, y) {
         this.canvasX = x;
@@ -93,11 +98,11 @@ class Tile {
     drawImage(size) {
         if (this.objectData) {
             this.ctx.drawImage(
-                this.worldInfo.spriteSheet,
+                this.spriteSheet,
                 this.objectData.x,
                 this.objectData.y,
-                this.worldInfo.spriteWidth,
-                this.worldInfo.spriteHeight,
+                this.spriteWidth,
+                this.spriteWidth,
                 this.canvasX, this.canvasY, size, size
             )
         } else {

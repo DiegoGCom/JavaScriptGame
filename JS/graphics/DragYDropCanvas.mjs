@@ -16,16 +16,18 @@ class DragYDropCanvas extends BaseCanvas{
         this.objectWidth=400;
         this.spriteSize=800;
         this.objectWidth=400;
-        
 
-        
+        this.obj=null;
+             
+    }
+    setObj(obj){
+        this.obj=obj;
     }
 
-
     drawObject(x,y,size){
+        if(this.obj==null) return;
         this.ctx.clearRect(0,0,this.canvas.clientWidth,this.canvas.clientHeight);
-        this.ctx.drawImage(this.smallWorlInfo.spriteSheet,0,0,800,800,x,y,size*4,size*4);
-  
+        this.ctx.drawImage(this.obj.spriteSheet,this.obj.x,this.obj.y,this.obj.spriteWidth,this.obj.spriteHeight,x,y,size*this.obj.fr,size*this.obj.fr);
     }
     resetCanvas(){
         this.ctx.clearRect(0,0,this.canvas.clientWidth,this.canvas.clientHeight);

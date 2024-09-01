@@ -32,7 +32,7 @@ class ImageManager {
 
         house: {
             house0: { x: '0', y: '0', hasCollider: true },
-           
+
         },
         void: {
             void0: { x: '-500', y: '-500', hasCollider: false }
@@ -41,10 +41,10 @@ class ImageManager {
     static backGroundData = {
 
         ground: {
-            0: { x: 0, y: 200},
-            0: { x: 200, y: 400},
-            0: { x: 400, y: 200}
-            
+            0: { x: 0, y: 200 },
+            0: { x: 200, y: 400 },
+            0: { x: 400, y: 200 }
+
         }
 
     }
@@ -74,38 +74,65 @@ class ImageManager {
     }
     static getWorldMapInfo(mapType) {
 
-        const mapaMundiInfo = {
-            backGroundImage: ImageManager.getImage('bigMapBackGround'),
-            spriteSheet: ImageManager.getImage('spriteSheetRetina'),
-            spriteData: ImageManager.getSpriteData(),
-            mapWidth: 100,
-            mapHeight: 100,
-            spriteWidth: '128',
-            spriteHeight: '128',
-            tileSize: 100
-        }
-        const smallAreaInfo = {
-            backGroundImage: ImageManager.getImage('smallAreaBackground'),
-            spriteSheet: ImageManager.getImage('spriteHouse'),
-            spriteData: ImageManager.getSpriteData(),
-            mapWidth: 300,
-            mapHeight: 50,
-            spriteWidth: '200',
-            spriteHeight: '200',
-            tileSize: 100
-        }
+        const mapInfo = {
 
-        return mapType == 'mapaMundi' ? mapaMundiInfo : smallAreaInfo;
+            mapaMundiInfo: {
+                backGroundImage: ImageManager.getImage('bigMapBackGround'),
+                spriteSheet: ImageManager.getImage('spriteSheetRetina'),
+                spriteData: ImageManager.getSpriteData(),
+                mapWidth: 100,
+                mapHeight: 100,
+                spriteWidth: '128',
+                spriteHeight: '128',
+                tileSize: 100
+            },
+            smallAreaInfo: {
+                backGroundImage: ImageManager.getImage('smallAreaBackground'),
+                spriteSheet: ImageManager.getImage('spriteHouse'),
+                spriteData: ImageManager.getSpriteData(),
+                mapWidth: 300,
+                mapHeight: 50,
+                spriteWidth: '200',
+                spriteHeight: '200',
+                tileSize: 100
+            },
+            appleHouse: {
+                key: 'appleHouse',
+                spriteSheet: ImageManager.getImage('spriteHouse'),
+                src: '../Assets/Dibujos/Spritesheet/casa_800.png',
+                x: 0,
+                y: 0,
+                spriteWidth: 800,
+                spriteHeight: 800,
+                fr: 4 ,            //numero de fracciones ->> tiles que ocupa el sprite
+                frSize: 200        //tamaño de la fracción
+            },
+            ruins: {
+                key: 'ruins',
+                spriteSheet: ImageManager.getImage('ruins'),
+                src: '../Assets/Dibujos/PNG/Default/ruins.png',
+                x: 0,
+                y: 0,
+                spriteWidth: 128,
+                spriteHeight: 128,
+                fr: 1,
+                frSize: 128,
+            }
+
+        }
+        return mapInfo[mapType];
+
+
     }
 
     static loadImagesFromDirectory() {
 
         const imagesToLoad = [
             { key: 'spriteSheetRetina', src: '../Assets/Dibujos/Spritesheet/spritesheet_retina.png' },
-            { key: 'smallAreaBackground', src: "../Assets/Dibujos/Textures/tile_cesped_1.png" }, 
+            { key: 'smallAreaBackground', src: "../Assets/Dibujos/Textures/tile_cesped_1.png" },
             { key: 'bigMapBackGround', src: "../Assets/Dibujos/Textures/parchmentAncient.png" },
             { key: 'spriteHouse', src: '../Assets/Dibujos/Spritesheet/casa_800.png' },
-            { key: 'ruins', src: '../Assets/Dibujos/PNG/Default/ruins.png' },
+            { key: 'ruins', src: '../Assets/Dibujos/PNG/Retina/ruins.png' },
             { key: 'greySky', src: '../Assets/Dibujos/Textures/cielo_oscuro.png' }
         ]
 

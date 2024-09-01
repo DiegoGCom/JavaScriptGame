@@ -1,24 +1,35 @@
 import { CharacterCanvas } from "../graphics/CharacterCanvas.mjs";
+import { DragYDropCanvas } from "../graphics/DragYDropCanvas.mjs";
 import { MapCanvas } from "../graphics/MapCanvas.mjs";
+import { CanvasGroupControler } from "./CanvasGroupControler.mjs";
 import { ImageManager } from "./ImageManager.mjs";
 
 class UIManager {
 
     constructor(canvasGroup) {
-
+        /**@type {CanvasGroupControler} */
+        this.canvasGroup=canvasGroup;
         /**@type {MapCanvas} */
         this.mapCanvas = canvasGroup.mapCanvas;
         /**@type {CharacterCanvas} */
         this.characterCanvas = canvasGroup.characterCanvas;
+        /**@type {DragYDropCanvas} */
+        this.dragDropCanvas = canvasGroup.dragDropCanvas;
 
         this.selectedTilesList = canvasGroup.selectedTilesList;
 
         this.dropDownMenuSandbox = document.getElementById('dropdownMenuSandbox');
         this.dropDownMenuCharacter = document.getElementById('dropdownMenuCharacter');
 
+        this.objectsToDraw= new Map();
+
+        this.objectsToDraw.set('appleHouse',ImageManager.getWorldMapInfo('appleHouse'));
+        this.objectsToDraw.set('ruins',ImageManager.getWorldMapInfo('ruins'));
+
         this.setupListeners();
         this.addCharactersToMenu();
-        this.addMenuItems();
+        this.addMenuItems(this.objectsToDraw.get('appleHouse'));
+        this.addMenuItems(this.objectsToDraw.get('ruins'));
     }
 
     setupListeners() {
@@ -36,9 +47,6 @@ class UIManager {
                e.stopPropagation();
             });
         }
-
-
-
         imageButtonMap.addEventListener('click', (e) => {
              e.stopPropagation();
             console.log("Boton pulsado");
@@ -47,22 +55,19 @@ class UIManager {
                 this.quitTileSelection();   
                 this.buttonMapClic();
             },300);
-
-            
-
         });
         //------CLIC EN EL BOTON DEL PERSONAJE PARA LOS EVENTOS EN EL CANVAS CONTAINER
         imageButtonCharacter.addEventListener('click', (e) => {
             e.stopPropagation();
             this.dropDownMenuSandbox.style.display = this.dropDownMenuSandbox.style.display = 'none';
-            this.dropDownMenuCharacter.style.display = this.dropDownMenuCharacter.style.display === 'flex' ? 'none' : 'flex';
+            this.dropDownMenuCharacter.style.display = this.dropDownMenuCharacter.style.display === 'block' ? 'none' : 'block';
 
         });
         //------DESPLEGA EL MENU DEL MODO SANDBOX
         imageButtonSandbox.addEventListener('click', (e) => {
 
             e.stopPropagation();
-            this.dropDownMenuSandbox.style.display = this.dropDownMenuSandbox.style.display === 'flex' ? 'none' : 'flex';
+            this.dropDownMenuSandbox.style.display = this.dropDownMenuSandbox.style.display === 'block' ? 'none' : 'block';
             this.dropDownMenuCharacter.style.display = this.dropDownMenuCharacter.style.display = 'none';
 
 
@@ -91,90 +96,24 @@ class UIManager {
 
     addCharactersToMenu() {
 
-        this.characterCanvas.characters.forEach((character) => {
-
-            const characterDiv = document.createElement('div');
-            const textAreaTargetX = document.createElement('input');
-            const textAreaTargetY = document.createElement('input');
-            const targetButton = document.createElement('button');
-            
-
-            textAreaTargetX.placeholder = 'X: '
-            textAreaTargetY.placeholder = 'Y: '
-            targetButton.textContent = 'GO!!'
-
-            characterDiv.textContent = character.name;
-            characterDiv.appendChild(textAreaTargetX);
-            characterDiv.appendChild(textAreaTargetY);
-            characterDiv.appendChild(targetButton);
-
-            targetButton.addEventListener('click', () => {
-                if (textAreaTargetX.value) {
-                    let tileTarget= this.mapCanvas.map[parseInt(textAreaTargetY.value)][parseInt(textAreaTargetX.value)];
-                    character.setTarget(tileTarget.canvasX,tileTarget.canvasY);
-                } else {
-                    textAreaTargetX.placeholder = 'Introduce un número > que 0';
-                }
-                textAreaTargetX.value='';
-                textAreaTargetY.value='';
-            });
-
-            characterDiv.addEventListener('click', (e) => { e.stopPropagation() });
-            this.dropDownMenuCharacter.appendChild(characterDiv);
-            
-        });
-
     }
 
     //----TEMPORALMENTE----Introduciendo texto podemos cambiar la imagen en la casilla seleccionada
-    addMenuItems() {
+    addMenuItems(obj) {
 
-        const imageIconDiv= document.createElement('div');
-        const textAreaType = document.getElementById('textTypeArea')
-        const textAreaObectKey = document.getElementById('textIndexArea')
-        const okButtonM = document.getElementById('okButtonDropM');
-        const reset = document.getElementById('resetButtonDropM');
-        const imageMap = ImageManager.getImageMap();
+        const gridContainerSandbox = document.getElementById('gridContainerSandbox');
+        const button=document.createElement('button');
+        const image=document.createElement('img');
+        image.src=obj.src;
+        button.appendChild(image);
+        gridContainerSandbox.appendChild(button);
 
-        okButtonM.addEventListener('click', (e) => {
-            e.stopPropagation();
-            let tileType = textAreaType.value;
-            let tileObjectKey = textAreaObectKey.value;
-            let worldMapInfo =  ImageManager.getWorldMapInfo('smallArea'); //this.mapCanvas.mapaMundi.worldInfo.spriteData[tileType];
-
-            if (worldMapInfo) {
-                this.selectedTilesList.forEach((tile) => {
-                    tile.setType(worldMapInfo.spriteData[tileType][tileObjectKey]);
-                    console.log('Exito al cambiar de imagen');
-                    this.quitTileSelection();
-                    tile.render(tile.x, tile.y, this.mapCanvas.tileSize);
-                });
-            } else {
-                textAreaType.value = 'Objeto no encontrado'
-            }
-            this.mapCanvas.draw();
-
+        button.addEventListener('click', ()=>{
+            this.dragDropCanvas.setObj(obj);
+            this.canvasGroup.setObjectToDraw(obj);
+            this.canvasGroup.groupSelection=true;
+            this.dropDownMenuSandbox.style.display = 'none';
         });
-
-        reset.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.selectedTilesList.forEach((tile) => {
-                tile.isSelected = false;
-                console.log('Éxito al deseleccionar los tiles');
-                tile.render(tile.canvasX, tile.canvasY, this.mapCanvas.tileSize);
-            });
-            this.selectedTilesList.clear();
-
-        });
-
-        textAreaType.addEventListener('click', (e) => e.stopPropagation());
-        textAreaObectKey.addEventListener('click', (e) => e.stopPropagation());
-
-        this.dropDownMenuSandbox.appendChild(textAreaType);
-        this.dropDownMenuSandbox.appendChild(textAreaObectKey);
-        this.dropDownMenuSandbox.appendChild(okButtonM);
-        this.dropDownMenuSandbox.appendChild(reset);
-
     }
     quitTileSelection(){
         this.selectedTilesList.forEach((tile) => {

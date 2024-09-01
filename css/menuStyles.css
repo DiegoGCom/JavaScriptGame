@@ -1,0 +1,99 @@
+
+
+/* Estilo para la barra de navegación */
+.nav {
+    position: relative;
+    top: 1em;
+    left: 0;
+    width: 100vw;
+    height: 3em;
+    background-color: rgba(255, 255, 255, 0); /* Fondo transparente */
+    display: flex;
+    align-items: center;
+    box-sizing: border-box; /* Incluye el padding y el border en el tamaño total */
+    z-index: 10;
+    
+}
+
+/* Estilo para el botón */
+.imgButton {
+    width: 3em;
+    height: 3em;
+    display: flex;
+    background-color: rgba(100, 255, 0, 0.5);
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    margin-left: 1em;
+    &:hover{box-shadow:0 15px 15px rgba(0, 0, 0, .9);
+        
+    }
+}
+
+/* Estilo para la imagen del botón */
+.imgButton img {
+    width: 100%;  
+}
+
+/* Efecto al hacer clic en el botón */
+.imgButton:active {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transform: translateY(2px);
+}
+/* Estilo para el menú desplegable */
+.dropdown-menu {
+    display: none; /* Inicialmente oculto */
+    position:absolute; /* Posición absoluta respecto al contenedor .nav */
+    top: 3em; /* Se despliega justo debajo del botón */
+    left: 2em;
+    width: 25vw;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    z-index: 11; /* Asegúrate de que esté por encima del canvas */
+    box-sizing: border-box; /* Incluye el padding en el tamaño total */
+    background-image: url('../Assets/Dibujos/Textures/dropdownmenu-img.png');
+    background-position: center;
+    background-size: 100% 100%;
+
+}
+@media screen and  (max-width:900px) {
+    .dropdown-menu div{grid-template-columns:1fr 1fr;}
+}
+.gridButtonContainer{
+    display: grid;
+    box-sizing: border-box;
+    margin: 13px;
+    grid-template-columns:repeat(4,1fr);
+    grid-template-rows:repeat(4,1fr);
+}
+
+.dropdown-menu div button{
+
+    position: relative;
+    box-sizing: border-box;
+    align-items: center;
+    background-color: white;
+    margin:5px;
+    border: solid 2px gray;  
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    &:hover{
+        box-shadow:0 15px 15px rgba(0, 0, 0, .9);
+        transform: translate(3px, 3px);
+        border-color: yellowgreen;
+    }
+ 
+}
+.dropdown-menu div button img{
+    width: 100%;
+}
+
+#dropdownMenuSandbox div button:active{
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); 
+    transform: translateY(4px);
+}
+
+
+

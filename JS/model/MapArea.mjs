@@ -51,10 +51,10 @@ class MapArea extends TileMap {
 
     }
 
-    drawMultipleTileObject(objName, x, y, width = 2, height = 2) {
+    drawMultipleTileObject(obj, x, y) {
 
-        for (let dy = 0; dy < height; dy++) {
-            for (let dx = 0; dx < width; dx++) {
+        for (let dy = 0; dy < obj.fr; dy++) {
+            for (let dx = 0; dx < obj.fr; dx++) {
                 let gridX = x + dx;
                 let gridY = y + dy;
 
@@ -63,16 +63,11 @@ class MapArea extends TileMap {
 
                 /**@type {Tile} */
                 let tile = this.map[gridY][gridX];
-                const tileIndex = dy * width + dx;
-
-                tile.setType(dx * 200, dy * 200);
-
-
+                tile.setSpriteSheet(obj.spriteSheet,obj.frSize);
+                tile.setType(dx * obj.frSize, dy * obj.frSize);
 
             }
-
         }
-
     }
     drawMapObjects(xIndex, yIndex, singleImage) {
 
@@ -98,7 +93,6 @@ class MapArea extends TileMap {
         }
         return "#8B4513"; // Marrón
 
-
     }
     setHorizontalMap() {
 
@@ -114,23 +108,16 @@ class MapArea extends TileMap {
     }
     setTileBackground() {
 
-        for (let y=40;y<this.mapHeight;y++) {
-            for (let x=0;x<this.mapWidth;x++) {
-                let tile=this.map[y][x];
-                
-                if(y==40)tile.setBackground(true, Random.getRandomElements(600, 800, 1000,1200,1400), 0);
-                if(y>40 && y<45)tile.setBackground(true, Random.getRandomElements(1200,1400,1600), 200);
-                if(y==45)tile.setBackground(true, Random.getRandomElements(600,800,1000), 200);
-                if(y>=46 && y<this.mapHeight)tile.setBackground(true, Random.getRandomElements(0,200,400),  Random.getRandomElements(200,400));
+        for (let y = 40; y < this.mapHeight; y++) {
+            for (let x = 0; x < this.mapWidth; x++) {
+                let tile = this.map[y][x];
+                if (y == 40) tile.setBackground(true, Random.getRandomElements(600, 800, 1000, 1200, 1400), 0);
+                if (y > 40 && y < 45) tile.setBackground(true, Random.getRandomElements(1200, 1400, 1600), 200);
+                if (y == 45) tile.setBackground(true, Random.getRandomElements(600, 800, 1000), 200);
+                if (y >= 46 && y < this.mapHeight) tile.setBackground(true, Random.getRandomElements(0, 200, 400), Random.getRandomElements(200, 400));
             }
         }
     }
-    skyAnimation() {
 
-        this.ctx.drawImage(this.backGroundImage, 0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fillStyle = 'rgb(250,50,10,0.3)'
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-    }
 }
 export { MapArea }

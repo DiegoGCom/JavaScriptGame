@@ -26,6 +26,8 @@ class CanvasGroupControler {
         this.paint = false;
         this.selectedTilesList = new Map();
 
+        this.objectToDraw=null;
+
         this.setupListeners();
 
         onload = () => {
@@ -33,9 +35,12 @@ class CanvasGroupControler {
             this.mapCanvas.draw();
             this.characterCanvas.draw();
             this.sunsetCanvas.setMapSize(this.mapCanvas.mapWidth, this.mapCanvas.mapHeight);
-            this.sunsetCanvas.setOffset(this.mapCanvas.offsetX,this.mapCanvas.offsetY);
+            this.sunsetCanvas.setOffset(this.mapCanvas.offsetX, this.mapCanvas.offsetY);
             this.sunsetCanvas.draw();
         };
+    }
+    setObjectToDraw(obj){
+        this.objectToDraw=obj;
     }
 
     setupListeners() {
@@ -48,8 +53,11 @@ class CanvasGroupControler {
             this.mouseDown(e);
 
             if (e.button === 0) this.selectTile = true;
-            if (e.button === 1) this.groupSelection = true;
-            //if (e.button === 2) this.moveCharacter(e);
+          //  if (e.button === 1) this.groupSelection = true;
+            if (e.button === 2) {
+                this.dragDropCanvas.resetCanvas(); 
+                this.groupSelection=false
+            }
         });
 
         //-----ARRASTRE DEL MAPA
@@ -85,15 +93,16 @@ class CanvasGroupControler {
 
         //------EVENTO CLIC EN LOS CANVAS--------------------
         container.addEventListener('click', (e) => {
-
+            if (this.groupSelection) {
+                this.drawObjects(e);
+                this.groupSelection = false;
+                this.dragDropCanvas.resetCanvas();
+            }
             this.infoMouse(e);
         });
 
         container.addEventListener('dblclick', (e) => {
 
-            if (this.groupSelection) this.drawObjects(e);
-            this.groupSelection = false;
-            this.dragDropCanvas.resetCanvas();
             this.clic(e);
         });
         window.addEventListener('keydown', (e) => {
@@ -133,7 +142,7 @@ class CanvasGroupControler {
             this.mapCanvas.setOffset(offsetX, offsetY);
             this.characterCanvas.setOffset(offsetX, offsetY);
 
-           
+
         }
     }
     //--Zoom in y zoom out se lleva a cabo en la zona donde está el ratón
@@ -241,22 +250,22 @@ class CanvasGroupControler {
 
         if (e.key === "a") {
             this.characterCanvas.characters.forEach(character => {
-                 x = character.x;
-                 y = character.y;
-                 x -= 30;
+                x = character.x;
+                y = character.y;
+                x -= 30;
                 console.log(x + ', ' + y);
             });
-            this.characterCanvas.setTarget(x,y);
+            this.characterCanvas.setTarget(x, y);
         }
         if (e.key === "d") {
             this.characterCanvas.characters.forEach(character => {
-                 x = character.x;
+                x = character.x;
                 y = character.y;
                 x += 30;
                 character.setTarget(x, y);
                 console.log('Pulsado d');
             });
-            this.characterCanvas.setTarget(x,y);
+            this.characterCanvas.setTarget(x, y);
         }
 
 
@@ -308,8 +317,6 @@ class CanvasGroupControler {
 
         let { gridX, gridY } = this.getGridCoordenates(e);
 
-        const mapArea = this.mapCanvas.mapAreas.get(510);
-
         let tileSelected = this.mapCanvas.map[gridY][gridX];
 
         if (gridX > this.mapCanvas.mapWidth - 2) gridX = this.mapCanvas.mapWidth - 2;
@@ -324,7 +331,8 @@ class CanvasGroupControler {
         if (gridX > this.mapCanvas.mapWidth - 4) gridX = this.mapCanvas.mapWidth - 4;
         if (gridY > this.mapCanvas.mapHeight - 4) gridY = this.mapCanvas.mapHeight - 4;
         const mapArea = this.mapCanvas.mapAreas.get(510);
-        mapArea.drawMultipleTileObject('house', gridX, gridY, 4, 4);
+        mapArea.drawMultipleTileObject(this.objectToDraw, gridX, gridY);
+        this.mapCanvas.draw();
 
     }
 
