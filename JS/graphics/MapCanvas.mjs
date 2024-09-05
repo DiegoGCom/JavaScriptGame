@@ -16,15 +16,13 @@ class MapCanvas extends BaseCanvas {
 
         this.mapaMundiInfo = ImageManager.getWorldMapInfo('mapaMundiInfo');
 
-        this.mapaMundi = new MapaMundi(this.mapaMundiInfo);
+        //this.mapaMundi = new MapaMundi(this.mapaMundiInfo);
 
         this.mapAreas = new Map();
 
-       
-
         this.mapAreaGround=0;
 
-        this.bigMapSelected =false;
+        this.scene='smallArea';
 
         this.loading = 50;
 
@@ -37,7 +35,18 @@ class MapCanvas extends BaseCanvas {
 
     draw() {
 
-        if (this.bigMapSelected) {
+        switch(this.scene){
+            case 'mapaMundi':
+                this.drawMapaMundi();
+                break;
+            case 'smallArea':
+                this.drawArea();
+                break
+            case 'mapCreator':
+
+                break;
+        }
+      /*   if (this.bigMapSelected) {
 
           
            this.drawMapaMundi();
@@ -46,7 +55,11 @@ class MapCanvas extends BaseCanvas {
 
             this.drawArea();
 
-        }
+        } */
+
+    }
+    drawMapCreator(){
+        
 
     }
 
@@ -54,6 +67,8 @@ class MapCanvas extends BaseCanvas {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.map = this.mapaMundi.map;
+
+        this.map[5][10].setStroke('green');
 
         this.setMapSize(this.mapaMundi.mapWidth, this.mapaMundi.mapHeight);
 
@@ -75,8 +90,6 @@ class MapCanvas extends BaseCanvas {
 
             this.setMapSize(mapArea.mapWidth, mapArea.mapHeight);
             
-            let houseTile = mapArea.map[5][4];
-
             mapArea.render(this.tileSize, this.offsetX, this.offsetY);
 
         } else {
@@ -87,6 +100,8 @@ class MapCanvas extends BaseCanvas {
             this.mapAreaGround=newMapArea.ground;
 
             this.mapAreas.set(this.tileIndex, newMapArea);
+
+            console.log('Creando mapa en '+this.tileIndex);
 
             this.map = newMapArea.map;
 

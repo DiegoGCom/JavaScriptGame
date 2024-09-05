@@ -4,6 +4,7 @@ import { Tile } from "../model/Tile.mjs";
 import { MapCanvas } from "../graphics/MapCanvas.mjs";
 import { CharacterCanvas } from "../graphics/CharacterCanvas.mjs";
 import { SunsetCanvas } from "../graphics/SunsetCanvas.mjs";
+import { MapCreator } from "../utils/MapCreator.mjs";
 
 
 
@@ -15,6 +16,7 @@ class CanvasGroupControler {
         this.characterCanvas = new CharacterCanvas('characterCanvas', 100, this.mapCanvas);
         this.dragDropCanvas = new DragYDropCanvas('animationCanvas', 100);
         this.sunsetCanvas = new SunsetCanvas('sunsetCanvas', 100,);
+        this.creatorCanvas = new MapCreator(this);
 
         this.isDragging = false;
         this.startX = 0;
@@ -23,6 +25,8 @@ class CanvasGroupControler {
         this.selectTile = false;
         this.selectedTile = this.mapCanvas.map[0][0];
         this.groupSelection = false;
+        this.groupSelectionWidth=0;
+        this.groupSelectionHeight=0;
         this.paint = false;
         this.selectedTilesList = new Map();
 
@@ -42,6 +46,17 @@ class CanvasGroupControler {
     setObjectToDraw(obj){
         this.objectToDraw=obj;
     }
+    setGroupSelection(width, height){
+        this.groupSelection=true;
+        this.groupSelectionWidth=width;
+        this.groupSelectionHeight=height;
+  
+    }
+    updateOffsets(){
+        
+        this.characterCanvas.setOffset(this.mapCanvas.offsetX,this.mapCanvas.offsetY);
+        this.sunsetCanvas.setOffset(this.mapCanvas.offsetX, this.mapCanvas.offsetY);
+    }
 
     setupListeners() {
 
@@ -52,7 +67,10 @@ class CanvasGroupControler {
             e.preventDefault();
             this.mouseDown(e);
 
-            if (e.button === 0) this.selectTile = true;
+            if (e.button === 0){ 
+                this.selectTile = true;
+                if(this.groupSelection) this.paint=true;
+            }
           //  if (e.button === 1) this.groupSelection = true;
             if (e.button === 2) {
                 this.dragDropCanvas.resetCanvas(); 
@@ -66,21 +84,20 @@ class CanvasGroupControler {
             this.mouseDragg(e);
             if (this.selectTile) this.infoMouse(e);
             if (this.groupSelection) this.selectGroupOfTiles(e);
-
+            if(this.paint) this.drawObjects(e);
         });
 
         //------ZOOM-----------------------------
         container.addEventListener("wheel", (e) => {
-            //Debouncing-> evita el efecto rebote de la rueda del ratón
+           
             this.zoom(e);
-
-            //setTimeout(() => this.zoom(e), 130);
 
         });
 
         container.addEventListener("mouseup", () => {
             this.isDragging = false;
             this.selectTile = false;
+            this.paint=false;
         });
 
         container.addEventListener("mouseleave", () => {
@@ -95,8 +112,8 @@ class CanvasGroupControler {
         container.addEventListener('click', (e) => {
             if (this.groupSelection) {
                 this.drawObjects(e);
-                this.groupSelection = false;
-                this.dragDropCanvas.resetCanvas();
+              //  this.groupSelection = false;
+               // this.dragDropCanvas.resetCanvas();
             }
             this.infoMouse(e);
         });
@@ -202,6 +219,8 @@ class CanvasGroupControler {
             this.characterCanvas.clearRect = true;
 
             this.selectedTile = this.mapCanvas.map[gridY][gridX];
+
+            this.selectedTile.setStroke('green');
 
             this.selectedTile.isSelected = this.selectedTile.isSelected ? false : true;
 
@@ -315,22 +334,28 @@ class CanvasGroupControler {
 
     selectGroupOfTiles(e) {
 
+        this.quitTileSelection();
         let { gridX, gridY } = this.getGridCoordenates(e);
-
         let tileSelected = this.mapCanvas.map[gridY][gridX];
+        if (gridX > this.mapCanvas.mapWidth - this.groupSelectionWidth) gridX = this.mapCanvas.mapWidth - this.groupSelectionWidth;
+        if (gridY > this.mapCanvas.mapHeight - this.groupSelectionHeight) gridY = this.mapCanvas.mapHeight - this.groupSelectionHeight;
 
-        if (gridX > this.mapCanvas.mapWidth - 2) gridX = this.mapCanvas.mapWidth - 2;
-        if (gridY > this.mapCanvas.mapHeight - 2) gridY = this.mapCanvas.mapHeight - 2;
-
+        for(let x=gridX; x<gridX+this.groupSelectionWidth; x++){
+            for(let y=gridY; y<gridY+this.groupSelectionHeight; y++){
+                let tile=this.mapCanvas.map[y][x];
+                tile.setSelected(true);
+                this.selectedTilesList.set(tile.tileIndex,tile);
+                this.selectedTilesList.forEach(tile=>tile.render(tile.canvasX,tile.canvasY,this.mapCanvas.tileSize));
+            }
+        }
         this.dragDropCanvas.drawObject(tileSelected.canvasX, tileSelected.canvasY, this.mapCanvas.tileSize);
-
-
     }
     drawObjects(e) {
         let { gridX, gridY } = this.getGridCoordenates(e);
         if (gridX > this.mapCanvas.mapWidth - 4) gridX = this.mapCanvas.mapWidth - 4;
         if (gridY > this.mapCanvas.mapHeight - 4) gridY = this.mapCanvas.mapHeight - 4;
-        const mapArea = this.mapCanvas.mapAreas.get(510);
+       
+        const mapArea = this.mapCanvas.bigMapSelected ? this.mapCanvas.mapaMundi : this.mapCanvas.mapAreas.get(this.mapCanvas.tileIndex);
         mapArea.drawMultipleTileObject(this.objectToDraw, gridX, gridY);
         this.mapCanvas.draw();
 

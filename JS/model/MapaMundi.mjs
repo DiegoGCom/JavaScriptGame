@@ -123,28 +123,7 @@ class MapaMundi extends TileMap {
 
         }
     }
-    multipleTileObject(objName, x, y, width = 2, height = 2) {
-
-        for (let dy = 0; dy < height; dy++) {
-            for (let dx = 0; dx < width; dx++) {
-                const gridX = x + dx;
-                const gridY = y + dy;
-
-                if (gridX + width > this.map.length || gridY + height > this.map[0].length) {
-
-                    console.warn('El objeto se sale del mapa');
-                    continue;
-                }
-                /**@type {Tile} */
-                let tile = this.map[gridY][gridX];
-                const tileIndex = dy * width + dx;
-
-                tile.setType(this.worldInfo.spriteData[objName][`${objName}${tileIndex}`]);
-            }
-
-        }
-
-    }
+  
     getRandomObject(tile_type) {
 
         switch (tile_type) {

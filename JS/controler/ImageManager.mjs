@@ -90,55 +90,111 @@ class ImageManager {
                 backGroundImage: ImageManager.getImage('smallAreaBackground'),
                 spriteSheet: ImageManager.getImage('spriteHouse'),
                 spriteData: ImageManager.getSpriteData(),
-                mapWidth: 300,
+                mapWidth: 100,
                 mapHeight: 50,
                 spriteWidth: '200',
                 spriteHeight: '200',
                 tileSize: 100
-            },
+            }
+        }
+        return mapInfo[mapType];
+
+
+    }
+    static getObjects(objectName) {
+
+        const object = {
             appleHouse: {
                 key: 'appleHouse',
+                type: 'block',
+                zIndex: 1,
                 spriteSheet: ImageManager.getImage('spriteHouse'),
                 src: '../Assets/Dibujos/Spritesheet/casa_800.png',
                 x: 0,
                 y: 0,
                 spriteWidth: 800,
                 spriteHeight: 800,
-                fr: 4 ,            //numero de fracciones ->> tiles que ocupa el sprite
+                cols: 4 ,            //numero de fracciones ->> tiles que ocupa el sprite
+                rows: 4,            //numero de fracciones ->> tiles que ocupa el sprite
                 frSize: 200        //tamaño de la fracción
             },
             ruins: {
                 key: 'ruins',
-                spriteSheet: ImageManager.getImage('ruins'),
+                type: 'sprite',
+                zIndex: 1,
+                spriteSheet: ImageManager.getImage('spriteSheetRetina'),
                 src: '../Assets/Dibujos/PNG/Default/ruins.png',
                 x: 0,
                 y: 0,
-                spriteWidth: 128,
-                spriteHeight: 128,
-                fr: 1,
-                frSize: 128,
+                spriteWidth: 1280,
+                spriteHeight: 1280,
+                cols: 10,
+                rows: 10,
+                frSize: 128
+            },
+            suelo0: {
+                key: 'suelo',
+                type: 'sprite',
+                zIndex: 0,
+                spriteSheet: ImageManager.getImage('suelo'),
+                src: '../Assets/Dibujos/PNG/Default/ruins.png',
+                x: 0,
+                y: 0,
+                spriteWidth: 1200,
+                spriteHeight: 800,
+                cols:6,
+                rows:4,
+                frSize: 200
+            },
+            suelo1: {
+                key: 'suelo',
+                type: 'sprite',
+                zIndex: 0,
+                spriteSheet: ImageManager.getImage('suelo'),
+                src: '../Assets/Dibujos/PNG/Default/ruins.png',
+                x: 1200,
+                y: 0,
+                spriteWidth: 1200,
+                spriteHeight: 800,
+                cols:6,
+                rows:4,
+                frSize: 200
+            },
+            suelo2: {
+                key: 'suelo',
+                type: 'sprite',
+                zIndex: 0,
+                spriteSheet: ImageManager.getImage('suelo'),
+                src: '../Assets/Dibujos/PNG/Default/ruins.png',
+                x: 2400,
+                y: 0,
+                spriteWidth: 1200,
+                spriteHeight: 800,
+                cols:6,
+                rows:4,
+                frSize: 200
             }
+    
+    }
 
-        }
-        return mapInfo[mapType];
-
-
+        return object[objectName];
     }
 
     static loadImagesFromDirectory() {
 
-        const imagesToLoad = [
-            { key: 'spriteSheetRetina', src: '../Assets/Dibujos/Spritesheet/spritesheet_retina.png' },
-            { key: 'smallAreaBackground', src: "../Assets/Dibujos/Textures/tile_cesped_1.png" },
-            { key: 'bigMapBackGround', src: "../Assets/Dibujos/Textures/parchmentAncient.png" },
-            { key: 'spriteHouse', src: '../Assets/Dibujos/Spritesheet/casa_800.png' },
-            { key: 'ruins', src: '../Assets/Dibujos/PNG/Retina/ruins.png' },
-            { key: 'greySky', src: '../Assets/Dibujos/Textures/cielo_oscuro.png' }
-        ]
+    const imagesToLoad = [
+        { key: 'spriteSheetRetina', src: '../Assets/Dibujos/Spritesheet/spritesheet_retina.png' },
+        { key: 'smallAreaBackground', src: "../Assets/Dibujos/Textures/tile_cesped_1.png" },
+        { key: 'bigMapBackGround', src: "../Assets/Dibujos/Textures/parchmentAncient.png" },
+        { key: 'spriteHouse', src: '../Assets/Dibujos/Spritesheet/casa_800.png' },
+        { key: 'ruins', src: '../Assets/Dibujos/PNG/Retina/ruins.png' },
+        { key: 'greySky', src: '../Assets/Dibujos/Textures/cielo.png' },
+        { key: 'suelo', src: '../Assets/Dibujos/Textures/tile_cesped_doble.png' },
+    ]
 
-        imagesToLoad.forEach(image => ImageManager.loadImage(image.key, image.src));
+    imagesToLoad.forEach(image => ImageManager.loadImage(image.key, image.src));
 
-    }
+}
 
 
 

@@ -2,7 +2,7 @@
 import { TileMap } from "./TileMap.mjs";
 import { Random } from "../utils/Random.mjs";
 import { Tile } from "./Tile.mjs";
-import { ImageManager } from "../controler/ImageManager.mjs";
+
 
 class MapArea extends TileMap {
 
@@ -10,25 +10,17 @@ class MapArea extends TileMap {
 
         super(wolrdInfo);
 
-        //this.multipleTileObject('house',5,5);
-
         this.sky = Math.floor(this.mapHeight * 0.8);
         this.ground = this.sky - 1;
-        this.backGroundImage = ImageManager.getImage('greySky');
 
-        this.setHorizontalMap();
+       // this.setHorizontalMap();
 
-        this.setTileBackground(40)
+      //  this.setTileBackground(40)
     }
 
 
     render(tileSize, offsetX, offsetY) {
         this.tileSize = tileSize;
-
-        //    this.ctx.drawImage(this.backGroundImage,0,0);
-
-
-        // console.log(`En renderizado de mapas: OffsetX: ${offsetX}, OffsetY: ${offsetY}`);
 
         for (let y = 0; y < this.mapHeight; y++) {
             for (let x = 0; x < this.mapWidth; x++) {
@@ -51,24 +43,7 @@ class MapArea extends TileMap {
 
     }
 
-    drawMultipleTileObject(obj, x, y) {
-
-        for (let dy = 0; dy < obj.fr; dy++) {
-            for (let dx = 0; dx < obj.fr; dx++) {
-                let gridX = x + dx;
-                let gridY = y + dy;
-
-                if (gridX > this.mapWidth - 1) gridX = this.mapWidth - 1;
-                if (gridY > this.mapHeight - 1) gridY = this.mapHeight - 1;
-
-                /**@type {Tile} */
-                let tile = this.map[gridY][gridX];
-                tile.setSpriteSheet(obj.spriteSheet,obj.frSize);
-                tile.setType(dx * obj.frSize, dy * obj.frSize);
-
-            }
-        }
-    }
+ 
     drawMapObjects(xIndex, yIndex, singleImage) {
 
         /** @type {Tile} tile */

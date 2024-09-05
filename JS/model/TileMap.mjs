@@ -39,9 +39,51 @@ class TileMap {
 
     render(tileSize, offsetX, offsetY) {
        
-        throw new Error("El método render() debe ser implementado por las subclases");
+     this.tileSize = tileSize;
+
+        for (let y = 0; y < this.mapHeight; y++) {
+            for (let x = 0; x < this.mapWidth; x++) {
+                let drawX = x * this.tileSize - offsetX;
+                let drawY = y * this.tileSize - offsetY;
+
+                /**@type {Tile} */
+                let tile = this.map[y][x];
+
+                if (
+                    drawX <= this.canvas.width && drawX + this.tileSize >= 0 &&
+                    drawY <= this.canvas.height && drawY + this.tileSize >= 0
+                ) {
+                    
+                    tile.render(drawX, drawY, this.tileSize);
+
+                }
+            }
+        } 
 
     }
+
+    drawMultipleTileObject(obj, x, y) {
+
+        for (let dy = 0; dy < obj.rows; dy++) {
+            for (let dx = 0; dx < obj.cols; dx++) {
+                let gridX = x + dx;
+                let gridY = y + dy;
+
+                if (gridX > this.mapWidth - 1) gridX = this.mapWidth - 1;
+                if (gridY > this.mapHeight - 1) gridY = this.mapHeight - 1;
+
+                /**@type {Tile} */
+                let tile = this.map[gridY][gridX];
+                if(obj.zIndex==0) tile.setBackground(obj);
+                
+                if(obj.zIndex==1) {
+                    if(obj.rows>1) tile.setSpriteSheet(obj,dx*obj.frSize,dy*obj.frSize);
+                    else tile.setSpriteSheet(obj,obj.x,obj.y);
+                }
+            }
+        }
+    }
+
     drawMapObjects(xIndex, yIndex, singleImage) {
 
         /** @type {Tile} tile */

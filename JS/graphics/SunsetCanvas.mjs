@@ -33,12 +33,9 @@ class SunsetCanvas extends BaseCanvas {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.clientWidth, this.canvas.clientHeight);
         this.ctx.drawImage(this.skyImage, 0, 0);
-        this.skyAnimation();
-        if (this.state === "day") {
-            this.drawSun();
-        } else {
-            this.drawMoon();
-        }
+        this.skyAnimation();    ///------cambia el color del cielo
+        this.checkDayNight();   ///------dibuja el sol o la luna
+       
     }
     update() {
         this.framePosition += 1;
@@ -83,7 +80,7 @@ class SunsetCanvas extends BaseCanvas {
                 // Anochecer: Rojo a Morado Oscuro
                 this.skyColor = this.interpolateColor({ r: 255, g: 94, b: 77 }, { r: 72, g: 61, b: 139 }, t / 0.25);
                 this.sunHalo = 600;
-                this.skyAlpha=this.skyAlpha<1 ? this.skyAlpha+=0.005:this.skyAlpha=1; //por la noche se oscurece el cielo
+                this.skyAlpha=this.skyAlpha<0.7 ? this.skyAlpha+=0.005:this.skyAlpha=0.7; //por la noche se oscurece el cielo
             } else if (t < 0.75) {
                 // Noche: Morado Oscuro constante
                 this.skyColor = { r: 72, g: 61, b: 139 };
@@ -200,6 +197,14 @@ class SunsetCanvas extends BaseCanvas {
         this.ctx.fillStyle = moonGradient;
         this.ctx.fill();
         this.ctx.closePath();
+    }
+    checkDayNight(){
+        if (this.state === "day") {
+            this.drawSun();
+        } else {
+            this.drawMoon();
+        }
+
     }
 
 
