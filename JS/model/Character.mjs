@@ -10,11 +10,17 @@ class Character {
         this.bigMapY;
         this.x = x;
         this.y = y;
-        this.speed = 10;
+        this.speed = 3;
         this.targetX;
         this.targetY;
         this.frameRate = 0;
         this.currentTile = null;
+        this.contador=1;
+
+        this.offsetX=0;
+        this.offsetY=0;
+
+        this.path = [];
 
         //Objeto monigote
         this.monigote = {
@@ -34,25 +40,37 @@ class Character {
 
         }
     }
+    setOffset(offsetX,offsetY){
+        this.offsetX=offsetX;
+        this.offsetY=offsetY;
+    }
+    setPath(path) {
+        this.path = path;
+    }
 
     /*Al target hay que sumarle también el offset para que esté coordinado */
 
-    setTarget(targetX,targetY,offsetX,offsetY) {
-        this.targetX = targetX +offsetX;
-        this.targetY = this.y//targetY + offsetY   
+    setTarget(targetX, targetY, offsetX, offsetY) {
+        this.targetX = targetX + offsetX;
+        this.targetY = targetY + offsetY
     }
 
     updateTarjetPosition(scaleFactor) {
 
-        this.targetX =this.targetX*scaleFactor;
-        this.targetY = this.y//this.targetY*scaleFactor;
+        this.path.forEach(tile=> {
+            tile.x*scaleFactor;
+            tile.y*scaleFactor;
+        });
+        this.targetX = this.targetX * scaleFactor;
+        this.targetY = this.targetY*scaleFactor;
 
-        this.speed*= scaleFactor
+        this.speed *= scaleFactor
     }
 
 
     updateScale(scaleFactor) {
 
+      
         this.x = this.x * scaleFactor;
         this.y = this.y * scaleFactor;
 
@@ -65,6 +83,7 @@ class Character {
         if (distance < this.speed) {
             this.x = this.targetX;
             this.y = this.targetY;
+            this.followPath();
         } else {
             this.x += (deltaX / distance) * this.speed;
             this.y += (deltaY / distance) * this.speed;
@@ -75,14 +94,14 @@ class Character {
     render(x, y, size) {
 
         //this.animateSprite();
-    
+
         this.ctx.drawImage(
             this.monigoteSheet,
             this.monigote.x,
             this.monigote.y,
             this.monigote.width,
             this.monigote.height,
-            x,y, size, size);
+            x, y, size, size);
 
 
     }
@@ -90,7 +109,7 @@ class Character {
     updateRender(x, y, size) {
 
         if (this.targetX >= this.x) this.render(x, y, size);
-        else this.renderMirror(x, y, size); 
+        else this.renderMirror(x, y, size);
     }
 
     renderMirror(x, y, size) {
@@ -123,9 +142,23 @@ class Character {
         }
 
     }
+    followPath() {
+        
+        if (this.path.length === 0) {
+            this.contador = 0;
+            return
+        }
+        console.log('Llegada al tile ' + this.contador);
+        const nextTile = this.path.shift();
+        this.targetX = nextTile.x+this.offsetX;
+        this.targetY = nextTile.y+this.offsetY;
+        console.log('Personaje: '+this.x+', '+this.y);
+        console.log('Coordenadas de siguiente casilla: '+this.targetX+', '+this.targetY)
+        this.contador++;
 
+    }
 
 
 }
 
-export { Character}
+export { Character }

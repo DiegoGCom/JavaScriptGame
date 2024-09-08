@@ -15,7 +15,7 @@ class SunsetCanvas extends BaseCanvas {
         this.skyColor = { r: 255, g: 94, b: 77 }; 
         this.skyAlpha = 0.4;
         //------Sol----------
-        this.sunPosition = { x: -200, y: 500, radius: 100, };
+        this.sunPosition = { x: -200, y:500, radius: 100, };
         this.sunColor = { r: 250, g: 255, b: 255 }; 
         this.sunHalo = 600;
         //------Luna---------
@@ -28,6 +28,20 @@ class SunsetCanvas extends BaseCanvas {
         this.state = 'day';
         this.totalCycle = 2 * this.mapWidth * this.tileSize;
 
+        //-----Nubes--------
+        this.clouds= new Map();
+        this.loadClouds();
+        this.backGroundCloud=ImageManager.getImage('nube6');
+        this.staticCloudData={key:'cloud6',x:1,y:0,width:1920,heigth:1000}
+        console.log(this.clouds);
+        this.cloudsData=[
+            {key:'cloud1',x:300,y:100, speed:0.2},
+            {key:'cloud2',x:60,y:200, speed:0.4},
+            {key:'cloud3',x:-10,y:600, speed:0.3},
+            {key:'cloud4',x:460,y:400, speed:0.6},
+            {key:'cloud5',x:930,y:500, speed:2},
+            
+        ]
     }
 
     draw() {
@@ -35,6 +49,8 @@ class SunsetCanvas extends BaseCanvas {
         this.ctx.drawImage(this.skyImage, 0, 0);
         this.skyAnimation();    ///------cambia el color del cielo
         this.checkDayNight();   ///------dibuja el sol o la luna
+        this.drawClouds();
+     
        
     }
     update() {
@@ -47,6 +63,7 @@ class SunsetCanvas extends BaseCanvas {
         let t = this.framePosition / this.totalCycle;
         this.updateSunMoonPosition(t);
         this.updateSkyColor(t);
+        this.updateClouds();
         this.draw();
     }
 
@@ -233,6 +250,37 @@ class SunsetCanvas extends BaseCanvas {
             }
         }
 
+    }
+
+    //-------------ANIMACIÓN NUBES-------
+    loadClouds(){
+        for(let i=1;i<6;i++){
+            let nube= ImageManager.getImage(`nube${i}`)
+            this.clouds.set(`cloud${i}`,nube);
+        }
+    }
+    drawClouds(){
+        this.ctx.drawImage(
+            this.backGroundCloud,
+            this.staticCloudData.x,
+            this.staticCloudData.y,
+            this.staticCloudData.width,
+            this.staticCloudData.heigth  
+        )
+        
+        this.cloudsData.forEach(cloud =>{
+            /**@type {CanvasImageSource} */
+            const img= this.clouds.get(cloud.key);
+            this.ctx.drawImage(img,cloud.x,cloud.y);
+        });
+    }
+    updateClouds(){
+
+        this.cloudsData.forEach(cloud =>{
+            cloud.x+=cloud.speed;
+            if(cloud.x>this.canvas.clientWidth) cloud.x=-800;
+           
+        });
     }
 
 }

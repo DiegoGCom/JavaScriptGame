@@ -1,29 +1,29 @@
 
 class Tile {
 
-    constructor(ctx, tileIndex) {
+    constructor(ctx, tileIndex,gridX,gridY) {
         /**@type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.tileIndex = tileIndex;
 
         //---Coordenadas
-        this.canvasX = 0;
-        this.canvasY = 0;
+        this.x = 0;
+        this.y = 0;
+        this.gridX=gridX;
+        this.gridY=gridY;
 
+        //--Opciones----
         this.isSelected = false;
-        this.isArea = false;
-        this.visibility = 'clear';
-        this.strokeOn = false;
+        this.strokeOn = true;
         this.strokeColor = 'white';
         this.hasCollider = false;
-        this.color = '';
+        this.color = 'white';
 
         //----Carga de imagenes
         this.worldInfo = null;
         this.singleImage = null;
         this.backgroundOn = false;
         this.foregroundOn = false;
-    
         this.backGround = {
             spriteSheet: null,
             x: 0,
@@ -38,6 +38,13 @@ class Tile {
             width: 0,
             height: 0,
         }
+        //----PathFinding----
+        this.parent=null;
+        this.g=0;
+        this.h=0;
+        this.f=0;
+
+  
     }
 
     setObjectToDraw(obj) {
@@ -75,8 +82,8 @@ class Tile {
     }
 
     setPosition(x, y) {
-        this.canvasX = x;
-        this.canvasY = y;
+        this.x = x;
+        this.y = y;
     }
     setSelected(selected) {
         this.isSelected = selected;
@@ -88,12 +95,18 @@ class Tile {
         this.isArea = true;
         this.strokeColor = color;
     }
+    getColor(){
+        return this.color;
+    }
+    setCollider(collider){
+        this.hasCollider=collider;
+    }
 
     //--------DIBUJADO--------
 
     fillColor(size) {
         this.ctx.fillStyle = this.color;
-        this.ctx.fillRect(this.canvasX, this.canvasY, size, size);
+        this.ctx.fillRect(this.x, this.y, size, size);
     }
 
     drawBackground(size) {
@@ -104,13 +117,13 @@ class Tile {
             this.backGround.y,
             this.backGround.width,
             this.backGround.height,
-            this.canvasX, this.canvasY, size, size);
+            this.x, this.y, size, size);
     }
 
     drawOverlay(size) {
 
         this.drawImage(size);
-        if (this.strokeOn) this.drawStroke(size);
+        
     }
 
     drawImage(size) {
@@ -121,7 +134,7 @@ class Tile {
             this.foreGround.y,
             this.foreGround.width,
             this.foreGround.height,
-            this.canvasX, this.canvasY, size, size
+            this.x, this.y, size, size
         )
 
     }
@@ -129,10 +142,10 @@ class Tile {
         if (this.strokeOn) {
             this.ctx.lineWidth = 0.5;
             this.ctx.strokeStyle = 'black';
-            this.ctx.strokeRect(this.canvasX, this.canvasY, size, size);
+            this.ctx.strokeRect(this.x, this.y, size, size);
             this.ctx.font = `${size / 8}px Arial`;
             this.ctx.fillStyle = 'black';
-            this.ctx.fillText(this.gridX + ', ' + this.gridY, this.canvasX, this.canvasY);
+            this.ctx.fillText(this.gridY + ', ' + this.gridX, this.x, this.y+15);
         }
     }
     drawSelection(size) {
@@ -140,7 +153,7 @@ class Tile {
             const gap = 5;
             this.ctx.lineWidth = gap;
             this.ctx.strokeStyle = this.strokeColor;
-            this.ctx.strokeRect(this.canvasX + gap, this.canvasY + gap, size - gap * 2, size - gap * 2);
+            this.ctx.strokeRect(this.x + gap, this.y + gap, size - gap * 2, size - gap * 2);
         }
     }
 
@@ -149,12 +162,15 @@ class Tile {
         this.setPosition(x, y);
 
         if (this.color) this.fillColor(size);
+        else {
+            this.drawBackground(size);
 
-        this.drawBackground(size);
+            this.drawOverlay(size);
 
-        this.drawOverlay(size);
+            this.drawSelection(size);
+        }
+        if (this.strokeOn) this.drawStroke(size);
 
-        this.drawSelection(size);
 
     }
 }

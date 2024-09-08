@@ -19,9 +19,9 @@ class CharacterCanvas extends BaseCanvas {
         this.offsetY = 3500;
         this.characters = new Map();
 
+        this.path=[];
+
         this.createNewCharacter("Pepe", 400, 3900);
-
-
 
     }
 
@@ -64,6 +64,14 @@ class CharacterCanvas extends BaseCanvas {
 
         this.characters.forEach(character => { character.setTarget(targetX, targetY, this.offsetX, this.offsetY); });
 
+    }
+    setPath(path){
+
+        this.characters.forEach(character => {
+            character.setOffset(this.offsetX,this.offsetY);
+            character.setPath(path);
+
+        });
     }
 
     //Dibuja la cuadricula del canvas de personaje

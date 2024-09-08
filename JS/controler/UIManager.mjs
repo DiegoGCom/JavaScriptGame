@@ -88,7 +88,6 @@ class UIManager {
         this.creatorInfoButtons.forEach((button) => {
             button.addEventListener('mouseover', () => {
                 let info = button.innerHTML;
-             //   console.log(info);
                 let obj = ImageManager.getObjects(info);
                 this.creatorCanvas.draw(obj.spriteSheet, obj);
             });

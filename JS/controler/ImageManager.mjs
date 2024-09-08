@@ -173,7 +173,22 @@ class ImageManager {
                 cols:6,
                 rows:4,
                 frSize: 200
+            },
+            monigote: {
+                key: 'monigote',
+                type: 'sprite',
+                zIndex: 1,
+                spriteSheet: ImageManager.getImage('monigote'),
+                src: '../Assets/Dibujos/PNG/Spritesheet/monigote.png',
+                x: 0,
+                y: 0,
+                spriteWidth: 871,
+                spriteHeight: 204,
+                cols:7,
+                rows:1,
+                frSize: 204
             }
+    
     
     }
 
@@ -190,6 +205,13 @@ class ImageManager {
         { key: 'ruins', src: '../Assets/Dibujos/PNG/Retina/ruins.png' },
         { key: 'greySky', src: '../Assets/Dibujos/Textures/cielo.png' },
         { key: 'suelo', src: '../Assets/Dibujos/Textures/tile_cesped_doble.png' },
+        { key: 'monigote', src: '../Assets/Dibujos/Spritesheet/monigote.png' },
+        { key: 'nube1', src: '../Assets/Dibujos/PNG/nube_1.png' },
+        { key: 'nube2', src: '../Assets/Dibujos/PNG/nube_2.png' },
+        { key: 'nube3', src: '../Assets/Dibujos/PNG/nube_3.png' },
+        { key: 'nube4', src: '../Assets/Dibujos/PNG/nube_4.png' },
+        { key: 'nube5', src: '../Assets/Dibujos/PNG/nube_5.png' },
+        { key: 'nube6', src: '../Assets/Dibujos/PNG/nube_frontal.png' },
     ]
 
     imagesToLoad.forEach(image => ImageManager.loadImage(image.key, image.src));

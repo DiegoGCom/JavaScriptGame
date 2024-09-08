@@ -40,27 +40,27 @@ class MapCreator extends BaseCanvas {
 
     draw(img, obj) {
         this.obj = obj;
-        this.tileSize = this.canvas.width / this.obj.cols;
+        let tileWidth = this.canvas.width / this.obj.cols;
         let tileHeight = this.canvas.height / this.obj.rows;
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.drawImage(
             img, obj.x, obj.y, obj.spriteWidth, obj.spriteHeight,
-            0 - this.offsetX, 0 - this.offsetY, obj.cols * this.tileSize, obj.rows * tileHeight);
+            0 - this.offsetX, 0 - this.offsetY, obj.cols *  tileWidth, obj.rows * tileHeight);
         //  console.log('Dibujando: ' + obj.key);
         this.drawTiles(tileHeight);
     }
     drawTiles(tileHeight) {
 
-        this.tileSize = this.canvas.width / this.obj.cols;
+        let tileWidth = this.canvas.width / this.obj.cols;
         this.ctx.strokeStyle = 'black';
-        const gap = 0;
+        const gap = 2;
         // console.log('tilesize '+this.tileSize);
 
         for (let row = 0; row < this.obj.rows; row++) {
             for (let col = 0; col < this.obj.cols; col++) {
-                const x = col * this.tileSize - this.offsetX;
+                const x = col * tileWidth - this.offsetX;
                 const y = row * tileHeight - this.offsetY;
-                this.ctx.strokeRect(x + gap, y + gap, this.tileSize - gap, tileHeight - gap);
+                this.ctx.strokeRect(x + gap, y + gap, tileWidth - gap, tileHeight - gap);
             }
         }
     }
@@ -97,7 +97,7 @@ class MapCreator extends BaseCanvas {
         const spriteX = column * this.obj.frSize;
         const spriteY = row * this.obj.frSize;
 
-        console.log(`Sprite origin coordinates: (${spriteX}, ${spriteY})`);
+       // console.log(`Sprite origin coordinates: (${spriteX}, ${spriteY})`);
 
         return { spriteX, spriteY };
     }

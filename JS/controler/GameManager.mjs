@@ -17,6 +17,9 @@ class GameManager {
 
     constructor(canvasGroup) {
 
+        /**@type {CanvasGroupControler} */
+        this.canvasGroupControler= canvasGroup;
+
         /** @type {MapCanvas} */
         this.mapCanvas = canvasGroup.mapCanvas;
         /**
@@ -41,12 +44,8 @@ class GameManager {
     }
 
     update() {
-
-        this.characterCanvas.update();
-        this.mapCanvas.update();
         this.gameTimer.update();
-        this.sunsetCanvas.update();
-
+        this.canvasGroupControler.update();
     }
 
     checkCurrentTile() {

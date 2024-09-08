@@ -5,6 +5,7 @@ import { MapCanvas } from "../graphics/MapCanvas.mjs";
 import { CharacterCanvas } from "../graphics/CharacterCanvas.mjs";
 import { SunsetCanvas } from "../graphics/SunsetCanvas.mjs";
 import { MapCreator } from "../utils/MapCreator.mjs";
+import { AStarAlgorithm } from "../utils/AStarAlgorithm.mjs";
 
 
 
@@ -25,12 +26,19 @@ class CanvasGroupControler {
         this.selectTile = false;
         this.selectedTile = this.mapCanvas.map[0][0];
         this.groupSelection = false;
-        this.groupSelectionWidth=0;
-        this.groupSelectionHeight=0;
+        this.groupSelectionWidth = 0;
+        this.groupSelectionHeight = 0;
         this.paint = false;
         this.selectedTilesList = new Map();
 
-        this.objectToDraw=null;
+        this.isUpdating = true;
+
+        this.objectToDraw = null;
+
+        this.aStar = new AStarAlgorithm(this.mapCanvas.map);
+
+        this.tileA = null;
+        this.tileB = null;
 
         this.setupListeners();
 
@@ -42,19 +50,27 @@ class CanvasGroupControler {
             this.sunsetCanvas.setOffset(this.mapCanvas.offsetX, this.mapCanvas.offsetY);
             this.sunsetCanvas.draw();
         };
+
     }
-    setObjectToDraw(obj){
-        this.objectToDraw=obj;
+    update() {
+        if (!this.isUpdating) return;
+        this.characterCanvas.update();
+        this.mapCanvas.update();
+        this.sunsetCanvas.update();
     }
-    setGroupSelection(width, height){
-        this.groupSelection=true;
-        this.groupSelectionWidth=width;
-        this.groupSelectionHeight=height;
-  
+
+    setObjectToDraw(obj) {
+        this.objectToDraw = obj;
     }
-    updateOffsets(){
-        
-        this.characterCanvas.setOffset(this.mapCanvas.offsetX,this.mapCanvas.offsetY);
+    setGroupSelection(width, height) {
+        this.groupSelection = true;
+        this.groupSelectionWidth = width;
+        this.groupSelectionHeight = height;
+
+    }
+    updateOffsets() {
+
+        this.characterCanvas.setOffset(this.mapCanvas.offsetX, this.mapCanvas.offsetY);
         this.sunsetCanvas.setOffset(this.mapCanvas.offsetX, this.mapCanvas.offsetY);
     }
 
@@ -67,14 +83,18 @@ class CanvasGroupControler {
             e.preventDefault();
             this.mouseDown(e);
 
-            if (e.button === 0){ 
+            if (e.button === 0) {
                 this.selectTile = true;
-                if(this.groupSelection) this.paint=true;
+                if (this.groupSelection) this.paint = true;
             }
-          //  if (e.button === 1) this.groupSelection = true;
+            //  if (e.button === 1) this.groupSelection = true;
             if (e.button === 2) {
-                this.dragDropCanvas.resetCanvas(); 
-                this.groupSelection=false
+                this.dragDropCanvas.resetCanvas();
+                this.groupSelection = false
+            }
+            if (e.button === 1) {
+                this.setCollider(e);
+                this.mapCanvas.draw();
             }
         });
 
@@ -82,14 +102,14 @@ class CanvasGroupControler {
 
         container.addEventListener("mousemove", (e) => {
             this.mouseDragg(e);
-            if (this.selectTile) this.infoMouse(e);
+            if (this.selectTile) this.selectMouseTile(e);
             if (this.groupSelection) this.selectGroupOfTiles(e);
-            if(this.paint) this.drawObjects(e);
+            if (this.paint) this.drawObjects(e);
         });
 
         //------ZOOM-----------------------------
         container.addEventListener("wheel", (e) => {
-           
+
             this.zoom(e);
 
         });
@@ -97,7 +117,7 @@ class CanvasGroupControler {
         container.addEventListener("mouseup", () => {
             this.isDragging = false;
             this.selectTile = false;
-            this.paint=false;
+            this.paint = false;
         });
 
         container.addEventListener("mouseleave", () => {
@@ -112,10 +132,9 @@ class CanvasGroupControler {
         container.addEventListener('click', (e) => {
             if (this.groupSelection) {
                 this.drawObjects(e);
-              //  this.groupSelection = false;
-               // this.dragDropCanvas.resetCanvas();
             }
-            this.infoMouse(e);
+
+            this.selectMouseTile(e);
         });
 
         container.addEventListener('dblclick', (e) => {
@@ -124,8 +143,48 @@ class CanvasGroupControler {
         });
         window.addEventListener('keydown', (e) => {
             //this.moveMapWithKeyboard(e);
+
             this.moveCharacterWhithKey(e);
+            this.setUpdate(e);
+
+            if (e.key === 'k') {
+                this.runAStarAlgorithm();
+            }
+
         });
+    }
+
+    runAStarAlgorithm() {
+        if (this.tileA && this.tileB) {
+            this.aStar.setTiles(this.tileA, this.tileB);
+            let path = this.aStar.run();
+            if (path!=null) {
+                for (let tile of path) {
+                    tile.setColor('lightgrey');
+                    this.tileA.setColor('green');
+                    this.tileB.setColor('red');
+                    this.selectedTilesList.set(tile.tileIndex, tile);
+                    console.log(tile.gridY, tile.gridX);
+                    
+
+                }
+                this.characterCanvas.setPath(path);
+                this.mapCanvas.draw();
+            }else{
+                console.log('Estas encerrado!!!');
+            }   
+           
+        } else {
+            console.log('Debes seleccionar las casillas');
+        }
+
+    }
+    setCollider(e) {
+        let { gridX, gridY } = this.getGridCoordenates(e);
+        let collider = this.mapCanvas.map[gridY][gridX].hasCollider ? false : true;
+        this.mapCanvas.map[gridY][gridX].setCollider(collider);
+        this.mapCanvas.map[gridY][gridX].setColor(collider ? 'black' : 'white');
+        console.log(gridY + ' ,' + gridX + ' tiene colider: ' + this.mapCanvas.map[gridY][gridX].hasCollider);
     }
 
 
@@ -241,7 +300,7 @@ class CanvasGroupControler {
     }
 
     //--------selecciona las casillas por las que pasa el raton----
-    infoMouse(e) {
+    selectMouseTile(e) {
 
         // this.characterCanvas.setMapSize(this.mapCanvas.mapWidth, this.mapCanvas.mapHeight);
         const { gridX, gridY } = this.getGridCoordenates(e);
@@ -251,14 +310,32 @@ class CanvasGroupControler {
         /**@type {Tile} */
         this.selectedTile = this.mapCanvas.map[gridY][gridX];
         this.selectedTile.setSelected(true);
-        this.characterCanvas.setTarget(this.selectedTile.canvasX, this.selectedTile.canvasY);
+        this.choosePathBetween(this.selectedTile);
+        console.log(this.selectedTile.x + ', ' + this.selectedTile.y);
+       // this.characterCanvas.setTarget(this.selectedTile.x, this.selectedTile.y);
         this.selectedTilesList.set(this.selectedTile.tileIndex, this.selectedTile);
-        this.selectedTilesList.forEach(tile => tile.render(tile.canvasX, tile.canvasY, this.mapCanvas.tileSize));
+        this.selectedTilesList.forEach(tile => tile.render(tile.x, tile.y, this.mapCanvas.tileSize));
 
+    }
+    choosePathBetween(selectedTile) {
+        if (this.tileA == null && this.tileB == null) {
+            this.tileA = selectedTile;
+            selectedTile.setColor('green');
+            return;
+        }
+        if (this.tileA != null && this.tileB == null) {
+            this.tileB = selectedTile;
+            selectedTile.setColor('red');
+        } else {
+            this.quitTileSelection();
+        }
     }
     quitTileSelection() {
         this.selectedTilesList.forEach((tile) => {
+            tile.setColor('white');
             tile.setSelected(false);
+            this.tileA = null;
+            this.tileB = null;
         });
         this.mapCanvas.draw();
         this.selectedTilesList.clear();
@@ -340,21 +417,21 @@ class CanvasGroupControler {
         if (gridX > this.mapCanvas.mapWidth - this.groupSelectionWidth) gridX = this.mapCanvas.mapWidth - this.groupSelectionWidth;
         if (gridY > this.mapCanvas.mapHeight - this.groupSelectionHeight) gridY = this.mapCanvas.mapHeight - this.groupSelectionHeight;
 
-        for(let x=gridX; x<gridX+this.groupSelectionWidth; x++){
-            for(let y=gridY; y<gridY+this.groupSelectionHeight; y++){
-                let tile=this.mapCanvas.map[y][x];
+        for (let x = gridX; x < gridX + this.groupSelectionWidth; x++) {
+            for (let y = gridY; y < gridY + this.groupSelectionHeight; y++) {
+                let tile = this.mapCanvas.map[y][x];
                 tile.setSelected(true);
-                this.selectedTilesList.set(tile.tileIndex,tile);
-                this.selectedTilesList.forEach(tile=>tile.render(tile.canvasX,tile.canvasY,this.mapCanvas.tileSize));
+                this.selectedTilesList.set(tile.tileIndex, tile);
+                this.selectedTilesList.forEach(tile => tile.render(tile.x, tile.y, this.mapCanvas.tileSize));
             }
         }
-        this.dragDropCanvas.drawObject(tileSelected.canvasX, tileSelected.canvasY, this.mapCanvas.tileSize);
+        this.dragDropCanvas.drawObject(tileSelected.x, tileSelected.y, this.mapCanvas.tileSize);
     }
     drawObjects(e) {
         let { gridX, gridY } = this.getGridCoordenates(e);
         if (gridX > this.mapCanvas.mapWidth - 4) gridX = this.mapCanvas.mapWidth - 4;
         if (gridY > this.mapCanvas.mapHeight - 4) gridY = this.mapCanvas.mapHeight - 4;
-       
+
         const mapArea = this.mapCanvas.bigMapSelected ? this.mapCanvas.mapaMundi : this.mapCanvas.mapAreas.get(this.mapCanvas.tileIndex);
         mapArea.drawMultipleTileObject(this.objectToDraw, gridX, gridY);
         this.mapCanvas.draw();
@@ -371,6 +448,12 @@ class CanvasGroupControler {
 
         return { gridX, gridY }
 
+    }
+    setUpdate(e) {
+        if (e.altKey && e.key === 'u') {
+            e.preventDefault();
+            this.isUpdating = this.isUpdating ? false : true;
+        }
     }
 
 
