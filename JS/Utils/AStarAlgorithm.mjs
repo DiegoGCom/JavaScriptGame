@@ -19,7 +19,7 @@ class AStarAlgorithm {
         this.resetGrid();
 
         while (!this.openList.isEmpty()) {
-            console.log('Calculando ruta');
+            //console.log('Calculando ruta');
             //---dequeue elimina el elemento de prioridad más baja y lo devuelve
             /**@type {Tile} */
             const currentTile = this.openList.deQueue().element;
@@ -27,7 +27,7 @@ class AStarAlgorithm {
 
             //---Llegada al punto, reconstrucción del camino devolviendo el parent de cada tile
             if (currentTile === this.goalTile) {
-                console.log('Ruta calculada')
+               // console.log('Ruta calculada')
                 return this.reconstructPath(currentTile);
 
             }
@@ -49,7 +49,7 @@ class AStarAlgorithm {
                         this.openList.enQueue(neighbor, neighbor.f);
                     }
                 }
-                console.log('Comprobando vecinos')
+              //  console.log('Comprobando vecinos')
             }
 
         }
@@ -63,7 +63,7 @@ class AStarAlgorithm {
         this.startTile.g = 0;
         this.startTile.h = this.heuristic(startTile, goalTile);
         this.startTile.f = this.startTile.g + this.startTile.h;
-        console.log('Tiles seleccionados');
+        //console.log('Tiles seleccionados');
         this.openList.enQueue(this.startTile, this.startTile.f)
     }
 

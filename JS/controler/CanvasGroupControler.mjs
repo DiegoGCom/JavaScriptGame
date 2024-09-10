@@ -163,17 +163,13 @@ class CanvasGroupControler {
                     tile.setColor('lightgrey');
                     this.tileA.setColor('green');
                     this.tileB.setColor('red');
-                    this.selectedTilesList.set(tile.tileIndex, tile);
-                    console.log(tile.gridY, tile.gridX);
-                    
-
+                   // this.selectedTilesList.set(tile.tileIndex, tile);         
                 }
                 this.characterCanvas.setPath(path);
                 this.mapCanvas.draw();
             }else{
                 console.log('Estas encerrado!!!');
             }   
-           
         } else {
             console.log('Debes seleccionar las casillas');
         }
@@ -183,7 +179,7 @@ class CanvasGroupControler {
         let { gridX, gridY } = this.getGridCoordenates(e);
         let collider = this.mapCanvas.map[gridY][gridX].hasCollider ? false : true;
         this.mapCanvas.map[gridY][gridX].setCollider(collider);
-        this.mapCanvas.map[gridY][gridX].setColor(collider ? 'black' : 'white');
+        this.mapCanvas.map[gridY][gridX].setColor(collider ? 'black' : '');
         console.log(gridY + ' ,' + gridX + ' tiene colider: ' + this.mapCanvas.map[gridY][gridX].hasCollider);
     }
 
@@ -217,6 +213,8 @@ class CanvasGroupControler {
             this.sunsetCanvas.setOffset(offsetX, offsetY);
             this.mapCanvas.setOffset(offsetX, offsetY);
             this.characterCanvas.setOffset(offsetX, offsetY);
+            this.characterCanvas.updatePath();
+          
 
 
         }
@@ -258,6 +256,8 @@ class CanvasGroupControler {
             this.mapCanvas.setOffset(offsetX, offsetY);
             this.characterCanvas.setOffset(offsetX, offsetY);
             this.sunsetCanvas.setOffset(offsetX, offsetY);
+            this.characterCanvas.updatePath();
+           
 
         }
     }
@@ -332,7 +332,7 @@ class CanvasGroupControler {
     }
     quitTileSelection() {
         this.selectedTilesList.forEach((tile) => {
-            tile.setColor('white');
+            tile.setColor('');
             tile.setSelected(false);
             this.tileA = null;
             this.tileB = null;

@@ -1,3 +1,5 @@
+import { Tile } from "./Tile.mjs";
+
 class Character {
 
 
@@ -57,20 +59,14 @@ class Character {
 
     updateTarjetPosition(scaleFactor) {
 
-        this.path.forEach(tile=> {
-            tile.x*scaleFactor;
-            tile.y*scaleFactor;
-        });
         this.targetX = this.targetX * scaleFactor;
         this.targetY = this.targetY*scaleFactor;
-
         this.speed *= scaleFactor
     }
 
 
     updateScale(scaleFactor) {
 
-      
         this.x = this.x * scaleFactor;
         this.y = this.y * scaleFactor;
 
@@ -148,11 +144,11 @@ class Character {
             this.contador = 0;
             return
         }
-        console.log('Llegada al tile ' + this.contador);
+      //  console.log('Llegada al tile ' + this.contador);
         const nextTile = this.path.shift();
         this.targetX = nextTile.x+this.offsetX;
         this.targetY = nextTile.y+this.offsetY;
-        console.log('Personaje: '+this.x+', '+this.y);
+
         console.log('Coordenadas de siguiente casilla: '+this.targetX+', '+this.targetY)
         this.contador++;
 

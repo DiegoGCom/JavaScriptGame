@@ -46,6 +46,7 @@ body {
     z-index:-4;
 }
 #mapCreatorCanvas {
+ 
     padding: 0;
     margin: 0;
     top: 3.6em;
@@ -57,7 +58,7 @@ body {
     box-shadow: 2px 2px 7px 3px;
     background-color: aliceblue;
     image-rendering:crisp-edges;
-    z-index: 3;
+    z-index:-5;
     cursor: grab;
 }
 

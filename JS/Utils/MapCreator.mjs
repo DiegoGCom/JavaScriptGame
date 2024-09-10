@@ -29,7 +29,9 @@ class MapCreator extends BaseCanvas {
             spriteHeight:0,
             cols:1,
             rows:1,
-            frSize:0
+            frSize:0,
+            hasCollider:false
+
         };
 
         this.obj = null;
@@ -37,7 +39,9 @@ class MapCreator extends BaseCanvas {
         this.setupListeners();
 
     }
-
+    setCanvasVisible(visible){
+        this.canvas.style.zIndex= visible ? 3:-5;
+    }
     draw(img, obj) {
         this.obj = obj;
         let tileWidth = this.canvas.width / this.obj.cols;
@@ -72,11 +76,7 @@ class MapCreator extends BaseCanvas {
             this.chooseObjectToDraw(spriteX, spriteY);
 
         });
-        this.canvas.addEventListener('mousemove', (e) => {
-            e.stopPropagation();
-            let { spriteX, spriteY } = this.getGridCoordenates(e);
-        });
-
+       
     }
     getGridCoordenates(e) {
 
@@ -129,6 +129,7 @@ class MapCreator extends BaseCanvas {
         this.spriteToDraw.spriteWidth=obj.frSize;
         this.spriteToDraw.spriteHeight=obj.frSize;
         this.spriteToDraw.frSize=obj.frSize;
+        this.spriteToDraw.hasCollider=obj.hasCollider;
 
         console.log(objX,objY);
         

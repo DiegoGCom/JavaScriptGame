@@ -32,15 +32,14 @@ class SunsetCanvas extends BaseCanvas {
         this.clouds= new Map();
         this.loadClouds();
         this.backGroundCloud=ImageManager.getImage('nube6');
-        this.staticCloudData={key:'cloud6',x:1,y:0,width:1920,heigth:1000}
+        this.staticCloudData={key:'cloud6',x:0,y:2000,width:1920,heigth:1000}
         console.log(this.clouds);
         this.cloudsData=[
-            {key:'cloud1',x:300,y:100, speed:0.2},
-            {key:'cloud2',x:60,y:200, speed:0.4},
-            {key:'cloud3',x:-10,y:600, speed:0.3},
-            {key:'cloud4',x:460,y:400, speed:0.6},
+            {key:'cloud1',x:1850,y:600, speed:0.2},
+            {key:'cloud2',x:2400,y:1200, speed:0.4},
+            {key:'cloud3',x:-10,y:3000, speed:0.3},
+            {key:'cloud4',x:5000,y:1950, speed:0.6},
             {key:'cloud5',x:930,y:500, speed:2},
-            
         ]
     }
 
@@ -119,6 +118,7 @@ class SunsetCanvas extends BaseCanvas {
         this.moonPosition.x *= scaleFactor;
         this.moonPosition.y *= scaleFactor;
         this.moonPosition.radius *= scaleFactor;
+        this.updateCloudsScale(scaleFactor);
     }
 
     updateSunMoonPosition(t) {
@@ -260,26 +260,35 @@ class SunsetCanvas extends BaseCanvas {
         }
     }
     drawClouds(){
-        this.ctx.drawImage(
+     
+        this.cloudsData.forEach(cloud =>{
+            /**@type {CanvasImageSource} */
+            const img= this.clouds.get(cloud.key);
+            this.ctx.drawImage(img,cloud.x-this.offsetX,cloud.y-this.offsetY);
+        });
+/*         this.ctx.drawImage(
             this.backGroundCloud,
             this.staticCloudData.x,
             this.staticCloudData.y,
             this.staticCloudData.width,
             this.staticCloudData.heigth  
         )
-        
-        this.cloudsData.forEach(cloud =>{
-            /**@type {CanvasImageSource} */
-            const img= this.clouds.get(cloud.key);
-            this.ctx.drawImage(img,cloud.x,cloud.y);
-        });
+ */
     }
     updateClouds(){
 
         this.cloudsData.forEach(cloud =>{
             cloud.x+=cloud.speed;
-            if(cloud.x>this.canvas.clientWidth) cloud.x=-800;
+            /* if(cloud.x>this.canvas.clientWidth) cloud.x=-800; */
+            if(cloud.x>this.mapWidth*this.tileSize) cloud.x=-800;
            
+        });
+    }
+    updateCloudsScale(scaleFactor){
+        this.cloudsData.forEach(cloud=>{
+            cloud.x*=scaleFactor;
+            cloud.y*=scaleFactor;
+            cloud.speed*=scaleFactor;
         });
     }
 

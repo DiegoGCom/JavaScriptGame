@@ -116,7 +116,8 @@ class ImageManager {
                 spriteHeight: 800,
                 cols: 4 ,            //numero de fracciones ->> tiles que ocupa el sprite
                 rows: 4,            //numero de fracciones ->> tiles que ocupa el sprite
-                frSize: 200        //tamaño de la fracción
+                frSize: 200,    //tamaño de la fracción
+                hasCollider: false        
             },
             ruins: {
                 key: 'ruins',
@@ -130,7 +131,8 @@ class ImageManager {
                 spriteHeight: 1280,
                 cols: 10,
                 rows: 10,
-                frSize: 128
+                frSize: 128,
+                hasCollider: false
             },
             suelo0: {
                 key: 'suelo',
@@ -144,7 +146,8 @@ class ImageManager {
                 spriteHeight: 800,
                 cols:6,
                 rows:4,
-                frSize: 200
+                frSize: 200,
+                hasCollider:true
             },
             suelo1: {
                 key: 'suelo',
@@ -158,7 +161,8 @@ class ImageManager {
                 spriteHeight: 800,
                 cols:6,
                 rows:4,
-                frSize: 200
+                frSize: 200,
+                hasCollider:true
             },
             suelo2: {
                 key: 'suelo',
@@ -172,7 +176,8 @@ class ImageManager {
                 spriteHeight: 800,
                 cols:6,
                 rows:4,
-                frSize: 200
+                frSize: 200,
+                hasCollider:true
             },
             monigote: {
                 key: 'monigote',
@@ -186,7 +191,8 @@ class ImageManager {
                 spriteHeight: 204,
                 cols:7,
                 rows:1,
-                frSize: 204
+                frSize: 204,
+                hasCollider:true
             }
     
     

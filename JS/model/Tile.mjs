@@ -14,10 +14,10 @@ class Tile {
 
         //--Opciones----
         this.isSelected = false;
-        this.strokeOn = true;
+        this.strokeOn = false;
         this.strokeColor = 'white';
         this.hasCollider = false;
-        this.color = 'white';
+        this.color = '';
 
         //----Carga de imagenes
         this.worldInfo = null;

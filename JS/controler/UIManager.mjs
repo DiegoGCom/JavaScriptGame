@@ -58,7 +58,7 @@ class UIManager {
         //------CLIC EN EL BOTON DEL PERSONAJE PARA LOS EVENTOS EN EL CANVAS CONTAINER
         imageButtonCharacter.addEventListener('click', (e) => {
             e.stopPropagation();
-            this.dropDownMenuCreator.style.display = 'none';
+            this.disableMapCreator();
             this.dropDownMenuSandbox.style.display = 'none';
             this.dropDownMenuCharacter.style.display = this.dropDownMenuCharacter.style.display === 'block' ? 'none' : 'block';
         });
@@ -68,7 +68,7 @@ class UIManager {
             e.stopPropagation();
             this.dropDownMenuSandbox.style.display = this.dropDownMenuSandbox.style.display === 'block' ? 'none' : 'block';
             this.dropDownMenuCharacter.style.display = 'none';
-            this.dropDownMenuCreator.style.display = 'none';
+            this.disableMapCreator()
         });
         imageButtonCreator.addEventListener('click', (e) => {
 
@@ -76,6 +76,7 @@ class UIManager {
             this.dropDownMenuSandbox.style.display = 'none';
             this.dropDownMenuCharacter.style.display = 'none';
             this.dropDownMenuCreator.style.display = this.dropDownMenuCreator.style.display === 'flex' ? 'none' : 'flex';
+            this.creatorCanvas.setCanvasVisible(false);
         });
         window.addEventListener('keydown', (e) => {
 
@@ -88,8 +89,10 @@ class UIManager {
         this.creatorInfoButtons.forEach((button) => {
             button.addEventListener('mouseover', () => {
                 let info = button.innerHTML;
+                this.creatorCanvas.setCanvasVisible(true);
                 let obj = ImageManager.getObjects(info);
                 this.creatorCanvas.draw(obj.spriteSheet, obj);
+
             });
         });
 
@@ -122,7 +125,7 @@ class UIManager {
 
     }
 
-    //----TEMPORALMENTE----Introduciendo texto podemos cambiar la imagen en la casilla seleccionada
+
     addMenuItems(obj) {
 
         const gridContainerSandbox = document.getElementById('gridContainerSandbox');
@@ -137,6 +140,7 @@ class UIManager {
             this.canvasGroup.setObjectToDraw(obj);
             this.canvasGroup.setGroupSelection(obj.cols, obj.rows);
             this.dropDownMenuSandbox.style.display = 'none';
+
         });
 
     }
@@ -146,6 +150,10 @@ class UIManager {
             tile.render(tile.canvasX, tile.canvasY, this.mapCanvas.tileSize);
         });
         this.selectedTilesList.clear();
+    }
+    disableMapCreator() {
+        this.dropDownMenuCreator.style.display = 'none';
+        this.creatorCanvas.setCanvasVisible(false);
     }
 
 

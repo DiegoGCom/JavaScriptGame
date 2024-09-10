@@ -19,7 +19,7 @@ class CharacterCanvas extends BaseCanvas {
         this.offsetY = 3500;
         this.characters = new Map();
 
-        this.path=[];
+        this.path = [];
 
         this.createNewCharacter("Pepe", 400, 3900);
 
@@ -65,13 +65,21 @@ class CharacterCanvas extends BaseCanvas {
         this.characters.forEach(character => { character.setTarget(targetX, targetY, this.offsetX, this.offsetY); });
 
     }
-    setPath(path){
-
+    setPath(path) {
+        this.path = path;
         this.characters.forEach(character => {
-            character.setOffset(this.offsetX,this.offsetY);
-            character.setPath(path);
+            character.setOffset(this.offsetX, this.offsetY);
+            character.setPath(this.path);
 
         });
+    }
+    updatePath() {
+        if (this.path != null) {
+            for (let tile of this.path) {
+                tile = this.mapCanvas.map[tile.gridY][tile.gridX];
+            }
+            this.setPath(this.path);
+        }
     }
 
     //Dibuja la cuadricula del canvas de personaje

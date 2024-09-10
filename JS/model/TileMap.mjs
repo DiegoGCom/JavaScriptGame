@@ -14,12 +14,17 @@ class TileMap {
         this.tileSize = this.worldInfo.tileSize;
         this.mapWidth = this.worldInfo.mapWidth;
         this.mapHeight = this.worldInfo.mapHeight;
+        this.strokeOn=false;
 
         this.map = [];
 
         this.initializeGameMap();
 
     }
+    setStroke(stroke){
+        this.strokeOn=stroke;
+    }
+
 
     //Creamos la malla 
     initializeGameMap() {
@@ -55,7 +60,7 @@ class TileMap {
                 ) {
                     
                     tile.render(drawX, drawY, this.tileSize);
-
+                    tile.strokeOn=this.strokeOn;
                 }
             }
         } 
@@ -74,6 +79,8 @@ class TileMap {
 
                 /**@type {Tile} */
                 let tile = this.map[gridY][gridX];
+                tile.setCollider(obj.hasCollider);
+                console.log(obj.hasCollider);
                 if(obj.zIndex==0) tile.setBackground(obj);
                 
                 if(obj.zIndex==1) {
@@ -92,6 +99,7 @@ class TileMap {
         tile.singleImage = singleImage;
 
     }
+
 }
 
 export { TileMap }
