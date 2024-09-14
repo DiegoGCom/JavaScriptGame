@@ -2,6 +2,7 @@
 import { ImageManager } from "../controler/ImageManager.mjs";
 import { MapaMundi } from "../model/MapaMundi.mjs";
 import { MapArea } from "../model/MapArea.mjs";
+import { TileMap } from "../model/TileMap.mjs";
 import { BaseCanvas } from "./BaseCanvas.mjs";
 
 
@@ -14,115 +15,45 @@ class MapCanvas extends BaseCanvas {
 
         this.map = [];
 
-        this.mapaMundiInfo = ImageManager.getWorldMapInfo('mapaMundiInfo');
+        this.defaultTileMap= new TileMap(100,100,100);
+   
+        /**@type {TileMap} */
+        this.tileMap= null;
 
-        //this.mapaMundi = new MapaMundi(this.mapaMundiInfo);
+        this.tileMap=this.defaultTileMap;
 
         this.mapAreas = new Map();
 
-        this.mapAreaGround=0;
+        this.mapAreas.set('default',this.defaultTileMap);
 
-        this.scene='smallArea';
+        this.scene = 'default';
 
-        this.loading = 50;
 
-        this.offsetY=3500;
-
-        this.tileIndex = 510;
+        this.centeringOffsetX=0;
+        this.centeringOffsetY=0;
 
         this.draw();
     }
+    setTileMap(key,tileMap){
+        this.mapAreas.set(key,tileMap);
+    }
+    setScene(scene){
+        this.scene=scene;
+    }
 
     draw() {
-
-        switch(this.scene){
-            case 'mapaMundi':
-                this.drawMapaMundi();
-                break;
-            case 'smallArea':
-                this.drawArea();
-                break
-            case 'mapCreator':
-
-                break;
-        }
-      /*   if (this.bigMapSelected) {
-
-          
-           this.drawMapaMundi();
-
-        } else {
-
-            this.drawArea();
-
-        } */
-
-    }
-    drawMapCreator(){
-        
-
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.tileMap=this.mapAreas.get(this.scene);
+        this.map = this.tileMap.map;
+        this.setMapSize(this.tileMap.mapWidth, this.tileMap.mapHeight);
+        this.tileMap.render(this.tileSize, this.offsetX, this.offsetY,this.centeringOffsetX,this.centeringOffsetY);
     }
 
-    drawMapaMundi(){
+    clearRect() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.map = this.mapaMundi.map;
-
-        this.map[5][10].setStroke('green');
-
-        this.setMapSize(this.mapaMundi.mapWidth, this.mapaMundi.mapHeight);
-
-        this.mapaMundi.render(this.tileSize, this.offsetX, this.offsetY);
-
     }
-
-    drawArea() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        if (this.mapAreas.get(this.tileIndex) != undefined) {
-
-            /**@type {MapArea} */
-            let mapArea = this.mapAreas.get(this.tileIndex);
-
-            this.mapAreaGround=mapArea.ground;  
-
-            this.map = mapArea.map;
-
-            this.setMapSize(mapArea.mapWidth, mapArea.mapHeight);
-            
-            mapArea.render(this.tileSize, this.offsetX, this.offsetY);
-
-        } else {
-            const smallAreaInfo = ImageManager.getWorldMapInfo('smallAreaInfo');
-
-            const newMapArea = new MapArea(smallAreaInfo);
-
-            this.mapAreaGround=newMapArea.ground;
-
-            this.mapAreas.set(this.tileIndex, newMapArea);
-
-            console.log('Creando mapa en '+this.tileIndex);
-
-            this.map = newMapArea.map;
-
-            this.loading = 0;
-        }
-
-    }
-    clearRect(){
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-    update(){
-
-        if(this.loading<=50){
-            this.draw();
-            this.loading++; 
-           
-        }
-
-
-    }
-
+ 
 }
 
-export { MapCanvas}
+export { MapCanvas }

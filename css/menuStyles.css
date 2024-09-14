@@ -1,17 +1,152 @@
+#landingMenuContainer {
+    box-sizing: border-box;
+    width: 33vw;
+    height: 33vh;
+    left: 33vw;
+    top: 35vh;
+    z-index: 5;
+    display: flex;
+    position: absolute;
+    align-items: center;
+    flex-direction: column;
+    transition: transform 1s ease;
+    will-change: transform;
+}
+.slide-out{
+    animation: slideOut 2s ease forwards;
+}
+.slide-out-reverse{
+    animation: slideOutReverse 2s ease forwards;
+}
+.slide-in{
+    animation: slideIn 2s ease forwards;
+}
+.slide-in-reverse{
+    animation: slideInReverse 2s ease forwards;
+}
+
+.landingMenuButtons {
+    box-sizing: border-box;
+    font-family: 'Chewy', sans-serif;
+    font-size: 1.5em;
+    padding: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    border: solid black 2px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    min-width: 10vw;
+    height: 5em;
+    background-color: bisque;
+    margin: 1em;
+    will-change: transform;
+    transition: transform 1s ease;
+    animation: buttonsIdle 2s infinite;
+    &:hover {
+        translate: -5px -5px -5px;
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        border-color: silver;
+    }
+    &:active {
+        translate: 0px 0px 0px;
+    }
+  
+}
+
+@keyframes slideOut {
+    0%{transform:  translateX(0vw);}
+    100%{transform: translateX(120vw);}
+}
+@keyframes slideOutReverse {
+    0%{transform:  translateX(60vw);}
+    100%{transform: translateX(-1000px);}
+}
+@keyframes slideIn {
+    0%{transform:  translateX(0vw);}
+    100%{transform: translateX(60vw);}
+}
+@keyframes slideInReverse {
+    0%{transform:  translateX(120vw);}
+    100%{transform: translateX(0vw);}
+}
+
+@keyframes buttonsIdle{
+    0%{transform: scale(1);}
+    50%{transform: scale(1.03);}
+    100%{transform: scale(1);}
+}
+
+#mapCreatorMenu {
+    box-sizing: border-box;
+    border: solid 2px black;
+    border-radius: 5px;
+    left: -20vw;
+    top: 30vh;
+    z-index: 5;
+    width: 18vw;
+    height: auto    ;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background-color: bisque;
+    justify-content:space-around;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
+    transition: transform 1s ease;
+    overflow: hidden;
+}
+#mapCreatorMenu div{
+    display: flex;
+    margin-top:1em;
+    margin-bottom: 1em;
+    justify-content: space-evenly;
+}
+#mapCreatorMenu div label{
+    flex: 1;
+    margin-left: 1em;
+}
+#mapCreatorMenu div input{
+    flex: 1; 
+    font-family: 'Chewy', sans-serif;
+    margin-right: 1em;
+    border: solid 2px black;
+    border-radius: 5px;
+} 
+#mapCreatorMenu div button{
+    font-family: 'Chewy', sans-serif;
+    font-size: 1em;
+    border: solid 2px black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    &:hover {
+        translate: -2px -2px -2px;
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        border-color: white;
+    }
+    &:active {
+        translate: 0px 0px 0px
+    } 
+}
+
+
 /* Estilo para la barra de navegación */
 .nav {
     position: relative;
-    top: 1em;
+    top: 0;
     left: 0;
-    width: 100vw;
-    height: 3em;
+    width: 3em;
+    height: 100vh;
     background-color: rgba(255, 255, 255, 0);
+
     /* Fondo transparente */
     display: flex;
     align-items: center;
-    box-sizing: border-box;
+
     /* Incluye el padding y el border en el tamaño total */
-    z-index: 10;
+    z-index: 0;
+    flex-direction: column;
 
 }
 
@@ -26,11 +161,24 @@
     cursor: pointer;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     margin-left: 1em;
+    margin-top: 0.5em;
 
     &:hover {
         box-shadow: 0 15px 15px rgba(0, 0, 0, .9);
 
     }
+}
+
+#imageButtonCharacter {
+    display: none;
+}
+
+#imageButtonMap {
+    display: none;
+}
+
+#imageButtonSandbox {
+    display: none;
 }
 
 /* Estilo para la imagen del botón */
@@ -52,8 +200,8 @@
     /* Posición absoluta respecto al contenedor .nav */
     top: 3em;
     /* Se despliega justo debajo del botón */
-    left: 2em;
-    width: 25vw;
+    left: 4em;
+    /* width: 25vw; */
     max-height: 70vh;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
@@ -61,7 +209,7 @@
     /* Asegúrate de que esté por encima del canvas */
     box-sizing: border-box;
     /* Incluye el padding en el tamaño total */
-    background-image: url('../Assets/Dibujos/Textures/dropdownmenu-img.png');
+    background-color: rgb(65, 65, 65, .5);
     background-position: center;
     background-size: 100% 100%;
     overflow: auto;
@@ -83,8 +231,7 @@
 }
 
 .dropdown-menu div button {
-
-
+    width: 5em;
     position: relative;
     box-sizing: border-box;
     align-items: center;
@@ -133,16 +280,14 @@
     border-radius: 7px;
     margin: 3px;
     display: block;
-    width: 100%;
+    width: 10vw;
     height: 3em;
-    background-color: white;
+    color: white;
+    background-color: rgb(65, 65, 65);
 
     &:hover {
         box-shadow: 0 15px 15px rgba(0, 0, 0, .9);
         transform: translate(3px, 3px);
+        background-color: rgb(149, 147, 147);
     }
 }
-
-
-
-

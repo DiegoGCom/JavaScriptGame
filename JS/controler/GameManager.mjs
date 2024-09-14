@@ -55,8 +55,8 @@ class GameManager {
         this.currentTile = this.mapCanvas.map[this.gridY][this.gridX];
         this.character.currentTile = this.currentTile;
         //   console.log(this.currentTile.objectData);
-
     }
+    
 }
 
 export { GameManager }

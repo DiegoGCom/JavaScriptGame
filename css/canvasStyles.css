@@ -1,10 +1,10 @@
 body {
     margin: 0;
     height: 100vh;
-    font-family: Arial, sans-serif;
+    font-family: 'Chewy', sans-serif;
     background-color: #333;
     overflow: hidden; /* Evita scrollbars innecesarios */
-    position: relative;
+    position:relative;
 }
 
 /* Estilo para el contenedor del canvas */
@@ -27,7 +27,7 @@ body {
     left: 0;
     border: none;
     display: block;
-    image-rendering:crisp-edges;  /* Mejora la visualización de los bordes en escalas */
+    image-rendering:pixelated;  /* Mejora la visualización de los bordes en escalas */
     box-sizing: border-box; /* Incluye el padding y el border en el tamaño total */
 }
 
@@ -43,7 +43,7 @@ body {
 }
 
 #sunsetCanvas{
-    z-index:-4;
+    z-index:4;
 }
 #mapCreatorCanvas {
  
@@ -57,7 +57,7 @@ body {
     box-sizing: border-box;
     box-shadow: 2px 2px 7px 3px;
     background-color: aliceblue;
-    image-rendering:crisp-edges;
+    image-rendering:pixelated;
     z-index:-5;
     cursor: grab;
 }

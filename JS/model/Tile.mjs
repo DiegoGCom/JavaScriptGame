@@ -1,7 +1,7 @@
 
 class Tile {
 
-    constructor(ctx, tileIndex,gridX,gridY) {
+    constructor(ctx, tileIndex, gridX, gridY) {
         /**@type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.tileIndex = tileIndex;
@@ -9,8 +9,8 @@ class Tile {
         //---Coordenadas
         this.x = 0;
         this.y = 0;
-        this.gridX=gridX;
-        this.gridY=gridY;
+        this.gridX = gridX;
+        this.gridY = gridY;
 
         //--Opciones----
         this.isSelected = false;
@@ -20,8 +20,6 @@ class Tile {
         this.color = '';
 
         //----Carga de imagenes
-        this.worldInfo = null;
-        this.singleImage = null;
         this.backgroundOn = false;
         this.foregroundOn = false;
         this.backGround = {
@@ -39,12 +37,12 @@ class Tile {
             height: 0,
         }
         //----PathFinding----
-        this.parent=null;
-        this.g=0;
-        this.h=0;
-        this.f=0;
+        this.parent = null;
+        this.g = 0;
+        this.h = 0;
+        this.f = 0;
 
-  
+
     }
 
     setObjectToDraw(obj) {
@@ -59,11 +57,7 @@ class Tile {
     }
 
     //------SETTERS------
-    setInfo(worldInfo) {
-        this.worldInfo = worldInfo;
-        this.spriteSheet = worldInfo.spriteSheet;
-        this.spriteWidth = worldInfo.spriteWidth;
-    }
+   
     setSpriteSheet(obj, objX, objY) {
         this.foreGround.spriteSheet = obj.spriteSheet;
         this.foreGround.x = objX;
@@ -95,11 +89,11 @@ class Tile {
         this.isArea = true;
         this.strokeColor = color;
     }
-    getColor(){
+    getColor() {
         return this.color;
     }
-    setCollider(collider){
-        this.hasCollider=collider;
+    setCollider(collider) {
+        this.hasCollider = collider;
     }
 
     //--------DIBUJADO--------
@@ -123,7 +117,7 @@ class Tile {
     drawOverlay(size) {
 
         this.drawImage(size);
-        
+
     }
 
     drawImage(size) {
@@ -145,7 +139,7 @@ class Tile {
             this.ctx.strokeRect(this.x, this.y, size, size);
             this.ctx.font = `${size / 8}px Arial`;
             this.ctx.fillStyle = 'black';
-            this.ctx.fillText(this.gridY + ', ' + this.gridX, this.x, this.y+15);
+            this.ctx.fillText(this.gridY + ', ' + this.gridX, this.x, this.y + 15);
         }
     }
     drawSelection(size) {
@@ -162,13 +156,13 @@ class Tile {
         this.setPosition(x, y);
 
         if (this.color) this.fillColor(size);
-        else {
-            this.drawBackground(size);
 
-            this.drawOverlay(size);
+        this.drawBackground(size);
 
-            this.drawSelection(size);
-        }
+        this.drawOverlay(size);
+
+        this.drawSelection(size);
+
         if (this.strokeOn) this.drawStroke(size);
 
 

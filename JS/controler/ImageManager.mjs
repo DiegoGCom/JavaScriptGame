@@ -114,7 +114,7 @@ class ImageManager {
                 y: 0,
                 spriteWidth: 800,
                 spriteHeight: 800,
-                cols: 4 ,            //numero de fracciones ->> tiles que ocupa el sprite
+                cols: 4,            //numero de fracciones ->> tiles que ocupa el sprite
                 rows: 4,            //numero de fracciones ->> tiles que ocupa el sprite
                 frSize: 200,    //tamaño de la fracción
                 hasCollider: false        

@@ -17,10 +17,12 @@ class Character {
         this.targetY;
         this.frameRate = 0;
         this.currentTile = null;
-        this.contador=1;
+        this.contador = 1;
 
-        this.offsetX=0;
-        this.offsetY=0;
+        this.offsetX = 0;
+        this.offsetY = 0;
+
+        this.tileSize = 100;
 
         this.path = [];
 
@@ -41,10 +43,12 @@ class Character {
             this.monigoteLoaded = true;
 
         }
+        
+
     }
-    setOffset(offsetX,offsetY){
-        this.offsetX=offsetX;
-        this.offsetY=offsetY;
+    setOffset(offsetX, offsetY) {
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
     setPath(path) {
         this.path = path;
@@ -58,21 +62,18 @@ class Character {
     }
 
     updateTarjetPosition(scaleFactor) {
-
         this.targetX = this.targetX * scaleFactor;
-        this.targetY = this.targetY*scaleFactor;
+        this.targetY = this.targetY * scaleFactor;
         this.speed *= scaleFactor
     }
 
 
     updateScale(scaleFactor) {
-
         this.x = this.x * scaleFactor;
         this.y = this.y * scaleFactor;
-
+        this.tileSize*=scaleFactor; 
     }
     move() {
-
         const deltaX = this.targetX - this.x;
         const deltaY = this.targetY - this.y;
         const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -84,22 +85,18 @@ class Character {
             this.x += (deltaX / distance) * this.speed;
             this.y += (deltaY / distance) * this.speed;
         }
-
     }
 
     render(x, y, size) {
-
         //this.animateSprite();
-
+        this.tileSize = size;
         this.ctx.drawImage(
             this.monigoteSheet,
             this.monigote.x,
             this.monigote.y,
             this.monigote.width,
             this.monigote.height,
-            x, y, size, size);
-
-
+            x, y, size, size);          
     }
     //----MÉTODO QUE MUEVE AL PERSONAJE 
     updateRender(x, y, size) {
@@ -109,9 +106,8 @@ class Character {
     }
 
     renderMirror(x, y, size) {
-
         //this.animateSprite();
-
+        this.tileSize = size;
         this.ctx.save();
         this.ctx.translate(x + size, y);
         this.ctx.scale(-1, 1);
@@ -139,19 +135,28 @@ class Character {
 
     }
     followPath() {
-        
+
         if (this.path.length === 0) {
             this.contador = 0;
             return
         }
-      //  console.log('Llegada al tile ' + this.contador);
+        //  console.log('Llegada al tile ' + this.contador);
         const nextTile = this.path.shift();
-        this.targetX = nextTile.x+this.offsetX;
-        this.targetY = nextTile.y+this.offsetY;
+        this.targetX = nextTile.x + this.offsetX;
+        this.targetY = nextTile.y + this.offsetY;
 
-        console.log('Coordenadas de siguiente casilla: '+this.targetX+', '+this.targetY)
         this.contador++;
 
+    }
+    getGridCoordenates() {
+
+        /*calculamos la casilla en la que se encuentra el personaje tomando
+        como referencia el punto central del tile(this.x+this.tileSize/2) para evitar posibles errores 
+        en el escalado*/
+        let gridX=Math.floor((this.x+this.tileSize/2)/this.tileSize);
+        let gridY=Math.floor((this.y+this.tileSize/2)/this.tileSize);
+
+        return {gridX,gridY};
     }
 
 

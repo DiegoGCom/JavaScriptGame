@@ -1,9 +1,11 @@
 import { CharacterCanvas } from "../graphics/CharacterCanvas.mjs";
 import { DragYDropCanvas } from "../graphics/DragYDropCanvas.mjs";
 import { MapCanvas } from "../graphics/MapCanvas.mjs";
+import { SunsetCanvas } from "../graphics/SunsetCanvas.mjs";
 import { MapCreator } from "../utils/MapCreator.mjs";
 import { CanvasGroupControler } from "./CanvasGroupControler.mjs";
 import { ImageManager } from "./ImageManager.mjs";
+import { LandingMenu } from "./Ui/LandingMenu.mjs";
 
 class UIManager {
 
@@ -18,11 +20,16 @@ class UIManager {
         this.dragDropCanvas = canvasGroup.dragDropCanvas;
         /**@type {MapCreator} */
         this.creatorCanvas = canvasGroup.creatorCanvas;
+        /**@type {SunsetCanvas}*/
+        this.sunsetCanvas = canvasGroup.sunsetCanvas;
+
+        this.landingMenu= new LandingMenu(this.canvasGroup);
 
         this.selectedTilesList = canvasGroup.selectedTilesList;
 
-        this.dropDownMenus = document.getElementsByClassName('dropdown-menu');
 
+
+        this.dropDownMenus = document.getElementsByClassName('dropdown-menu');
         this.dropDownMenuSandbox = document.getElementById('dropdownMenuSandbox');
         this.dropDownMenuCharacter = document.getElementById('dropdownMenuCharacter');
         this.dropDownMenuCreator = document.getElementById('dropdownMenuCreator');
@@ -47,6 +54,7 @@ class UIManager {
         const imageButtonSandbox = document.getElementById('imageButtonSandbox');
         const imageButtonCreator = document.getElementById('imageButtonCreator');
         const dropDownMenus = document.getElementsByClassName('dropdown-menu');
+
 
         this.stopPropagation();
 
@@ -83,6 +91,7 @@ class UIManager {
             if (e.key === 'Escape') {
                 this.dropDownMenuSandbox.style.display = 'none';
                 this.dropDownMenuCharacter.style.display = 'none';
+                this.disableMapCreator();
             }
         });
 
@@ -95,6 +104,7 @@ class UIManager {
 
             });
         });
+
 
 
     }
@@ -138,7 +148,11 @@ class UIManager {
         button.addEventListener('click', () => {
             this.dragDropCanvas.setObj(obj);
             this.canvasGroup.setObjectToDraw(obj);
-            this.canvasGroup.setGroupSelection(obj.cols, obj.rows);
+            let objCols = obj.type == 'block' ? obj.cols : 1;
+            let objRows = obj.type == 'block' ? obj.rows : 1;
+            console.log(objCols, objRows);
+
+            this.canvasGroup.setGroupSelection(objCols, objRows);
             this.dropDownMenuSandbox.style.display = 'none';
 
         });
@@ -154,6 +168,11 @@ class UIManager {
     disableMapCreator() {
         this.dropDownMenuCreator.style.display = 'none';
         this.creatorCanvas.setCanvasVisible(false);
+    }
+    changeCanvasIndex(canvas, zIndex) {
+
+        canvas.style.zIndex = zIndex;
+
     }
 
 

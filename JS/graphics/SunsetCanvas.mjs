@@ -33,13 +33,13 @@ class SunsetCanvas extends BaseCanvas {
         this.loadClouds();
         this.backGroundCloud=ImageManager.getImage('nube6');
         this.staticCloudData={key:'cloud6',x:0,y:2000,width:1920,heigth:1000}
-        console.log(this.clouds);
+        
         this.cloudsData=[
-            {key:'cloud1',x:1850,y:600, speed:0.2},
-            {key:'cloud2',x:2400,y:1200, speed:0.4},
-            {key:'cloud3',x:-10,y:3000, speed:0.3},
-            {key:'cloud4',x:5000,y:1950, speed:0.6},
-            {key:'cloud5',x:930,y:500, speed:2},
+            {key:'cloud1',x:1850,y:600,width:331,heigth:127,speed:0.2},
+            {key:'cloud2',x:2400,y:1200,width:225,heigth:65, speed:0.4},
+            {key:'cloud3',x:-10,y:3000,width:586,heigth:105,speed:0.3},
+            {key:'cloud4',x:5000,y:1950,width:325,heigth:128, speed:0.6},
+            {key:'cloud5',x:930,y:500,width:224,heigth:65, speed:2},
         ]
     }
 
@@ -264,7 +264,7 @@ class SunsetCanvas extends BaseCanvas {
         this.cloudsData.forEach(cloud =>{
             /**@type {CanvasImageSource} */
             const img= this.clouds.get(cloud.key);
-            this.ctx.drawImage(img,cloud.x-this.offsetX,cloud.y-this.offsetY);
+            this.ctx.drawImage(img,cloud.x-this.offsetX,cloud.y-this.offsetY,cloud.width,cloud.heigth);
         });
 /*         this.ctx.drawImage(
             this.backGroundCloud,
@@ -289,6 +289,8 @@ class SunsetCanvas extends BaseCanvas {
             cloud.x*=scaleFactor;
             cloud.y*=scaleFactor;
             cloud.speed*=scaleFactor;
+            cloud.width*=scaleFactor;
+            cloud.heigth*=scaleFactor;
         });
     }
 

@@ -16,12 +16,12 @@ class CharacterCanvas extends BaseCanvas {
         this.clearRect = false;
         this.scaleFactor = 1;
         this.dragging = false;
-        this.offsetY = 3500;
+        this.offsetY = 0;
         this.characters = new Map();
 
         this.path = [];
 
-        this.createNewCharacter("Pepe", 400, 3900);
+        this.createNewCharacter("Pepe", 400, 400);
 
     }
 
