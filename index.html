@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/canvasStyles.css">
     <link rel="stylesheet" href="css/menuStyles.css">
     <link rel="icon" href="monedaNueva.gif" type="image/gif">
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
 
     <script src="JS/main.js" type="module"> </script>
 
@@ -16,7 +17,36 @@
 </head>
 
 <body>
+    <!-- Landing Menu -->
+    <div id="landingMenuContainer">
+        <button class="landingMenuButtons">PLAY</button>
+        <button class="landingMenuButtons">MAPCREATOR</button>
+        <button class="landingMenuButtons">CREDITS</button>
+    </div>
+    <!-- MapCreatorMenu -->
+    <div id="mapCreatorMenu" >
+        <div>
+            <label for="mapWidth">Map Width:</label>
+            <input type="text" id="mapWidth" placeholder="Introduce tiles...">
+        </div>
+        <div>
+            <label for="mapHeight">Map Height:</label>
+            <input type="text" id="mapHeight" placeholder="Introduce tiles..." >
+        </div>
+        <div>
+            <label for="strokeCheckBox">Stroke:</label>
+            <input type="checkbox" name="stroke" id="strokeCheckBox" >
+        </div>
+        <div>
+            <button id="acceptButtonCreator">Accept</button>
+            <button id="cancelButtonCreator">Cancel</button>
+        </div>
+
+    </div>
+
+    <!-- Canvas Continer -->
     <div id="canvasContainer">
+
         <div class="nav">
             <div id="imageButtonCharacter" class="imgButton">
                 <img src="Assets/Dibujos/PNG/monigote_button.png" alt="boton monigote">
@@ -47,8 +77,6 @@
                     <div class="creatorInfo">suelo0</div>
                     <div class="creatorInfo">suelo1</div>
                     <div class="creatorInfo">suelo2</div>
-                    <div class="creatorInfo">monigote</div>
-
                 </div>
             </div>
         </div><!--Cierre nav-->
