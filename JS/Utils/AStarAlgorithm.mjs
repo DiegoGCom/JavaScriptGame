@@ -55,6 +55,9 @@ class AStarAlgorithm {
         }
         return null;
     }
+    setGrid(grid){
+        this.grid=grid;
+    }
     setTiles(startTile, goalTile) {
         this.openList.clearQueue();
         this.startTile = startTile;

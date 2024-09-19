@@ -11,24 +11,26 @@ class TileMap {
         this.tileSize = tileSize;
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
-        this.strokeOn = false;
-        this.backgroundColor='';
+        this.strokeOn = true;
+        this.backgroundColor='#4DEB7B';
 
         this.drawX=0;
         this.drawY=0;
-
-     
-
-        this.backgrounColor = null;
 
         this.map = [];
 
         this.initializeGameMap();
 
     }
-    setStroke(stroke) {
-        this.strokeOn = stroke;
+    setStroke(strokeOn) {
+        this.strokeOn=strokeOn;
+        for(let y=0;y<this.mapHeight;y++){
+            for(let x=0;x<this.mapWidth;x++){
+                this.map[y][x].strokeOn=strokeOn;
+            }
+        }
     }
+    
     setBackgroundColor(color){
         this.backgrounColor=color;
     }
@@ -53,8 +55,8 @@ class TileMap {
 
         this.tileSize = tileSize;
 
-        this.ctx.fillStyle=this.backgrounColor;
-        this.ctx.fillRect(0,0,this.mapWidth*tileSize, this.mapHeight*tileSize);
+        this.ctx.fillStyle=this.backgroundColor;
+        this.ctx.fillRect(centeringOffsetX,centeringOffsetY,this.mapWidth*tileSize, this.mapHeight*tileSize);
 
         for (let y = 0; y < this.mapHeight; y++) {
             for (let x = 0; x < this.mapWidth; x++) {
@@ -66,10 +68,10 @@ class TileMap {
 
                 if (
                     this.drawX <= this.canvas.width && this.drawX + this.tileSize >= 0 &&
-                    this.drawY <= this.canvas.height && this.drawY + this.tileSize >= 0
+                    this.drawY<= this.canvas.height && this.drawY + this.tileSize >= 0
                 ) {
                     tile.render(this.drawX, this.drawY, this.tileSize);
-                    tile.strokeOn = this.strokeOn;
+                    
                 }
             }
         }

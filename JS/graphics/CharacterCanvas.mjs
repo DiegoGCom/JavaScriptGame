@@ -28,8 +28,8 @@ class CharacterCanvas extends BaseCanvas {
     //TODO: cambiar el metodo para hacer spawn 
 
     createNewCharacter(name, positionX, positionY) {
-        let character = new Character(this.ctx, name, positionX, positionY);
-        character.setTarget(400, 400, this.offsetX, this.offsetY);
+        let character = new Character(this.ctx, name, this.mapCanvas.map[0][0]);
+        character.setTarget(0,0, this.offsetX, this.offsetY);
         this.characters.set(character.name, character);
 
     }

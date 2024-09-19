@@ -24,30 +24,34 @@
         <button class="landingMenuButtons">CREDITS</button>
     </div>
     <!-- MapCreatorMenu -->
-    <div id="mapCreatorMenu" >
+    <div id="mapCreatorMenu">
         <div>
-            <label for="mapWidth">Map Width:</label>
-            <input type="text" id="mapWidth" placeholder="Introduce tiles...">
+            <label for="mapNameCreator">Map name:</label>
+            <input type="text" name="mapName" id="mapNameCreator" placeholder="New scene">
         </div>
         <div>
-            <label for="mapHeight">Map Height:</label>
-            <input type="text" id="mapHeight" placeholder="Introduce tiles..." >
+            <label for="mapWidthCreatorMenu">Map Width:</label>
+            <input type="number" id="mapWidthCreatorMenu" placeholder="10" min="10" value="10">
+        </div>
+        <div>
+            <label for="mapHeightCreatorMenu">Map Height:</label>
+            <input type="number" id="mapHeightCreatorMenu" placeholder="10" min="10" value="10">
         </div>
         <div>
             <label for="strokeCheckBox">Stroke:</label>
-            <input type="checkbox" name="stroke" id="strokeCheckBox" >
+            <input type="checkbox" name="stroke" id="strokeCheckBox">
         </div>
+        <p id="dialogParagraphCreatorMenu">Crea un nuevo mapa</p>
         <div>
             <button id="acceptButtonCreator">Accept</button>
+            <button id="defaultButtonCreator">Default</button>
             <button id="cancelButtonCreator">Cancel</button>
+
         </div>
 
     </div>
-
-    <!-- Canvas Continer -->
-    <div id="canvasContainer">
-
-        <div class="nav">
+    <aside id="asideMapCreatorMenu">
+        <!-- <div class="nav">
             <div id="imageButtonCharacter" class="imgButton">
                 <img src="Assets/Dibujos/PNG/monigote_button.png" alt="boton monigote">
             </div>
@@ -79,11 +83,31 @@
                     <div class="creatorInfo">suelo2</div>
                 </div>
             </div>
-        </div><!--Cierre nav-->
+        </div --><!--Cierre nav-->
+
+        <div id="flexContainerCreator" class="flexContainer">
+            <div class="creatorInfo">appleHouse</div>
+            <div class="creatorInfo">ruins</div>
+            <div class="creatorInfo">suelo0</div>
+            <div class="creatorInfo">suelo1</div>
+            <div class="creatorInfo">suelo2</div>
+   
+        </div>
+        <div class="flexContainer">
+           <button id="strokeButtonCreator" class="buttonCreator">Stroke</button>
+           <button id="characterButtonCreator" class="buttonCreator">Character</button>
+           <button id="pathFinderButtonCreator" class="buttonCreator">PathFind</button>
+
+        </div>
+
+    </aside>
+
+    <!-- Canvas Continer -->
+    <div id="canvasContainer">
 
         <canvas id="gameCanvas" class="canvas"></canvas>
         <canvas id="characterCanvas" class="canvas"></canvas>
-        <canvas id="animationCanvas" class="canvas"></canvas>
+        <canvas id="dragDropCanvas" class="canvas"></canvas>
         <canvas id="sunsetCanvas" class="canvas"></canvas>
         <canvas id="mapCreatorCanvas" class="canvas"></canvas>
 

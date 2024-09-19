@@ -3,20 +3,20 @@ import { Tile } from "./Tile.mjs";
 class Character {
 
 
-    constructor(ctx, name, x, y) {
+    constructor(ctx, name,currentTile) {
 
         this.name = name;
         /**@type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.bigMapX;
         this.bigMapY;
-        this.x = x;
-        this.y = y;
+        this.x = currentTile.x;
+        this.y = currentTile.y;
         this.speed = 3;
         this.targetX;
         this.targetY;
         this.frameRate = 0;
-        this.currentTile = null;
+        this.currentTile =currentTile;
         this.contador = 1;
 
         this.offsetX = 0;

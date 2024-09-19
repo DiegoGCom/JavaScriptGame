@@ -31,7 +31,7 @@ class DragYDropCanvas extends BaseCanvas{
 
     drawObject(x,y,size){
         if(this.objToDraw==null) return console.log('Objeto nulo');
-        this.ctx.clearRect(0,0,this.canvas.clientWidth,this.canvas.clientHeight);
+        this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
         this.ctx.drawImage(this.objToDraw.spriteSheet,this.objToDraw.x,this.objToDraw.y,this.objToDraw.spriteWidth,this.objToDraw.spriteHeight,x,y,size*this.objToDraw.rows,size*this.objToDraw.cols);
     
     }

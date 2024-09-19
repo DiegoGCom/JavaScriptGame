@@ -6,6 +6,7 @@ import { CharacterCanvas } from "../graphics/CharacterCanvas.mjs";
 import { SunsetCanvas } from "../graphics/SunsetCanvas.mjs";
 import { MapCreator } from "../utils/MapCreator.mjs";
 import { AStarAlgorithm } from "../utils/AStarAlgorithm.mjs";
+import { UIVisibilityControler } from "./Ui/UIVisibilityControler.mjs";
 
 
 
@@ -15,15 +16,16 @@ class CanvasGroupControler {
 
         this.mapCanvas = new MapCanvas('gameCanvas', 100);
         this.characterCanvas = new CharacterCanvas('characterCanvas', 100, this.mapCanvas);
-        this.dragDropCanvas = new DragYDropCanvas('animationCanvas', 100);
+        this.dragDropCanvas = new DragYDropCanvas('dragDropCanvas', 100);
         this.sunsetCanvas = new SunsetCanvas('sunsetCanvas', 100);
         this.creatorCanvas = new MapCreator(this);
+        this.visibilityControler = new UIVisibilityControler(this);
 
         this.isDragging = false;
         this.startX = 0;
         this.startY = 0;
 
-        this.enablePathFind = true;
+        this.enablePathFind = false;
         this.selectTile = false;
         this.selectedTile = this.mapCanvas.map[0][0];
         this.groupSelection = false;
@@ -51,12 +53,10 @@ class CanvasGroupControler {
             this.sunsetCanvas.setOffset(this.mapCanvas.offsetX, this.mapCanvas.offsetY);
             this.sunsetCanvas.draw();
         };
-
     }
     update() {
         if (!this.isUpdating) return;
         this.characterCanvas.update();
-        this.mapCanvas.update();
         this.sunsetCanvas.update();
     }
 
@@ -104,6 +104,7 @@ class CanvasGroupControler {
 
         container.addEventListener("mousemove", (e) => {
             this.mouseDragg(e);
+
             if (this.selectTile) this.selectMouseTile(e);
             if (this.groupSelection) this.selectGroupOfTiles(e);
             if (this.paint) this.drawObjects(e);
@@ -156,27 +157,7 @@ class CanvasGroupControler {
         });
     }
 
-    runAStarAlgorithm() {
-        if (this.tileA && this.tileB) {
-            this.aStar.setTiles(this.tileA, this.tileB);
-            let path = this.aStar.run();
-            if (path != null) {
-                for (let tile of path) {
-                    tile.setColor('lightgrey');
-                    this.tileA.setColor('green');
-                    this.tileB.setColor('red');
-                    // this.selectedTilesList.set(tile.tileIndex, tile);         
-                }
-                this.characterCanvas.setPath(path);
-                this.mapCanvas.draw();
-            } else {
-                console.log('Estas encerrado!!!');
-            }
-        } else {
-            console.log('Debes seleccionar las casillas');
-        }
 
-    }
     setCollider(e) {
         let { gridX, gridY } = this.getGridCoordenates(e);
         let collider = this.mapCanvas.map[gridY][gridX].hasCollider ? false : true;
@@ -300,14 +281,36 @@ class CanvasGroupControler {
         // console.log(this.selectedTile.x, this.selectedTile.y);
 
     }
+    runAStarAlgorithm() {
+        this.aStar.setGrid(this.mapCanvas.map);
+        if (this.tileA && this.tileB) {
+            this.aStar.setTiles(this.tileA, this.tileB);
+            let path = this.aStar.run();
+            if (path != null) {
+                for (let tile of path) {
+                    tile.setColor('lightgrey');
+                    this.tileA.setColor('green');
+                    this.tileB.setColor('red');
+                    // this.selectedTilesList.set(tile.tileIndex, tile);         
+                }
+                this.characterCanvas.setPath(path);
+                this.mapCanvas.draw();
+            } else {
+                console.log('Estas encerrado!!!');
+            }
+        } else {
+            console.log('Debes seleccionar las casillas');
+        }
+
+    }
 
     //--------selecciona las casillas por las que pasa el raton----
     selectMouseTile(e) {
 
         let { gridX, gridY } = this.getGridCoordenates(e);
-        if(gridX<0 || gridX>this.mapCanvas.tileMapSelected.mapWidth-1)return;
-        if(gridY<0 || gridY>this.mapCanvas.tileMapSelected.mapHeight-1)return;
-        
+        if (gridX < 0 || gridX > this.mapCanvas.tileMap.mapWidth - 1) return;
+        if (gridY < 0 || gridY > this.mapCanvas.tileMap.mapHeight - 1) return;
+
         /**@type {Tile} */
         this.selectedTile = this.mapCanvas.map[gridY][gridX];
         this.selectedTile.setSelected(true);
@@ -413,8 +416,8 @@ class CanvasGroupControler {
 
         this.quitTileSelection();
         let { gridX, gridY } = this.getGridCoordenates(e);
-        if(gridX<0 || gridX>this.mapCanvas.tileMapSelected.mapWidth-1)return;
-        if(gridY<0 || gridY>this.mapCanvas.tileMapSelected.mapHeight-1)return;
+        if (gridX < 0 || gridX > this.mapCanvas.tileMap.mapWidth - 1) return;
+        if (gridY < 0 || gridY > this.mapCanvas.tileMap.mapHeight - 1) return;
 
         let tileSelected = this.mapCanvas.map[gridY][gridX];
         if (gridX > this.mapCanvas.mapWidth - this.groupSelectionWidth) gridX = this.mapCanvas.mapWidth - this.groupSelectionWidth;
@@ -434,13 +437,13 @@ class CanvasGroupControler {
     drawObjects(e) {
         let { gridX, gridY } = this.getGridCoordenates(e);
 
-        if(gridX<0 || gridX>this.mapCanvas.tileMapSelected.mapWidth-1)return;
-        if(gridY<0 || gridY>this.mapCanvas.tileMapSelected.mapHeight-1)return;
+        if (gridX < 0 || gridX > this.mapCanvas.tileMap.mapWidth - 1) return;
+        if (gridY < 0 || gridY > this.mapCanvas.tileMap.mapHeight - 1) return;
 
         if (gridX > this.mapCanvas.mapWidth - this.groupSelectionWidth) gridX = this.mapCanvas.mapWidth - this.groupSelectionWidth;
         if (gridY > this.mapCanvas.mapHeight - this.groupSelectionHeight) gridY = this.mapCanvas.mapHeight - this.groupSelectionHeight;
 
-        const mapArea = this.mapCanvas.tileMapSelected;
+        const mapArea = this.mapCanvas.tileMap;
         mapArea.drawMultipleTileObject(this.objectToDraw, gridX, gridY);
         this.mapCanvas.draw();
 
@@ -448,10 +451,12 @@ class CanvasGroupControler {
 
     getGridCoordenates(e) {
 
-        /*   const rect = this.mapCanvas.canvas.getBoundingClientRect(); */
-
-        const mouseX = e.clientX - this.mapCanvas.centeringOffsetX;
-        const mouseY = e.clientY - this.mapCanvas.centeringOffsetY;
+        const rect = this.mapCanvas.canvas.getBoundingClientRect();
+        const asideWidth = rect.left;
+        const rawMouseX = e.clientX - rect.left; 
+        const adjustmentFactor = rawMouseX / window.innerWidth * asideWidth;  // Ajuste proporcional basado en la posición X y el ancho del aside
+        const mouseX = rawMouseX  + adjustmentFactor;
+        const mouseY = (e.offsetY) - this.mapCanvas.centeringOffsetY;
 
         let gridX = Math.floor((this.mapCanvas.offsetX + mouseX) / this.mapCanvas.tileSize);
         let gridY = Math.floor((this.mapCanvas.offsetY + mouseY) / this.mapCanvas.tileSize);

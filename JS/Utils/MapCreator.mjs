@@ -2,6 +2,7 @@ import { CanvasGroupControler } from "../controler/CanvasGroupControler.mjs";
 import { ImageManager } from "../controler/ImageManager.mjs";
 import { BaseCanvas } from "../graphics/BaseCanvas.mjs";
 import { DragYDropCanvas } from "../graphics/DragYDropCanvas.mjs";
+import { MapCanvas } from "../graphics/MapCanvas.mjs";
 import { TileMap } from "../model/TileMap.mjs";
 
 class MapCreator extends BaseCanvas {
@@ -17,30 +18,35 @@ class MapCreator extends BaseCanvas {
         this.canvasGroup = canvasGroup;
         /**@type {DragYDropCanvas} */
         this.dragDropCanvas = canvasGroup.dragDropCanvas;
+        /**@type {MapCanvas} */
+        this.mapCanvas= canvasGroup.mapCanvas;
+        /**@type {Array} */
+        this.creatorInfoButtons = [...document.getElementsByClassName('creatorInfo')];
 
-        this.spriteToDraw={
-            key:'',
-            type:'',
-            zIndex:0,
-            spriteSheet:null,
-            src:'',
-            x:0,y:0,
-            spriteWidth:0,
-            spriteHeight:0,
-            cols:1,
-            rows:1,
-            frSize:0,
-            hasCollider:false
+        this.strokeButton= document.getElementById('strokeButtonCreator');
+        this.characterButton= document.getElementById('characterButtonCreator');
+        this.pathFinderButton= document.getElementById('pathFinderButtonCreator');
 
+        this.spriteToDraw = {
+            key: '',
+            type: '',
+            zIndex: 0,
+            spriteSheet: null,
+            src: '',
+            x: 0, y: 0,
+            spriteWidth: 0,
+            spriteHeight: 0,
+            cols: 1,
+            rows: 1,
+            frSize: 0,
+            hasCollider: false
         };
-
         this.obj = null;
-
         this.setupListeners();
 
     }
-    setCanvasVisible(visible){
-        this.canvas.style.zIndex= visible ? 3:-5;
+    setCanvasVisible(visible) {
+        this.canvas.style.zIndex = visible? 10:-5;
     }
     draw(img, obj) {
         this.obj = obj;
@@ -49,7 +55,7 @@ class MapCreator extends BaseCanvas {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.drawImage(
             img, obj.x, obj.y, obj.spriteWidth, obj.spriteHeight,
-            0 - this.offsetX, 0 - this.offsetY, obj.cols *  tileWidth, obj.rows * tileHeight);
+            0 - this.offsetX, 0 - this.offsetY, obj.cols * tileWidth, obj.rows * tileHeight);
         //  console.log('Dibujando: ' + obj.key);
         this.drawTiles(tileHeight);
     }
@@ -76,7 +82,28 @@ class MapCreator extends BaseCanvas {
             this.chooseObjectToDraw(spriteX, spriteY);
 
         });
-       
+        this.creatorInfoButtons.forEach((button) => {
+            button.addEventListener('mouseover', () => {
+                let info = button.innerHTML;
+                this.setCanvasVisible(true);
+                let obj = ImageManager.getObjects(info);
+                this.draw(obj.spriteSheet, obj);
+
+            });
+        });
+        this.strokeButton.addEventListener('click',()=>{
+            let strokeOn = this.mapCanvas.tileMap.strokeOn? false:true;
+            this.mapCanvas.tileMap.setStroke(strokeOn);
+            this.mapCanvas.draw();
+        });
+        this.characterButton.addEventListener('click',()=>{
+            this.canvasGroup.visibilityControler.toggleElementCanvas(this.canvasGroup.characterCanvas);
+        });
+        this.pathFinderButton.addEventListener('click',()=>{
+            this.canvasGroup.enablePathFind= this.canvasGroup.enablePathFind==false? true:false;
+            
+        });
+
     }
     getGridCoordenates(e) {
 
@@ -97,7 +124,7 @@ class MapCreator extends BaseCanvas {
         const spriteX = column * this.obj.frSize;
         const spriteY = row * this.obj.frSize;
 
-       // console.log(`Sprite origin coordinates: (${spriteX}, ${spriteY})`);
+        // console.log(`Sprite origin coordinates: (${spriteX}, ${spriteY})`);
 
         return { spriteX, spriteY };
     }
@@ -109,8 +136,8 @@ class MapCreator extends BaseCanvas {
                 this.dragDropCanvas.setObj(this.obj);
                 break;
             case 'sprite':
-                spriteX+=this.obj.x;
-                spriteY+=this.obj.y;
+                spriteX += this.obj.x;
+                spriteY += this.obj.y;
                 this.setSpriteToDraw(this.obj, spriteX, spriteY)
                 this.dragDropCanvas.setObj(this.spriteToDraw);
                 this.canvasGroup.setObjectToDraw(this.spriteToDraw);
@@ -119,20 +146,17 @@ class MapCreator extends BaseCanvas {
         }
 
     }
-    setSpriteToDraw(obj,objX,objY){
-        this.spriteToDraw.key=obj.key;
-        this.spriteToDraw.zIndex=obj.zIndex;
-        this.spriteToDraw.spriteSheet=obj.spriteSheet;
-        this.spriteToDraw.src=obj.src;
-        this.spriteToDraw.x=objX;
-        this.spriteToDraw.y=objY;
-        this.spriteToDraw.spriteWidth=obj.frSize;
-        this.spriteToDraw.spriteHeight=obj.frSize;
-        this.spriteToDraw.frSize=obj.frSize;
-        this.spriteToDraw.hasCollider=obj.hasCollider;
-
-        console.log(objX,objY);
-        
+    setSpriteToDraw(obj, objX, objY) {
+        this.spriteToDraw.key = obj.key;
+        this.spriteToDraw.zIndex = obj.zIndex;
+        this.spriteToDraw.spriteSheet = obj.spriteSheet;
+        this.spriteToDraw.src = obj.src;
+        this.spriteToDraw.x = objX;
+        this.spriteToDraw.y = objY;
+        this.spriteToDraw.spriteWidth = obj.frSize;
+        this.spriteToDraw.spriteHeight = obj.frSize;
+        this.spriteToDraw.frSize = obj.frSize;
+        this.spriteToDraw.hasCollider = obj.hasCollider;
     }
 
 

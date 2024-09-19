@@ -43,8 +43,8 @@ class UIManager {
 
         this.setupListeners();
         this.addCharactersToMenu();
-        this.addMenuItems(this.objectsToDraw.get('appleHouse'));
-        this.addMenuItems(this.objectsToDraw.get('ruins'));
+/*         this.addMenuItems(this.objectsToDraw.get('appleHouse'));
+        this.addMenuItems(this.objectsToDraw.get('ruins')); */
     }
 
     setupListeners() {
@@ -58,13 +58,13 @@ class UIManager {
 
         this.stopPropagation();
 
-        imageButtonMap.addEventListener('click', (e) => {
+  /*       imageButtonMap.addEventListener('click', (e) => {
             e.stopPropagation();
             this.quitTileSelection();
             this.buttonMapClic();
-        });
+        }); */
         //------CLIC EN EL BOTON DEL PERSONAJE PARA LOS EVENTOS EN EL CANVAS CONTAINER
-        imageButtonCharacter.addEventListener('click', (e) => {
+  /*       imageButtonCharacter.addEventListener('click', (e) => {
             e.stopPropagation();
             this.disableMapCreator();
             this.dropDownMenuSandbox.style.display = 'none';
@@ -85,7 +85,7 @@ class UIManager {
             this.dropDownMenuCharacter.style.display = 'none';
             this.dropDownMenuCreator.style.display = this.dropDownMenuCreator.style.display === 'flex' ? 'none' : 'flex';
             this.creatorCanvas.setCanvasVisible(false);
-        });
+        }); */
         window.addEventListener('keydown', (e) => {
 
             if (e.key === 'Escape') {
@@ -94,7 +94,7 @@ class UIManager {
                 this.disableMapCreator();
             }
         });
-
+/* 
         this.creatorInfoButtons.forEach((button) => {
             button.addEventListener('mouseover', () => {
                 let info = button.innerHTML;
@@ -104,7 +104,7 @@ class UIManager {
 
             });
         });
-
+ */
 
 
     }
@@ -135,7 +135,7 @@ class UIManager {
 
     }
 
-
+/* 
     addMenuItems(obj) {
 
         const gridContainerSandbox = document.getElementById('gridContainerSandbox');
@@ -157,7 +157,7 @@ class UIManager {
 
         });
 
-    }
+    } */
     quitTileSelection() {
         this.selectedTilesList.forEach((tile) => {
             tile.isSelected = false;
