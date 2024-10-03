@@ -1,3 +1,4 @@
+import { ImageManager } from "../controler/ImageManager.mjs";
 
 class Tile {
 
@@ -20,9 +21,10 @@ class Tile {
         this.color = '';
 
         //----Carga de imagenes
-        this.backgroundOn = false;
-        this.foregroundOn = false;
+        this.backGroundOn = false;
+        this.foreGroundOn = false;
         this.backGround = {
+            key:'',
             spriteSheet: null,
             x: 0,
             y: 0,
@@ -30,6 +32,7 @@ class Tile {
             height: 0,
         }
         this.foreGround = {
+            key:'',
             spriteSheet: null,
             x: 0,
             y: 0,
@@ -41,9 +44,18 @@ class Tile {
         this.g = 0;
         this.h = 0;
         this.f = 0;
-
+        //----Rotation------
+        this.backGroundRotation = 0;
+        this.foreGroundRotation = 0;
 
     }
+    rotateBackGround(degrees) {
+        this.backGroundRotation = degrees;
+    }
+    rotateForeGround(degrees) {
+        this.foreGroundRotation = degrees;
+    }
+
 
     setObjectToDraw(obj) {
         switch (obj.zIndex) {
@@ -57,22 +69,33 @@ class Tile {
     }
 
     //------SETTERS------
-   
+
     setSpriteSheet(obj, objX, objY) {
+        this.foreGround.key=obj.key;
         this.foreGround.spriteSheet = obj.spriteSheet;
         this.foreGround.x = objX;
         this.foreGround.y = objY;
         this.foreGround.width = obj.frSize;
         this.foreGround.height = obj.frSize;
-        this.foregroundOn = true;
+        this.foreGroundOn = true;
     }
     setBackground(obj) {
+        this.backGround.key=obj.key;
         this.backGround.spriteSheet = obj.spriteSheet;
         this.backGround.x = obj.x;
         this.backGround.y = obj.y;
         this.backGround.width = obj.frSize;
         this.backGround.height = obj.frSize;
-        this.backgroundOn = true;
+        this.backGroundOn = true;
+    }
+    clear() {
+        this.foreGroundOn = false;
+        this.backGroundOn = false;
+        this.setColor('');
+        this.setSelected(false);
+        this.setCollider(false);
+        this.backGroundRotation = 0;
+        this.foreGroundRotation = 0;
     }
 
     setPosition(x, y) {
@@ -104,14 +127,25 @@ class Tile {
     }
 
     drawBackground(size) {
-        if (!this.backgroundOn) return;
+        if (!this.backGroundOn) return;
+
+        const centerX = this.x + size / 2;
+        const centerY = this.y + size / 2;
+
+        this.ctx.save(); // Guardar el estado del contexto actual
+        this.ctx.translate(centerX, centerY);  // Mover el canvas al centro del tile
+        this.ctx.rotate((this.backGroundRotation * Math.PI) / 180);  // Aplicar la rotación en radianes
+        this.ctx.translate(-centerX, -centerY);  // Volver al origen
+
         this.ctx.drawImage(
             this.backGround.spriteSheet,
             this.backGround.x,
             this.backGround.y,
             this.backGround.width,
             this.backGround.height,
-            this.x, this.y, size, size);
+            this.x, this.y, size, size
+        );
+        this.ctx.restore();
     }
 
     drawOverlay(size) {
@@ -121,7 +155,16 @@ class Tile {
     }
 
     drawImage(size) {
-        if (!this.foregroundOn) return;
+        if (!this.foreGroundOn) return;
+
+        const centerX = this.x + size / 2;
+        const centerY = this.y + size / 2;
+
+        this.ctx.save(); // Guardar el estado del contexto actual
+        this.ctx.translate(centerX, centerY);  // Mover el canvas al centro del tile
+        this.ctx.rotate((this.foreGroundRotation * Math.PI) / 180);  // Aplicar la rotación en radianes
+        this.ctx.translate(-centerX, -centerY);  // Volver al origen
+
         this.ctx.drawImage(
             this.foreGround.spriteSheet,
             this.foreGround.x,
@@ -130,7 +173,7 @@ class Tile {
             this.foreGround.height,
             this.x, this.y, size, size
         )
-
+        this.ctx.restore();
     }
     drawStroke(size) {
         if (this.strokeOn) {
@@ -166,6 +209,71 @@ class Tile {
         if (this.strokeOn) this.drawStroke(size);
 
 
+    }
+  
+    toJSON(){
+        return{
+            tileIndex:this.tileIndex,
+            gridX:this.gridX,
+            gridY:this.gridY,
+            x:this.x,
+            y:this.y,
+            isSelected:this.isSelected,
+            strokeOn:this.strokeOn,
+            strokeColor:this.strokeColor,
+            hasCollider:this.hasCollider,
+            color:this.color,
+            backGroundOn: this.backGroundOn,
+            foreGroundOn: this.foreGroundOn,
+            backGround:{
+                key:this.backGround.key,
+                x: this.backGround.x,
+                y: this.backGround.y,
+                width: this.backGround.width,
+                height: this.backGround.height
+            },
+            foreGround:{
+                key: this.foreGround.key,
+                x: this.foreGround.x,
+                y: this.foreGround.y,
+                width: this.foreGround.width,
+                height: this.foreGround.height
+            },
+            backGroundRotation: this.backGroundRotation,
+            foreGroundRotation: this.foreGroundRotation,
+        };
+    }
+    fromJSON(tileData){
+        this.tileIndex=tileData.tileIndex;
+        this.gridX=tileData.gridX;
+        this.gridY=tileData.gridY;
+        this.x=tileData.x;
+        this.y=tileData.y;
+        this.isSelected=tileData.isSelected;
+        this.strokeOn=tileData.strokeOn;
+        this.strokeColor=tileData.strokeColor;
+        this.hasCollider=tileData.hasCollider;
+        this.color=tileData.color;
+        this.backGroundOn=tileData.backGroundOn;
+        this.foreGroundOn=tileData.foreGroundOn;
+        this.backGround={
+            key: tileData.backGround.key,
+            spriteSheet: tileData.backGround.key!='' ? ImageManager.getImage(tileData.backGround.key):null,
+            x: tileData.backGround.x,
+            y: tileData.backGround.y,
+            width: tileData.backGround.width,
+            height: tileData.backGround.height,
+        }
+        this.foreGround={
+            key:tileData.foreGround.key,
+            spriteSheet: tileData.foreGround.key!='' ? ImageManager.getImage(tileData.foreGround.key):null,
+            x: tileData.foreGround.x,
+            y: tileData.foreGround.y,
+            width: tileData.foreGround.width,
+            height: tileData.foreGround.height,
+        }
+        this.backGroundRotation=tileData.backGroundRotation;
+        this.foreGroundRotation=tileData.foreGroundRotation;
     }
 }
 

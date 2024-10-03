@@ -9,6 +9,7 @@ class BaseCanvas {
         this.canvas = document.getElementById(canvasId);
         this.width=this.canvas.width;
         this.height=this.canvas.height;
+        /**@type {CanvasRenderingContext2D} */
         this.ctx = this.canvas.getContext("2d");
         this.scale = window.devicePixelRatio || 1;
         this.tileSize = tileSize;

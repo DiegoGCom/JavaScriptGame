@@ -104,81 +104,6 @@ class ImageManager {
     static getObjects(objectName) {
 
         const object = {
-            appleHouse: {
-                key: 'appleHouse',
-                type: 'block',
-                zIndex: 1,
-                spriteSheet: ImageManager.getImage('spriteHouse'),
-                src: '../Assets/Dibujos/Spritesheet/casa_800.png',
-                x: 0,
-                y: 0,
-                spriteWidth: 800,
-                spriteHeight: 800,
-                cols: 4,            //numero de fracciones ->> tiles que ocupa el sprite
-                rows: 4,            //numero de fracciones ->> tiles que ocupa el sprite
-                frSize: 200,    //tamaño de la fracción
-                hasCollider: false        
-            },
-            ruins: {
-                key: 'ruins',
-                type: 'sprite',
-                zIndex: 1,
-                spriteSheet: ImageManager.getImage('spriteSheetRetina'),
-                src: '../Assets/Dibujos/PNG/Default/ruins.png',
-                x: 0,
-                y: 0,
-                spriteWidth: 1280,
-                spriteHeight: 1280,
-                cols: 10,
-                rows: 10,
-                frSize: 128,
-                hasCollider: false
-            },
-            suelo0: {
-                key: 'suelo',
-                type: 'sprite',
-                zIndex: 0,
-                spriteSheet: ImageManager.getImage('suelo'),
-                src: '../Assets/Dibujos/PNG/Default/ruins.png',
-                x: 0,
-                y: 0,
-                spriteWidth: 1200,
-                spriteHeight: 800,
-                cols:6,
-                rows:4,
-                frSize: 200,
-                hasCollider:true
-            },
-            suelo1: {
-                key: 'suelo',
-                type: 'sprite',
-                zIndex: 0,
-                spriteSheet: ImageManager.getImage('suelo'),
-                src: '../Assets/Dibujos/PNG/Default/ruins.png',
-                x: 1200,
-                y: 0,
-                spriteWidth: 1200,
-                spriteHeight: 800,
-                cols:6,
-                rows:4,
-                frSize: 200,
-                hasCollider:true
-            },
-            suelo2: {
-                key: 'suelo',
-                type: 'sprite',
-                zIndex: 0,
-                spriteSheet: ImageManager.getImage('suelo'),
-                src: '../Assets/Dibujos/PNG/Default/ruins.png',
-                x: 2400,
-                y: 0,
-                spriteWidth: 1200,
-                spriteHeight: 800,
-                cols:6,
-                rows:4,
-                frSize: 200,
-                hasCollider:true
-            },
             monigote: {
                 key: 'monigote',
                 type: 'sprite',
@@ -193,7 +118,54 @@ class ImageManager {
                 rows:1,
                 frSize: 204,
                 hasCollider:true
+            },
+            arbol1:{
+                key:'arbol1',
+                type:'block',
+                zIndex:1,
+                spriteSheet: ImageManager.getImage('arbol1'),
+                src: '../Assets/Dibujos/Spritesheet/arbol1.png',
+                x: 0,
+                y: 0,
+                spriteWidth: 400,
+                spriteHeight: 400,
+                cols:2,
+                rows:2,
+                frSize: 200,
+                hasCollider:true
+                
+            },
+            arbol2:{
+                key:'arbol2',
+                type:'block',
+                zIndex:1,
+                spriteSheet: ImageManager.getImage('arbol2'),
+                src: '../Assets/Dibujos/Spritesheet/arbol2.png',
+                x: 0,
+                y: 0,
+                spriteWidth: 400,
+                spriteHeight: 400,
+                cols:2,
+                rows:2,
+                frSize: 200,
+                hasCollider:true
+            },
+            terreno:{
+                key:'terreno',
+                type:'sprite',
+                zIndex:0,
+                spriteSheet: ImageManager.getImage('terreno'),
+                src: '../Assets/Dibujos/Spritesheet/tileset_terreno.png',
+                x: 0,
+                y: 0,
+                spriteWidth: 1200,
+                spriteHeight:1200,
+                cols:6,
+                rows:6,
+                frSize: 200,
+                hasCollider:false
             }
+
     
     
     }
@@ -204,20 +176,19 @@ class ImageManager {
     static loadImagesFromDirectory() {
 
     const imagesToLoad = [
-        { key: 'spriteSheetRetina', src: '../Assets/Dibujos/Spritesheet/spritesheet_retina.png' },
-        { key: 'smallAreaBackground', src: "../Assets/Dibujos/Textures/tile_cesped_1.png" },
-        { key: 'bigMapBackGround', src: "../Assets/Dibujos/Textures/parchmentAncient.png" },
-        { key: 'spriteHouse', src: '../Assets/Dibujos/Spritesheet/casa_800.png' },
-        { key: 'ruins', src: '../Assets/Dibujos/PNG/Retina/ruins.png' },
+        
         { key: 'greySky', src: '../Assets/Dibujos/Textures/cielo.png' },
-        { key: 'suelo', src: '../Assets/Dibujos/Textures/tile_cesped_doble.png' },
         { key: 'monigote', src: '../Assets/Dibujos/Spritesheet/monigote.png' },
+        { key: 'arbol1', src: '../Assets/Dibujos/Spritesheet/arbol1.png' },
+        { key: 'arbol2', src: '../Assets/Dibujos/Spritesheet/arbol2.png' },
+        { key: 'hojas', src: '../Assets/Dibujos/Spritesheet/hojas.png' },
         { key: 'nube1', src: '../Assets/Dibujos/PNG/nube_1.png' },
         { key: 'nube2', src: '../Assets/Dibujos/PNG/nube_2.png' },
         { key: 'nube3', src: '../Assets/Dibujos/PNG/nube_3.png' },
         { key: 'nube4', src: '../Assets/Dibujos/PNG/nube_4.png' },
         { key: 'nube5', src: '../Assets/Dibujos/PNG/nube_5.png' },
         { key: 'nube6', src: '../Assets/Dibujos/PNG/nube_frontal.png' },
+        { key: 'terreno', src: '../Assets/Dibujos/Spritesheet/tileset_terreno.png'}
     ]
 
     imagesToLoad.forEach(image => ImageManager.loadImage(image.key, image.src));

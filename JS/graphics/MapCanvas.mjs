@@ -15,7 +15,7 @@ class MapCanvas extends BaseCanvas {
 
         this.map = [];
 
-        this.defaultTileMap= new TileMap(100,100,100);
+        this.defaultTileMap= new TileMap('default',100,100,100);
         this.defaultTileMap.setStroke(true);
     
         /**@type {TileMap} */
@@ -25,16 +25,22 @@ class MapCanvas extends BaseCanvas {
 
         this.mapAreas = new Map();
 
-        this.mapAreas.set('default',this.defaultTileMap);
+        this.mapAreas.set(this.defaultTileMap.key,this.defaultTileMap);
 
-        this.scene = 'default';
+        this.scene = this.defaultTileMap.key;
         this.centeringOffsetX=0;
         this.centeringOffsetY=0;
 
         this.draw();
     }
-    setTileMap(key,mapWidth,mapHeight,stroke){
-        let tileMap = new TileMap(mapWidth,mapHeight,100);
+    loadTileMap(tileMap){
+        this.tileMap=tileMap;
+        this.mapAreas.set(tileMap.key,tileMap);
+        this.setScene(tileMap.key);
+        this.draw();
+    }
+    setNewTileMap(key,mapWidth,mapHeight,stroke){
+        let tileMap = new TileMap(key,mapWidth,mapHeight,100);
         if(mapWidth<80) this.centeringOffsetX=0;
         this.mapAreas.set(key,tileMap);
         tileMap.setStroke(stroke);

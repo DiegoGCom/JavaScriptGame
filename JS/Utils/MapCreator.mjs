@@ -1,5 +1,6 @@
 import { CanvasGroupControler } from "../controler/CanvasGroupControler.mjs";
 import { ImageManager } from "../controler/ImageManager.mjs";
+import { SaveLoadManager } from "../controler/SaveLoadManager.mjs";
 import { BaseCanvas } from "../graphics/BaseCanvas.mjs";
 import { DragYDropCanvas } from "../graphics/DragYDropCanvas.mjs";
 import { MapCanvas } from "../graphics/MapCanvas.mjs";
@@ -20,12 +21,17 @@ class MapCreator extends BaseCanvas {
         this.dragDropCanvas = canvasGroup.dragDropCanvas;
         /**@type {MapCanvas} */
         this.mapCanvas= canvasGroup.mapCanvas;
+        /**@type {SaveLoadManager} */
+        this.saveLoadManager=new SaveLoadManager(this.mapCanvas.tileMap);
         /**@type {Array} */
         this.creatorInfoButtons = [...document.getElementsByClassName('creatorInfo')];
 
         this.strokeButton= document.getElementById('strokeButtonCreator');
         this.characterButton= document.getElementById('characterButtonCreator');
         this.pathFinderButton= document.getElementById('pathFinderButtonCreator');
+        this.clearTilesButton= document.getElementById('clearTilesButtonCreator');
+        this.saveMapButton= document.getElementById('saveMapButtonCreator');
+        this.loadMapButton= document.getElementById('loadMapButtonCreator');
 
         this.spriteToDraw = {
             key: '',
@@ -101,9 +107,33 @@ class MapCreator extends BaseCanvas {
         });
         this.pathFinderButton.addEventListener('click',()=>{
             this.canvasGroup.enablePathFind= this.canvasGroup.enablePathFind==false? true:false;
-            
+            let buttonON=this.canvasGroup.enablePathFind==true ? true:false;
+            this.pathFinderButton.classList.toggle('buttonON',buttonON);
         });
-
+        this.clearTilesButton.addEventListener('click',()=>{
+            this.canvasGroup.selectedTilesList.forEach(tile=>{
+                tile.clear();
+            });
+            this.canvasGroup.selectedTilesList.clear();
+            this.mapCanvas.draw();
+        });
+        this.saveMapButton.addEventListener('click',()=>{
+            this.saveLoadManager.setTileMap(this.mapCanvas.tileMap);
+            this.saveLoadManager.saveGame();
+        });
+        this.loadMapButton.addEventListener('change', (evt)=>{
+            const file = evt.target.files[0];
+            if(file.type==="application/json"){
+                const reader = new FileReader();
+                reader.onload= (e)=>{
+                    const mapData = JSON.parse(e.target.result);
+                    this.mapCanvas.loadTileMap(this.saveLoadManager.loadMap(mapData));
+                };
+                reader.readAsText(file);
+            }else{
+                alert('Por favor introduce un archivo JSON válido')
+            }
+        });
     }
     getGridCoordenates(e) {
 

@@ -142,6 +142,7 @@ class Character {
         }
         //  console.log('Llegada al tile ' + this.contador);
         const nextTile = this.path.shift();
+        this.currentTile=nextTile;
         this.targetX = nextTile.x + this.offsetX;
         this.targetY = nextTile.y + this.offsetY;
 

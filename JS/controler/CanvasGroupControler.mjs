@@ -40,8 +40,10 @@ class CanvasGroupControler {
 
         this.aStar = new AStarAlgorithm(this.mapCanvas.map);
 
-        this.tileA = null;
+        this.tileA = this.characterCanvas.characters.get('Pepe').currentTile;
         this.tileB = null;
+
+        this.rotationDegrees=0;
 
         this.setupListeners();
 
@@ -142,7 +144,9 @@ class CanvasGroupControler {
 
         container.addEventListener('dblclick', (e) => {
 
-            this.clic(e);
+            this.selectMouseTile(e);
+            this.runAStarAlgorithm();
+           
         });
         window.addEventListener('keydown', (e) => {
             //this.moveMapWithKeyboard(e);
@@ -152,6 +156,10 @@ class CanvasGroupControler {
 
             if (e.key === 'k') {
                 this.runAStarAlgorithm();
+            }
+            if(e.key==='r'){
+                this.rotateObject();
+                this.dragDropCanvas.drawObject(this.rotationDegrees);
             }
 
         });
@@ -301,7 +309,7 @@ class CanvasGroupControler {
         } else {
             console.log('Debes seleccionar las casillas');
         }
-
+        this.tileA=this.tileB;  
     }
 
     //--------selecciona las casillas por las que pasa el raton----
@@ -337,9 +345,9 @@ class CanvasGroupControler {
         this.selectedTilesList.forEach((tile) => {
             tile.setColor('');
             tile.setSelected(false);
-            this.tileA = null;
-            this.tileB = null;
+            
         });
+        this.tileB=null;
         this.mapCanvas.draw();
         this.selectedTilesList.clear();
     }
@@ -431,8 +439,11 @@ class CanvasGroupControler {
                 this.selectedTilesList.forEach(tile => tile.render(tile.x, tile.y, this.mapCanvas.tileSize));
             }
         }
-        this.dragDropCanvas.drawObject(tileSelected.x, tileSelected.y, this.mapCanvas.tileSize);
-
+        this.dragDropCanvas.setCoordenates(tileSelected.x, tileSelected.y, this.mapCanvas.tileSize);
+        this.dragDropCanvas.drawObject(this.rotationDegrees);
+    }
+    rotateObject(){
+       this.rotationDegrees=(this.rotationDegrees+90)%360;  
     }
     drawObjects(e) {
         let { gridX, gridY } = this.getGridCoordenates(e);
@@ -444,8 +455,9 @@ class CanvasGroupControler {
         if (gridY > this.mapCanvas.mapHeight - this.groupSelectionHeight) gridY = this.mapCanvas.mapHeight - this.groupSelectionHeight;
 
         const mapArea = this.mapCanvas.tileMap;
-        mapArea.drawMultipleTileObject(this.objectToDraw, gridX, gridY);
+        mapArea.drawMultipleTileObject(this.objectToDraw, gridX, gridY,this.rotationDegrees);
         this.mapCanvas.draw();
+       // this.rotationDegrees=0;
 
     }
 

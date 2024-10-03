@@ -63,7 +63,7 @@ class LandingMenu {
                 this.dialogParagraph.innerHTML = 'Los valores han de estar entre 10 y 200';
                 return;
             } else {
-                this.mapCanvas.setTileMap(mapKey, mapWidth, mapHeight, stroke);
+                this.mapCanvas.setNewTileMap(mapKey, mapWidth, mapHeight, stroke);
                this.visibilityControler.activateMapCreator();
             }
         });
